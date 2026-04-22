@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SM LIMOUSINE | Driver Status</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --black-light: #0a0a0a;
+            --black-card: #111111;
+            --gold: #D4AF37;
+            --gold-light: #F9E2AF;
+            --gold-dark: #A67C00;
+            --white: #ffffff;
+            --accent-glow: rgba(212, 175, 55, 0.25);
+            --font-sans: 'Inter', sans-serif;
+            --radius: 12px;
+            --transition: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--black);
+            color: var(--gold);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .ds-header {
+            width: 100%;
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            background: var(--black-light);
+        }
+
+        .ds-header img {
+            height: 52px;
+            width: auto;
+            filter: brightness(1.2);
+        }
+
+        .ds-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: var(--radius);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            bottom: 20px;
+            width: 4px;
+            background: var(--gold);
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .card__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .btn-greeting {
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-greeting:hover {
+            background: var(--gold-light);
+            transform: translateY(-1px);
+        }
+
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: var(--gold-dark);
+        }
+
+        .info-value {
+            color: var(--gold-light);
+            text-align: right;
+        }
+
+        .check-notes {
+            margin-top: 20px;
+            padding: 15px 0 0;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        .check-notes span { flex: 1; }
+
+        .check-notes::after {
+            content: '›';
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .status-btn {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 10px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .status-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--gold-dark);
+            transition: all var(--transition);
+        }
+
+        .status-btn:hover {
+            background: var(--black-card-hover);
+            border-color: var(--gold-dark);
+        }
+
+        .status-btn.active {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            color: var(--white);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .status-btn.active svg {
+            stroke: var(--gold);
+            filter: drop-shadow(0 0 4px var(--gold));
+        }
+
+        .call-dispatch {
+            background: linear-gradient(135deg, #443300 0%, #000000 100%);
+            color: var(--white);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 100%;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            transition: all var(--transition);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        .call-dispatch:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #554400 0%, #111 100%);
+        }
+
+        .call-dispatch svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--white);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--gold);
+            color: var(--black);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <header class="ds-header">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
+    </header>
+
+    <main class="ds-container">
+        <div class="card">
+            <div class="card__header">
+                <span class="card__title">Reservation info</span>
+                <button class="btn-greeting" onclick="showGreeting()">Greeting Sign</button>
+            </div>
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Booking ID No:</span>
+                    <span class="info-value" id="bookingId">0</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Passenger:</span>
+                    <span class="info-value" id="passenger">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Pickup Date:</span>
+                    <span class="info-value" id="pickupDate">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Vehicle:</span>
+                    <span class="info-value" id="vehicle">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Pickup:</span>
+                    <span class="info-value" id="pickup">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Last Drop:</span>
+                    <span class="info-value" id="lastDrop">—</span>
+                </div>
+            </div>
+            <div class="check-notes">
+                <span>Check Notes</span>
+            </div>
+        </div>
+
+        <div class="status-grid">
+            <button class="status-btn" onclick="toggleStatus(this, 'Circling')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                Circling
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'Enroute')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Enroute
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'Waiting')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 14v-6M4.93 4.93l4.24 4.24m6.36 6.36l4.24 4.24M2 12h6m14 0h-6M4.93 19.07l4.24-4.24m6.36-6.36l4.24-4.24"/></svg>
+                Cont. & Waiting
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'On-Site')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                On-Site
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'Call Out')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                10 Min Call Out
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'On-Board')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polyline points="16 8 20 8 23 11 23 16 16 16"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                On-Board
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'No Show')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
+                No Show
+            </button>
+            <button class="status-btn" onclick="toggleStatus(this, 'Complete')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Complete
+            </button>
+        </div>
+
+        <a href="tel:+18177234592" class="call-dispatch">
+            <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.6-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 2 3 2.24 3 2.99c0 9.39 7.62 17.01 17 17.01.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+            Call Dispatch
+        </a>
+    </main>
+
+    <div id="toast" class="toast">Status Updated</div>
+
+    <script>
+        function toggleStatus(btn, status) {
+            document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            showToast(status + ' confirmed');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function showGreeting() {
+            const name = document.getElementById('passenger').textContent;
+            alert('Greeting Sign for: ' + (name !== '—' ? name : 'Guest'));
+        }
+
+        const p = new URLSearchParams(window.location.search);
+        if (p.get('id')) document.getElementById('bookingId').textContent = p.get('id');
+        if (p.get('passenger')) document.getElementById('passenger').textContent = p.get('passenger');
+        if (p.get('date')) document.getElementById('pickupDate').textContent = p.get('date');
+        if (p.get('vehicle')) document.getElementById('vehicle').textContent = p.get('vehicle');
+        if (p.get('pickup')) document.getElementById('pickup').textContent = p.get('pickup');
+        if (p.get('drop')) document.getElementById('lastDrop').textContent = p.get('drop');
+    </script>
+</body>
+</html>
