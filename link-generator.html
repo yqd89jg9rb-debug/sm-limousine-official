@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM LIMOUSINE | Driver Link Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --black-light: #0a0a0a;
+            --black-card: #111111;
+            --gold: #D4AF37;
+            --gold-light: #F9E2AF;
+            --gold-dark: #A67C00;
+            --white: #ffffff;
+            --font-sans: 'Inter', sans-serif;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--black);
+            color: var(--gold);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .generator-container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .logo {
+            height: 72px;
+            margin-bottom: 10px;
+            filter: brightness(1.2);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--white);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .card {
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 12px 15px;
+            color: var(--white);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+        }
+
+        .btn-generate {
+            width: 100%;
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 10px;
+        }
+
+        .btn-generate:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .result-card {
+            display: none;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px dashed var(--gold-dark);
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            word-break: break-all;
+            margin-top: 30px;
+        }
+
+        .result-card.active {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 0.8rem;
+            color: var(--gold-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .generated-url {
+            color: var(--white);
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid var(--gold-dark);
+            color: var(--gold);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--gold);
+            color: var(--white);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .row { grid-template-columns: 1fr; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-container">
+        <div class="header">
+            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="logo">
+            <h1>Driver Link Generator</h1>
+            <p>Create custom status links for your chauffeurs</p>
+        </div>
+
+        <div class="card">
+            <div class="row">
+                <div class="form-group">
+                    <label>Booking ID No</label>
+                    <input type="text" id="booking_id" class="form-control" placeholder="e.g. SM-1234">
+                </div>
+                <div class="form-group">
+                    <label>Passenger Name</label>
+                    <input type="text" id="passenger_name" class="form-control" placeholder="e.g. John Doe">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Pickup Date</label>
+                    <input type="text" id="pickup_date" class="form-control" placeholder="e.g. April 22, 2026">
+                </div>
+                <div class="form-group">
+                    <label>Vehicle</label>
+                    <input type="text" id="vehicle_type" class="form-control" placeholder="e.g. Cadillac Escalade">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Pickup Location</label>
+                <input type="text" id="pickup_loc" class="form-control" placeholder="Full address or Airport">
+            </div>
+
+            <div class="form-group">
+                <label>Dropoff Location</label>
+                <input type="text" id="dropoff_loc" class="form-control" placeholder="Final destination">
+            </div>
+
+            <div class="form-group">
+                <label>Special Notes (Optional)</label>
+                <textarea id="trip_notes" class="form-control" rows="3" placeholder="Client preferences, flight info, etc."></textarea>
+            </div>
+
+            <button class="btn-generate" onclick="generateLink()">Generate Driver Link</button>
+
+            <div id="resultCard" class="result-card">
+                <div class="result-title">Custom Driver Link:</div>
+                <div id="generatedUrl" class="generated-url"></div>
+                <button class="btn-copy" onclick="copyUrl()">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateLink() {
+            const baseUrl = window.location.origin + '/driver-status.html';
+            const params = new URLSearchParams();
+
+            const id = document.getElementById('booking_id').value;
+            const passenger = document.getElementById('passenger_name').value;
+            const date = document.getElementById('pickup_date').value;
+            const vehicle = document.getElementById('vehicle_type').value;
+            const pickup = document.getElementById('pickup_loc').value;
+            const drop = document.getElementById('dropoff_loc').value;
+            const notes = document.getElementById('trip_notes').value;
+
+            if (id) params.append('id', id);
+            if (passenger) params.append('passenger', passenger);
+            if (date) params.append('date', date);
+            if (vehicle) params.append('vehicle', vehicle);
+            if (pickup) params.append('pickup', pickup);
+            if (drop) params.append('drop', drop);
+            if (notes) params.append('notes', notes);
+
+            const finalUrl = baseUrl + '?' + params.toString();
+            
+            document.getElementById('generatedUrl').textContent = finalUrl;
+            document.getElementById('resultCard').classList.add('active');
+            
+            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyUrl() {
+            const urlText = document.getElementById('generatedUrl').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                const btn = document.querySelector('.btn-copy');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.borderColor = '#D4AF37';
+                btn.style.color = '#D4AF37';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.borderColor = '';
+                    btn.style.color = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
