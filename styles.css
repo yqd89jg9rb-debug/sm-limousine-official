@@ -25,7 +25,7 @@
     --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --container: 1200px;
-    --header-h: 80px;
+    --header-h: 60px; /* Reduced from 100px */
     --radius: 12px;
     --radius-sm: 8px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -64,7 +64,7 @@ a {
 }
 
 /* ===================================================================
-   HEADER — Centered Luxury Logo
+   HEADER — Centered Luxury Logo (Thinner)
    =================================================================== */
 .header {
     position: fixed;
@@ -80,6 +80,7 @@ a {
 }
 
 .header--scrolled {
+    --header-h: 50px; /* Thinner when scrolled */
     background: rgba(0, 0, 0, 0.96);
     box-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
 }
@@ -101,7 +102,7 @@ a {
 }
 
 .header__link {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--silver-dark);
     text-transform: uppercase;
@@ -109,6 +110,24 @@ a {
 }
 
 .header__link:hover { color: var(--white); }
+
+.header__logo-centered {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.header__logo-img-large {
+    height: 40px; /* Sized to fit thinner header */
+    width: auto;
+    transition: height var(--transition);
+}
+
+.header--scrolled .header__logo-img-large {
+    height: 32px;
+}
 
 .header__actions {
     flex: 1;
@@ -119,7 +138,7 @@ a {
 }
 
 .header__phone {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--white);
 }
@@ -147,7 +166,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: calc(var(--header-h) + 60px) 24px 60px;
+    padding: calc(var(--header-h) + 40px) 24px 60px;
     text-align: center;
 }
 
@@ -303,7 +322,9 @@ a {
 }
 
 @media (max-width: 768px) {
+    :root { --header-h: 50px; } /* Thinner header for mobile */
     .header__nav, .header__phone { display: none; }
     .header__burger { display: flex; }
+    .header__logo-img-large { height: 36px; }
     .booking-widget__row { flex-direction: column; }
 }
