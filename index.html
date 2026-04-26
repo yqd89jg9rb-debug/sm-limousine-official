@@ -15,16 +15,14 @@
     <!-- ===== HEADER ===== -->
     <header class="header" id="header">
         <div class="header__inner">
-            <!-- Left: Nav -->
+            <a href="#hero" class="header__logo-centered">
+                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="header__logo-img-large">
+            </a>
             <nav class="header__nav" id="mainNav">
                 <a href="#fleet" class="header__link">Fleet</a>
                 <a href="#services" class="header__link">Services</a>
                 <a href="#contact" class="header__link">Contact</a>
             </nav>
-            
-            <!-- Logo removed from top as requested -->
-
-            <!-- Right: Contact CTA -->
             <div class="header__actions">
                 <a href="tel:+18177234592" class="header__phone">817-723-4592</a>
                 <button class="header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
@@ -38,11 +36,10 @@
             <div class="hero__overlay"></div>
         </div>
         <div class="hero__content">
-            <!-- Centered Larger Logo in Middle of Page -->
             <div class="hero__logo-wrap">
                 <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="hero__logo-img">
             </div>
-            <p class="hero__tagline">Experience the Pinnacle of Luxury Travel</p>
+            <h2 class="hero__tagline">Experience the Pinnacle of Luxury Travel</h2>
             <p class="hero__subtitle">Elite chauffeur service for your every journey</p>
 
             <!-- Booking Widget -->
@@ -55,19 +52,19 @@
                 <!-- One Way Form -->
                 <form class="booking-widget__form active" id="form-oneway">
                     <div class="booking-widget__row">
-                        <div class="booking-widget__field">
-                            <input type="text" placeholder="Pickup Address" required data-field="pickup">
-                        </div>
-                        <div class="booking-widget__field">
-                            <input type="text" placeholder="Dropoff Address" required data-field="dropoff">
-                        </div>
+                        <input type="text" placeholder="Pickup Address" required data-field="pickup" class="st-input">
+                    </div>
+                    <div class="booking-widget__row">
+                        <input type="text" placeholder="Dropoff Address" required data-field="dropoff" class="st-input">
                     </div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
-                            <input type="date" required data-field="date">
+                            <label class="field-label">Date</label>
+                            <input type="date" required data-field="date" class="st-input">
                         </div>
                         <div class="booking-widget__field">
-                            <input type="time" required data-field="time">
+                            <label class="field-label">Time</label>
+                            <input type="time" required data-field="time" class="st-input">
                         </div>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
@@ -76,19 +73,20 @@
                 <!-- Hourly Form -->
                 <form class="booking-widget__form" id="form-hourly">
                     <div class="booking-widget__row">
-                        <div class="booking-widget__field">
-                            <input type="text" placeholder="Pickup Address" required data-field="pickup">
-                        </div>
+                        <input type="text" placeholder="Pickup Address" required data-field="pickup" class="st-input">
                     </div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
-                            <input type="date" required data-field="date">
+                            <label class="field-label">Date</label>
+                            <input type="date" required data-field="date" class="st-input">
                         </div>
                         <div class="booking-widget__field">
-                            <input type="time" required data-field="time">
+                            <label class="field-label">Time</label>
+                            <input type="time" required data-field="time" class="st-input">
                         </div>
                         <div class="booking-widget__field">
-                            <select data-field="hours">
+                            <label class="field-label">Hours</label>
+                            <select data-field="hours" class="st-input">
                                 <option value="3">3 Hours (Min)</option>
                                 <option value="4">4 Hours</option>
                                 <option value="5">5 Hours</option>
@@ -134,27 +132,6 @@
             </div>
         </div>
     </div>
-
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer" id="contact">
-        <div class="container">
-            <div class="footer__bottom">
-                <p>&copy; 2026 <span class="brand-name">SM LIMOUSINE</span>. All rights reserved.</p>
-                <div class="footer__social">
-                    <a href="https://www.facebook.com/profile.php?id=61588791567732&mibextid=wwXIfr" aria-label="Facebook" target="_blank">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/limousinesm?igsh=dzgydWcxdTYybDcx&utm_source=qr" aria-label="Instagram" target="_blank">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                    </a>
-                </div>
-                <div class="footer__bottom-links">
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>

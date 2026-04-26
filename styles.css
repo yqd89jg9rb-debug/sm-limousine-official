@@ -25,7 +25,7 @@
     --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --container: 1200px;
-    --header-h: 60px; /* Reduced from 100px */
+    --header-h: 60px;
     --radius: 12px;
     --radius-sm: 8px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -64,7 +64,7 @@ a {
 }
 
 /* ===================================================================
-   HEADER — Centered Luxury Logo (Thinner)
+   HEADER — Centered Luxury Logo
    =================================================================== */
 .header {
     position: fixed;
@@ -80,7 +80,7 @@ a {
 }
 
 .header--scrolled {
-    --header-h: 50px; /* Thinner when scrolled */
+    --header-h: 50px;
     background: rgba(0, 0, 0, 0.96);
     box-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
 }
@@ -120,7 +120,7 @@ a {
 }
 
 .header__logo-img-large {
-    height: 40px; /* Sized to fit thinner header */
+    height: 40px;
     width: auto;
     transition: height var(--transition);
 }
@@ -166,7 +166,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: calc(var(--header-h) + 40px) 24px 60px;
+    padding: calc(var(--header-h) + 60px) 24px 60px;
     text-align: center;
 }
 
@@ -250,6 +250,16 @@ a {
 
 .booking-widget__field {
     flex: 1;
+    text-align: left;
+}
+
+.field-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--silver-dark);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 .booking-widget__field input, .booking-widget__field select {
@@ -259,6 +269,15 @@ a {
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
     color: white;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+}
+
+/* Fix for mobile date/time inputs appearance */
+input[type="date"], input[type="time"] {
+    min-height: 48px;
+    display: block;
+    color-scheme: dark;
 }
 
 .booking-widget__submit {
@@ -270,6 +289,7 @@ a {
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 /* ===================================================================
@@ -322,7 +342,7 @@ a {
 }
 
 @media (max-width: 768px) {
-    :root { --header-h: 50px; } /* Thinner header for mobile */
+    :root { --header-h: 50px; }
     .header__nav, .header__phone { display: none; }
     .header__burger { display: flex; }
     .header__logo-img-large { height: 36px; }
