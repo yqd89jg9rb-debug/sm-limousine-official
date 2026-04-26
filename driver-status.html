@@ -48,10 +48,9 @@
         .info-label { font-weight: 700; color: var(--gold-dark); flex-shrink: 0; width: 100px; }
         .info-value { color: var(--gold-light); text-align: right; word-break: break-word; }
 
-        .nav-link { color: #5dade2; text-decoration: underline; font-weight: 600; cursor: pointer; }
-
         .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .status-btn { background: var(--black-card); border: 1px solid rgba(192, 192, 192, 0.1); border-radius: 10px; padding: 16px 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all var(--transition); font-size: 0.9rem; font-weight: 700; color: var(--gold); }
+        .status-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .status-btn.active { background: rgba(212, 175, 55, 0.2); border-color: var(--gold); color: var(--white); }
 
         .call-dispatch { background: linear-gradient(135deg, #443300 0%, #000000 100%); color: var(--white); border: 1px solid rgba(212, 175, 55, 0.3); width: 100%; padding: 18px; border-radius: 10px; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; margin-top: 10px; text-decoration: none; }
@@ -71,60 +70,61 @@
                 <div class="info-row"><span class="info-label">Booking ID:</span><span class="info-value" id="bookingId">0</span></div>
                 <div class="info-row"><span class="info-label">Passenger:</span><span class="info-value" id="passenger">--</span></div>
                 <div class="info-row"><span class="info-label">Vehicle:</span><span class="info-value" id="vehicle">--</span></div>
-                <div class="info-row"><span class="info-label">Pickup:</span><span class="info-value"><a id="pickupLink" class="nav-link" target="_blank">Tap to Navigate</a></span></div>
-                <div class="info-row"><span class="info-label">Dropoff:</span><span class="info-value"><a id="dropoffLink" class="nav-link" target="_blank">Tap to Navigate</a></span></div>
             </div>
         </div>
 
         <div class="status-grid">
-            <button class="status-btn" onclick="sendSMS(this, 'Enroute')">Enroute</button>
-            <button class="status-btn" onclick="sendSMS(this, 'On-Site')">On-Site</button>
-            <button class="status-btn" onclick="sendSMS(this, 'On-Board')">On-Board</button>
-            <button class="status-btn" onclick="sendSMS(this, 'Complete')">Complete</button>
-            <button class="status-btn" onclick="sendSMS(this, 'Circling')">Circling</button>
-            <button class="status-btn" onclick="sendSMS(this, 'No Show')">No Show</button>
+            <button class="status-btn" onclick="autoStatus(this, 'Enroute')">Enroute</button>
+            <button class="status-btn" onclick="autoStatus(this, 'On-Site')">On-Site</button>
+            <button class="status-btn" onclick="autoStatus(this, 'On-Board')">On-Board</button>
+            <button class="status-btn" onclick="autoStatus(this, 'Complete')">Complete</button>
+            <button class="status-btn" onclick="autoStatus(this, 'Waiting')">Waiting</button>
+            <button class="status-btn" onclick="autoStatus(this, 'No Show')">No Show</button>
         </div>
 
         <a href="tel:+18177234592" class="call-dispatch">Call Dispatch</a>
     </main>
 
-    <div id="toast" class="toast">Opening SMS...</div>
+    <div id="toast" class="toast">Alerting Dispatch...</div>
 
     <script>
-        function sendSMS(btn, status) {
+        async function autoStatus(btn, status) {
             const bookingId = document.getElementById('bookingId').textContent;
             const passenger = document.getElementById('passenger').textContent;
-            const phone = "+18177234592";
             
             document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            btn.disabled = true;
             
-            const message = "SM LIMO: " + status + " | ID: " + bookingId + " | Client: " + passenger;
-            const isiPhone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            const url = "sms:" + phone + (isiPhone ? "&" : "?") + "body=" + encodeURIComponent(message);
-            
-            showToast('Opening text message...');
-            setTimeout(() => { window.location.href = url; }, 500);
+            showToast('Sending Automatic Alert...');
+
+            try {
+                // Secure Call to Netlify Messenger Function
+                const response = await fetch('/.netlify/functions/send-sms', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status, bookingId, passenger })
+                });
+
+                if (response.ok) {
+                    showToast('Dispatch Notified Successfully');
+                } else {
+                    throw new Error('Auto-SMS failed');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Automatic Alert Failed');
+            } finally {
+                btn.disabled = false;
+            }
         }
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg; t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
         const p = new URLSearchParams(window.location.search);
-        const bookingId = p.get('id') || '0';
-        const passenger = p.get('passenger') || '--';
-        const pickup = p.get('pickup') || '';
-        const drop = p.get('drop') || '';
-
-        document.getElementById('bookingId').textContent = bookingId;
-        document.getElementById('passenger').textContent = passenger;
+        document.getElementById('bookingId').textContent = p.get('id') || '0';
+        document.getElementById('passenger').textContent = p.get('passenger') || '--';
         if(p.get('vehicle')) document.getElementById('vehicle').textContent = p.get('vehicle');
-        
-        if(pickup) document.getElementById('pickupLink').href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(pickup);
-        if(drop) document.getElementById('dropoffLink').href = "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(drop);
     </script>
 </body>
 </html>
