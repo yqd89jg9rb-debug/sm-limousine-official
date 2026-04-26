@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SM LIMOUSINE | Premium Black Car & Chauffeur Service</title>
-    <meta name="version" content="2.0.1">
+    <meta name="version" content="2.0.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-    <!-- Header -->
+    <!-- ===== HEADER ===== -->
     <header class="header" id="header">
         <div class="header__inner">
             <a href="#hero" class="header__logo">
@@ -28,33 +28,78 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- ===== HERO SECTION ===== -->
     <section class="hero" id="hero">
-        <div class="hero__bg"><div class="hero__overlay"></div></div>
+        <div class="hero__bg">
+            <div class="hero__overlay"></div>
+        </div>
         <div class="hero__content">
             <h1 class="hero__title">SM LIMOUSINE</h1>
             <p class="hero__tagline">Elite Chauffeur Service</p>
-            
-            <div class="booking-widget">
+
+            <!-- Booking Widget -->
+            <div class="booking-widget" id="bookingWidget">
                 <div class="booking-widget__tabs">
                     <button class="booking-widget__tab active" data-tab="oneway">One Way</button>
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
+
+                <!-- One Way Form -->
                 <form class="booking-widget__form active" id="form-oneway">
-                    <input type="text" placeholder="Pickup Address" required data-field="pickup">
-                    <input type="text" placeholder="Dropoff Address" required data-field="dropoff">
-                    <input type="date" required data-field="date">
-                    <input type="time" required data-field="time">
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <input type="text" placeholder="Pickup Address" required data-field="pickup">
+                        </div>
+                        <div class="booking-widget__field">
+                            <input type="text" placeholder="Dropoff Address" required data-field="dropoff">
+                        </div>
+                    </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <input type="date" required data-field="date">
+                        </div>
+                        <div class="booking-widget__field">
+                            <input type="time" required data-field="time">
+                        </div>
+                    </div>
+                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
+                </form>
+
+                <!-- Hourly Form -->
+                <form class="booking-widget__form" id="form-hourly">
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <input type="text" placeholder="Pickup Address" required data-field="pickup">
+                        </div>
+                    </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <input type="date" required data-field="date">
+                        </div>
+                        <div class="booking-widget__field">
+                            <input type="time" required data-field="time">
+                        </div>
+                        <div class="booking-widget__field">
+                            <select data-field="hours">
+                                <option value="3">3 Hours (Min)</option>
+                                <option value="4">4 Hours</option>
+                                <option value="5">5 Hours</option>
+                                <option value="6">6 Hours</option>
+                            </select>
+                        </div>
+                    </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Vehicle Selector -->
+    <!-- Vehicle Selection Overlay -->
     <div class="vs-overlay" id="vsOverlay">
         <div class="vs-panel">
-            <div class="vs-header"><h2>Choose Your Luxury Vehicle</h2></div>
+            <div class="vs-header">
+                <h2 style="color:white">Select Your Vehicle</h2>
+            </div>
             <div class="vs-list" id="vsList"></div>
             <div class="vs-footer">
                 <button id="vsBackBtn" class="btn--outline">Back</button>
@@ -63,21 +108,21 @@
         </div>
     </div>
 
-    <!-- Stripe Payment Modal -->
+    <!-- Payment Modal -->
     <div class="payment-overlay" id="paymentOverlay">
         <div class="payment-modal">
             <button class="payment-modal__close" id="paymentClose">&times;</button>
             <div class="payment-modal__summary">
-                <h3 id="pay-vehicle"></h3>
-                <p id="pay-total" style="font-size: 1.5rem; font-weight: bold;"></p>
+                <h3 id="pay-vehicle" style="color:white; margin-bottom:10px"></h3>
+                <p id="pay-total" style="font-size: 1.5rem; font-weight: bold; color:white"></p>
             </div>
             <div class="payment-modal__form">
-                <div class="pm-field"><label>Card Number</label><div id="card-number-element" class="stripe-box"></div></div>
+                <div class="pm-field"><label style="color:#C0C0C0; font-size:0.8rem; display:block; margin-bottom:5px">Card Number</label><div id="card-number-element" class="stripe-box"></div></div>
                 <div class="pm-row" style="display:flex; gap:10px; margin-top:15px;">
-                    <div class="pm-field" style="flex:1"><label>Expiry</label><div id="card-expiry-element" class="stripe-box"></div></div>
-                    <div class="pm-field" style="flex:1"><label>CVV</label><div id="card-cvc-element" class="stripe-box"></div></div>
+                    <div class="pm-field" style="flex:1"><label style="color:#C0C0C0; font-size:0.8rem; display:block; margin-bottom:5px">Expiry</label><div id="card-expiry-element" class="stripe-box"></div></div>
+                    <div class="pm-field" style="flex:1"><label style="color:#C0C0C0; font-size:0.8rem; display:block; margin-bottom:5px">CVV</label><div id="card-cvc-element" class="stripe-box"></div></div>
                 </div>
-                <button id="payBtn" class="pm-book-btn">Complete Booking</button>
+                <button id="payBtn" class="pm-book-btn">Book Now</button>
             </div>
         </div>
     </div>
