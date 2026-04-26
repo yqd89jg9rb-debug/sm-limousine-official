@@ -256,7 +256,14 @@ document.addEventListener('DOMContentLoaded', () => {
             squareCard = await squarePayments.card({ style: SQ_ELEMENT_STYLE });
             await squareCard.attach('#sq-card-container');
             squareCardReady = true;
-        } catch (e) { console.error('Square error', e); }
+        } catch (e) { 
+            console.error('Square error', e);
+            const errEl = document.getElementById('sq-card-errors');
+            if (errEl) {
+                errEl.textContent = 'Payment fields failed to load. Please refresh and ensure your domain is authorized in Square dashboard.';
+                errEl.style.display = 'block';
+            }
+        }
     }
 
     function openPaymentModal(booking) {
