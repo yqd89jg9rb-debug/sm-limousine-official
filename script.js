@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Google-Free Version)
-   Simplified logic for high-speed performance and zero errors.
+   SM LIMOUSINE — Main Script (Production Version)
+   Pricing, Vehicle Selection, Live Estimates & Square Payment Integration
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const FIXED_MILES = 20;
     const MIN_HOURS = 3;
 
-    /* --- SQUARE CONFIG --- */
-    const SQUARE_APP_ID = 'sandbox-sq0idb-5g3xxfMtkwDZ8wZsy9Y1qQ';
-    const SQUARE_LOCATION_ID = 'LEKJ3YX8WA1NM';
+    /* --- SQUARE PRODUCTION CONFIG --- */
+    const SQUARE_APP_ID = 'sq0idp-cecvvfhW0-GvaKyq34xIfw';
+    const SQUARE_LOCATION_ID = 'A71H8PW';
     let squareCard = null;
 
     /* --- TRIP STATE --- */
