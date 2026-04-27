@@ -54,7 +54,7 @@
         .status-btn.active { background: rgba(212, 175, 55, 0.2); border-color: var(--gold); color: var(--white); }
 
         .call-dispatch { background: linear-gradient(135deg, #443300 0%, #000000 100%); color: var(--white); border: 1px solid rgba(212, 175, 55, 0.3); width: 100%; padding: 18px; border-radius: 10px; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; margin-top: 10px; text-decoration: none; }
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--gold); color: var(--black); padding: 12px 30px; border-radius: 50px; font-size: 0.9rem; font-weight: 700; z-index: 1000; opacity: 0; transition: all 0.4s; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--gold); color: var(--black); padding: 12px 30px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; z-index: 1000; opacity: 0; transition: all 0.4s; text-align: center; width: 90%; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -69,7 +69,6 @@
             <div class="info-grid">
                 <div class="info-row"><span class="info-label">Booking ID:</span><span class="info-value" id="bookingId">0</span></div>
                 <div class="info-row"><span class="info-label">Passenger:</span><span class="info-value" id="passenger">--</span></div>
-                <div class="info-row"><span class="info-label">Vehicle:</span><span class="info-value" id="vehicle">--</span></div>
             </div>
         </div>
 
@@ -89,8 +88,8 @@
 
     <script>
         async function autoStatus(btn, status) {
-            const bookingId = document.getElementById('bookingId').textContent;
-            const passenger = document.getElementById('passenger').textContent;
+            const bId = document.getElementById('bookingId').textContent;
+            const pName = document.getElementById('passenger').textContent;
             
             document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -99,32 +98,30 @@
             showToast('Sending Automatic Alert...');
 
             try {
-                // Secure Call to Netlify Messenger Function
                 const response = await fetch('/.netlify/functions/send-sms', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status, bookingId, passenger })
+                    body: JSON.stringify({ status: status, bookingId: bId, passenger: pName })
                 });
 
                 if (response.ok) {
                     showToast('Dispatch Notified Successfully');
                 } else {
-                    throw new Error('Auto-SMS failed');
+                    const data = await response.json();
+                    showToast('Twilio Alert Error: ' + (data.message || 'Check connection'));
                 }
             } catch (err) {
-                console.error(err);
-                showToast('Automatic Alert Failed');
+                showToast('Automatic Alert Failed. Check Twilio settings.');
             } finally {
                 btn.disabled = false;
             }
         }
 
-        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000); }
 
         const p = new URLSearchParams(window.location.search);
         document.getElementById('bookingId').textContent = p.get('id') || '0';
         document.getElementById('passenger').textContent = p.get('passenger') || '--';
-        if(p.get('vehicle')) document.getElementById('vehicle').textContent = p.get('vehicle');
     </script>
 </body>
 </html>
