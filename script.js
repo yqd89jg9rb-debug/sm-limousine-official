@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const DISCOUNT_CODES = {
         'SMLIMO10': 0.10, // 10% off
         'VIP20': 0.20,    // 20% off
+        'SMLIMO30': 0.30, // 30% off
         'WELCOME': 5.00   // $5.00 off
     };
 
