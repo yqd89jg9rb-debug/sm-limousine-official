@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Master Stylesheet (v3.3)
-   Horizontal Social Icons & Final Layout Synchronization
+   SM LIMOUSINE — Elite Master Stylesheet (v3.4)
+   Horizontal Social Icons Alignment Fix
    =================================================================== */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,7 +25,7 @@ html, body { background: var(--black); color: var(--white); font-family: 'Inter'
 .header__burger span { width: 24px; height: 2px; background: #fff; transition: 0.3s; }
 
 /* HERO & BOOKING */
-.hero { position: relative; min-height: 100vh; padding-top: calc(var(--header-h) + 40px); text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed; }
+.hero { position: relative; min-height: 100vh; padding-top: calc(var(--header-h) + 400px); text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed; }
 .hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 0; }
 .hero__content { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; }
 .hero__logo-img { height: 100px; width: auto; margin-bottom: 15px; }
@@ -45,13 +45,13 @@ html, body { background: var(--black); color: var(--white); font-family: 'Inter'
 .fleet-card__content { padding: 24px; }
 @media (min-width: 768px) { .fleet-grid { grid-template-columns: repeat(3, 1fr); } }
 
-/* ELITE FOOTER - HORIZONTAL SOCIALS */
+/* ELITE FOOTER */
 .elite-footer { background: #0d0d0e; padding: 80px 20px 40px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 100px; text-align: center; }
 .elite-footer__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
 .elite-footer__contact-btn { background: #fff; color: #000; padding: 12px 28px; border-radius: 100px; font-weight: 700; text-decoration: none; }
 
-/* Forced Horizontal Social Line */
-.elite-footer__social {
+/* FIXED: Matching index.html class name for horizontal row */
+.elite-footer__social-row {
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
