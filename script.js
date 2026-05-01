@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.11)
-   Full Addon Modal Logic & Mobile Menu Controller
+   SM LIMOUSINE — Main Script (Precision Version 2.12)
+   Robust Tab Controller & Service Shortcut Logic
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,6 +22,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
     let passengerCount = 1, luggageCount = 1, meetGreet = false, childSeat = false;
 
+    /* --- GLOBAL TAB CONTROLLER --- */
+    window.setBookingTab = (tabName) => {
+        const tabs = document.querySelectorAll('.booking-widget__tab');
+        const forms = document.querySelectorAll('.booking-widget__form');
+        
+        tabs.forEach(t => {
+            if (t.dataset.tab === tabName) t.classList.add('active');
+            else t.classList.remove('active');
+        });
+
+        forms.forEach(f => {
+            if (f.id === 'form-' + tabName) f.classList.add('active');
+            else f.classList.remove('active');
+        });
+
+        initAutocomplete();
+        window.scrollTo({ top: document.getElementById('hero').offsetTop, behavior: 'smooth' });
+    };
+
     /* --- MOBILE MENU --- */
     const burgerBtn = document.getElementById('burgerBtn');
     const mainNav = document.getElementById('mainNav');
@@ -31,8 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
             burgerBtn.classList.toggle('open');
         };
     }
-
-    // Close menu when a link is clicked
     document.querySelectorAll('.header__link').forEach(link => {
         link.onclick = () => {
             mainNav.classList.remove('open');
