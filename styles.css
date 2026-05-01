@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Master Stylesheet (v3.8)
-   Header Burger Stack & Floating Chat Icon
+   SM LIMOUSINE — Elite Master Stylesheet (v3.9)
+   Mobile-First Layout Fix: Resolved Frozen View and Overlaps
    =================================================================== */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -9,71 +9,140 @@
     --black: #000000;
     --silver: #C0C0C0;
     --white: #ffffff;
-    --header-h: 90px;
+    --gold: #D4AF37;
+    --header-h: 80px;
+    --font-main: 'Inter', sans-serif;
 }
 
-html, body { background: var(--black); color: var(--white); font-family: 'Inter', sans-serif; line-height: 1.4; overflow-x: hidden; }
+html, body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-main);
+    line-height: 1.4;
+    overflow-x: hidden;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
 
-/* HEADER */
-.header { position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h); background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); z-index: 2000; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.header__inner { height: 100%; padding: 0 15px; display: flex; align-items: center; justify-content: space-between; position: relative; }
+/* --- HEADER --- */
+.header {
+    position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
+    background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); z-index: 2000;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.header__inner {
+    max-width: 1200px; margin: 0 auto; height: 100%; padding: 0 15px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative;
+}
+
+.header__logo-centered { flex: 0 0 auto; }
 .header__logo-centered img { height: 38px; width: auto; }
-.header__actions { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 8px; }
-.header__phone { font-size: 0.95rem; font-weight: 800; color: #fff !important; text-decoration: none !important; white-space: nowrap; }
-.header__burger { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
-.header__burger span { width: 26px; height: 2px; background: #fff; transition: 0.3s; }
+
+.header__actions {
+    display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px;
+}
+
+.header__burger { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 5px; }
+.header__burger span { width: 24px; height: 2px; background: #fff; transition: 0.3s; }
+
+.header__phone {
+    font-size: 0.85rem; font-weight: 800; color: #fff !important; text-decoration: none !important; white-space: nowrap;
+}
+
+/* MOBILE MENU */
+.header__nav {
+    display: none; position: fixed; top: var(--header-h); left: 0; width: 100%;
+    background: rgba(0,0,0,0.98); flex-direction: column; align-items: center; padding: 20px 0; z-index: 1999;
+}
+.header__nav.open { display: flex !important; }
+.header__link { font-size: 1rem; font-weight: 600; color: var(--silver); text-transform: uppercase; padding: 12px 0; text-decoration: none; }
+
+/* --- HERO & BOOKING --- */
+.hero {
+    position: relative; 
+    min-height: 100vh; 
+    padding-top: calc(var(--header-h) + 20px); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed;
+}
+
+.hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 0; }
+
+.hero__content {
+    position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 0 15px;
+}
+
+.hero__logo-wrap { margin-bottom: 10px; }
+.hero__logo-img { height: 80px; width: auto; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+
+.hero__tagline { font-size: 1.4rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; }
+.hero__subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
+
+.booking-widget {
+    background: rgba(20, 20, 20, 0.95); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+}
+
+.booking-widget__tabs { display: flex; gap: 4px; margin-bottom: 15px; background: #000; padding: 3px; border-radius: 8px; }
+.booking-widget__tab { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-size: 0.75rem; font-weight: 600; cursor: pointer; border-radius: 6px; }
+.booking-widget__tab.active { background: #fff; color: #000; }
+
+.booking-widget__form { display: none; flex-direction: column; gap: 10px; }
+.booking-widget__form.active { display: flex; }
+
+.booking-widget__field { display: flex; flex-direction: column; text-align: left; }
+.field-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
+
+.st-input, .people-addon-trigger {
+    width: 100%; padding: 12px; background: #000; border: 1px solid #333; border-radius: 8px;
+    color: #fff !important; font-size: 0.95rem; outline: none; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+}
+
+input[type="date"], input[type="time"] { color-scheme: dark; min-height: 44px; }
+
+.booking-widget__submit { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
+
+/* --- SECTIONS --- */
+.section-title { font-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
+.section-subtitle { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 30px; }
+
+.fleet-grid { display: grid; grid-template-columns: 1fr; gap: 25px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
+.fleet-card { background: #111; border-radius: 16px; overflow: hidden; border: 1px solid #222; text-align: left; cursor: pointer; }
+.fleet-card img { width: 100%; height: 200px; object-fit: cover; }
+.fleet-card__content { padding: 20px; }
+
+/* --- FOOTER --- */
+.elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
+.elite-footer__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.elite-footer__logo img { height: 32px; width: auto; }
+.elite-footer__contact-btn { background: #fff; color: #000; padding: 10px 24px; border-radius: 100px; font-weight: 700; text-decoration: none; }
+
+.elite-footer__social-row { display: flex; justify-content: center; gap: 15px; margin: 30px 0; }
+.social-icon { width: 44px; height: 44px; border-radius: 50%; background: #1a1a1b; display: flex; align-items: center; justify-content: center; }
+.social-icon img { filter: invert(1); }
+
+/* --- MODALS --- */
+.addon-overlay, .vs-overlay, .payment-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000;
+    display: none; align-items: flex-end; justify-content: center;
+}
+.addon-overlay.active, .vs-overlay.active, .payment-overlay.active { display: flex; }
+
+.addon-modal { background: #fff; color: #000; width: 100%; max-width: 440px; border-radius: 20px 24px 0 0; padding: 20px 20px 40px; }
+.vs-panel, .payment-modal { width: 100%; max-width: 440px; max-height: 90vh; background: #0a0a0a; border-radius: 20px; overflow: hidden; align-self: center; display: flex; flex-direction: column; }
 
 /* Floating Chat Icon */
 .chat-trigger {
-    position: fixed;
-    bottom: 30px;
-    left: 20px;
-    width: 60px;
-    height: 60px;
-    background: #522d41;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: fixed; bottom: 25px; left: 20px; width: 56px; height: 56px; background: #522d41;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 9999; cursor: pointer;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    z-index: 9999;
-    cursor: pointer;
-    transition: 0.3s;
 }
-.chat-trigger:active { transform: scale(0.9); }
-.chat-trigger img { width: 32px; height: auto; filter: invert(1); }
+.chat-trigger img { width: 28px; height: auto; filter: invert(1); }
 
-/* Rest of styles... */
-.hero { position: relative; min-height: 100vh; padding-top: calc(var(--header-h) + 40px); text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed; }
-.hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 0; }
-.hero__content { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; }
-.booking-widget { background: rgba(20,20,20,0.95); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
-.booking-widget__tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #000; padding: 4px; border-radius: 8px; }
-.booking-widget__tab { flex: 1; padding: 12px; background: transparent; color: #888; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-.booking-widget__tab.active { background: #fff; color: #000; }
-.booking-widget__form { display: none; flex-direction: column; gap: 12px; }
-.booking-widget__form.active { display: flex; }
-.st-input, .people-addon-trigger { width: 100%; padding: 14px; background: #000; border: 1px solid #333; border-radius: 8px; color: #fff !important; cursor: pointer; }
-.booking-widget__submit { width: 100%; padding: 16px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
-
-.fleet-grid { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
-.fleet-card { background: #111; border-radius: 20px; overflow: hidden; border: 1px solid #222; text-align: left; transition: 0.3s; }
-.fleet-card img { width: 100%; height: 220px; object-fit: cover; }
-.fleet-card__content { padding: 24px; }
-@media (min-width: 768px) { .fleet-grid { grid-template-columns: repeat(3, 1fr); } }
-
-.elite-footer { background: #0d0d0e; padding: 80px 20px 40px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 100px; text-align: center; }
-.elite-footer__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-.elite-footer__contact-btn { background: #fff; color: #000; padding: 12px 28px; border-radius: 100px; font-weight: 700; text-decoration: none; }
-.elite-footer__social-row { display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 20px !important; margin: 40px 0 !important; width: 100%; }
-.social-icon { width: 44px; height: 44px; border-radius: 50%; background: #1a1a1b; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-.social-icon img { filter: invert(1); }
-.elite-footer__bottom { text-align: center; padding-top: 30px; border-top: 1px solid #1a1a1b; }
-.elite-footer__legal { display: flex; justify-content: center; gap: 20px; margin-bottom: 10px; }
-.elite-footer__legal a { color: #888; text-decoration: underline; font-size: 0.85rem; }
-
-.addon-overlay, .vs-overlay, .payment-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; display: none; align-items: flex-end; justify-content: center; }
-.addon-overlay.active, .vs-overlay.active, .payment-overlay.active { display: flex; }
-.addon-modal { background: #fff; color: #000; width: 100%; max-width: 440px; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; }
-.vs-panel, .payment-modal { width: 100%; max-width: 440px; max-height: 90vh; background: #0a0a0a; border-radius: 20px; overflow: hidden; align-self: center; display: flex; flex-direction: column; }
-.clear-price { color: #fff; font-weight: 800; font-size: 1.1rem; }
+@media (min-width: 768px) {
+    .fleet-grid { grid-template-columns: repeat(3, 1fr); }
+}
