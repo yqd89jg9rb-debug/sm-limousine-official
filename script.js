@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.4)
-   Robust Return-Trip Logic with Multi-Address Support
+   SM LIMOUSINE — Main Script (Precision Version 2.5)
+   Robust Multi-Address Autocomplete & Z-Index Fix
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* --- GOOGLE PLACES SETUP --- */
     function initAutocomplete() {
+        if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
         const ids = [
             'pickup-oneway', 'dropoff-oneway', 
@@ -32,8 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ids.forEach(id => {
             const input = document.getElementById(id);
-            if (input) {
+            if (input && !input.dataset.acBound) {
                 const ac = new google.maps.places.Autocomplete(input, options);
+                input.dataset.acBound = "true"; // Prevent double-binding
+                
                 ac.addListener('place_changed', () => {
                     if (id.includes('oneway') || id.includes('roundtrip')) {
                         const mode = id.includes('oneway') ? 'oneway' : 'roundtrip';
@@ -44,7 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (typeof google !== 'undefined') initAutocomplete();
+    // Force init and retry to ensure mobile loading catch-up
+    initAutocomplete();
+    setTimeout(initAutocomplete, 1000);
+    setTimeout(initAutocomplete, 3000);
 
     function updateDistancePreview(mode) {
         return new Promise((resolve) => {
@@ -194,6 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
         const targetFormId = 'form-' + t.dataset.tab;
         document.getElementById(targetFormId).classList.add('active');
+        
+        // Re-run initAutocomplete whenever a tab is switched to catch hidden fields
+        initAutocomplete();
         calculatedMiles = 0;
     });
 });
