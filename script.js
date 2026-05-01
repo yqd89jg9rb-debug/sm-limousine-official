@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.3)
-   Asynchronous Distance Locking & Guaranteed Round-Trip Calculation
+   SM LIMOUSINE — Main Script (Precision Version 2.4)
+   Robust Return-Trip Logic with Multi-Address Support
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,15 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- GOOGLE PLACES SETUP --- */
     function initAutocomplete() {
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
-        const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'pickup-hourly'];
+        const ids = [
+            'pickup-oneway', 'dropoff-oneway', 
+            'pickup-roundtrip', 'dropoff-roundtrip', 
+            'return-pickup-roundtrip', 'return-dropoff-roundtrip', 
+            'pickup-hourly'
+        ];
 
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input) {
                 const ac = new google.maps.places.Autocomplete(input, options);
                 ac.addListener('place_changed', () => {
-                    const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
-                    if (mode) updateDistancePreview(mode);
+                    if (id.includes('oneway') || id.includes('roundtrip')) {
+                        const mode = id.includes('oneway') ? 'oneway' : 'roundtrip';
+                        updateDistancePreview(mode);
+                    }
                 });
             }
         });
@@ -86,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const hours = parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS);
             
             if (type !== 'hourly') {
-                // Wait for the actual distance to return from Google
                 const miles = await updateDistancePreview(type);
                 openVehicleSelector(type, hours, miles);
             } else {
@@ -102,9 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
         vsList.innerHTML = '';
         vsContinueBtn.disabled = true;
         
-        // FORCE MULTIPLIER FOR ROUND TRIP
         const distanceToBill = (type === 'roundtrip') ? (miles * 2) : miles;
-        const finalMiles = distanceToBill || 20; // Default to 20 if lookup failed
+        const finalMiles = distanceToBill || 20;
 
         const summaryLabel = (type === 'oneway' || type === 'roundtrip') ? `Total Distance: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
         document.getElementById('vs-distance-summary').textContent = summaryLabel;
@@ -113,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.hourly * hours : v.perMile * finalMiles;
             
-            // Apply minimum pricing safeguard
             const minPrice = v.perMile * 15;
             if (total < minPrice) total = minPrice;
 
