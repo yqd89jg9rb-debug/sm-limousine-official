@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Production Version)
-   Active Stripe Payment Engine
+   SM LIMOUSINE — Main Script (Precision Version)
+   Active Distance Matrix & Stripe Payment Engine
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,11 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const DISTANCE_RATE = 4.50;
-    const FIXED_MILES = 20;
     const MIN_HOURS = 3;
 
-    /* --- STRIPE LIVE CONFIG --- */
-    const STRIPE_PK = 'pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX';
+    /* --- STATE --- */
+    let calculatedMiles = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
 
     /* --- UI ELEMENTS --- */
@@ -27,6 +26,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const vsList = document.getElementById('vsList');
     const vsContinueBtn = document.getElementById('vsContinueBtn');
     const payOverlay = document.getElementById('paymentOverlay');
+
+    /* --- GOOGLE PLACES SETUP --- */
+    const options = { types: ['geocode', 'establishment'] };
+    const autocompleteIds = ['pickup-oneway', 'dropoff-oneway', 'pickup-hourly'];
+
+    autocompleteIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            const ac = new google.maps.places.Autocomplete(input, options);
+            ac.addListener('place_changed', () => {
+                if (id.includes('oneway')) updateDistancePreview();
+            });
+        }
+    });
+
+    async function updateDistancePreview() {
+        const origin = document.getElementById('pickup-oneway').value;
+        const destination = document.getElementById('dropoff-oneway').value;
+
+        if (!origin || !destination) return;
+
+        const service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix({
+            origins: [origin],
+            destinations: [destination],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+        }, (response, status) => {
+            if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
+                const element = response.rows[0].elements[0];
+                calculatedMiles = parseFloat(element.distance.text.replace(/[^0-9.]/g, ''));
+                document.getElementById('preview-oneway').style.display = 'block';
+                document.getElementById('dist-val-oneway').textContent = calculatedMiles + ' mi';
+            }
+        });
+    }
 
     /* --- FORM SUBMISSION --- */
     document.querySelectorAll('.booking-widget__form').forEach(form => {
@@ -41,10 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function openVehicleSelector(type, hours) {
         vsList.innerHTML = '';
         vsContinueBtn.disabled = true;
+        document.getElementById('vs-distance-summary').textContent = type === 'oneway' ? `Est. Distance: ${calculatedMiles} miles` : `Duration: ${hours} hours`;
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
-            const total = type === 'hourly' ? v.hourly * hours : DISTANCE_RATE * FIXED_MILES;
+            let total = type === 'hourly' ? v.hourly * hours : v.perMile * (calculatedMiles || 20);
+            
+            // Minimum charge safeguard (e.g., $90 min)
+            if (total < 90) total = 90;
+
             const card = document.createElement('div');
             card.className = 'vs-card';
             card.innerHTML = `
@@ -70,33 +110,23 @@ document.addEventListener('DOMContentLoaded', () => {
         vsOverlay.classList.add('active');
     }
 
-    /* --- ACTIVATE STRIPE --- */
+    /* --- STRIPE --- */
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle;
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
+        const payOverlay = document.getElementById('paymentOverlay');
         payOverlay.classList.add('active');
 
-        // Wait for modal to be visible before mounting
-        setTimeout(async () => {
+        setTimeout(() => {
             if (!stripe) {
-                stripe = Stripe(STRIPE_PK);
+                stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
                 elements = stripe.elements();
-                const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
-
+                const style = { base: { color: '#ffffff', fontSize: '16px' } };
                 cardNumber = elements.create('cardNumber', { style });
                 cardNumber.mount('#card-number-element');
-
                 cardExpiry = elements.create('cardExpiry', { style });
                 cardExpiry.mount('#card-expiry-element');
-
                 cardCvc = elements.create('cardCvc', { style });
-                cardCvc.mount('#card-cvc-element');
-                
-                console.log('Stripe Elements mounted.');
-            } else {
-                // Re-mount to ensure they are active if modal was closed/re-opened
-                cardNumber.mount('#card-number-element');
-                cardExpiry.mount('#card-expiry-element');
                 cardCvc.mount('#card-cvc-element');
             }
         }, 500);
@@ -104,13 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('payBtn').onclick = async () => {
         const {token, error} = await stripe.createToken(cardNumber);
-        if (token) alert('Success! Payment Authorized.');
+        if (token) alert('Payment Authorized!');
         else alert('Error: ' + error.message);
     };
 
-    document.getElementById('paymentClose').onclick = () => payOverlay.classList.remove('active');
+    document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
     document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
-    
+
     const tabs = document.querySelectorAll('.booking-widget__tab');
     tabs.forEach(t => t.onclick = () => {
         tabs.forEach(x => x.classList.remove('active'));
