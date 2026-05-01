@@ -1,6 +1,6 @@
 /* ===================================================================
    SM LIMOUSINE — Premium Black Car Service
-   Updated for Addons Modal & Precision UI
+   Updated Header Design for Elite Mobile Visibility
    =================================================================== */
 
 /* --- Reset & Base --- */
@@ -24,7 +24,7 @@
     --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --container: 1200px;
-    --header-h: 60px;
+    --header-h: 70px;
     --radius: 12px;
     --radius-sm: 8px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -83,7 +83,7 @@ a {
 }
 
 /* ===================================================================
-   HEADER — Centered Luxury Logo
+   HEADER — Redesigned for Mobile (No overlap)
    =================================================================== */
 .header {
     position: fixed;
@@ -91,93 +91,101 @@ a {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(192, 192, 192, 0.08);
+    border-bottom: 1px solid rgba(192, 192, 192, 0.1);
     transition: all var(--transition);
-}
-
-.header--scrolled {
-    --header-h: 50px;
-    background: rgba(0, 0, 0, 0.96);
-    box-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
 }
 
 .header__inner {
     max-width: var(--container);
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 16px;
     height: var(--header-h);
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.header__nav {
-    flex: 1;
+.header__logo-centered {
     display: flex;
-    gap: 24px;
+    align-items: center;
+}
+
+.header__logo-img-large {
+    height: 48px;
+    width: auto;
+}
+
+.header__nav {
+    display: flex;
+    gap: 20px;
 }
 
 .header__link {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--silver-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--silver);
     text-transform: uppercase;
     letter-spacing: 0.1em;
 }
 
-.header__link:hover { color: var(--white); }
-
-.header__logo-centered {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-}
-
-.header__logo-img-large {
-    height: 40px;
-    width: auto;
-    transition: height var(--transition);
-}
-
-.header--scrolled .header__logo-img-large {
-    height: 32px;
-}
-
 .header__actions {
-    flex: 1;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .header__phone {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    white-space: nowrap;
 }
 
 .header__burger {
     display: none;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
     background: none;
     border: none;
+    cursor: pointer;
+    padding: 5px;
 }
 
 .header__burger span {
-    width: 20px;
+    width: 22px;
     height: 2px;
-    background: var(--white);
+    background: #FFFFFF;
+}
+
+/* Mobile Specific Header Fix */
+@media (max-width: 768px) {
+    :root { --header-h: 60px; }
+    
+    .header__inner {
+        padding: 0 12px;
+    }
+
+    .header__nav {
+        display: none; /* Hide links on mobile to prevent overlap */
+    }
+
+    .header__logo-img-large {
+        height: 38px;
+    }
+
+    .header__phone {
+        font-size: 0.75rem;
+    }
+
+    .header__burger {
+        display: flex; /* Show burger instead of links */
+    }
 }
 
 /* ===================================================================
-   HERO SECTION — Large Logo in Middle
+   HERO SECTION
    =================================================================== */
 .hero {
     position: relative;
@@ -185,7 +193,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: calc(var(--header-h) + 60px) 24px 60px;
+    padding: calc(var(--header-h) + 40px) 24px 60px;
     text-align: center;
 }
 
@@ -212,7 +220,7 @@ a {
 }
 
 .hero__logo-img {
-    height: 180px;
+    height: 140px;
     width: auto;
     filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
 }
@@ -227,21 +235,23 @@ a {
 .hero__subtitle {
     color: var(--silver-dark);
     margin-bottom: 40px;
+    font-size: 0.9rem;
 }
 
 /* ===================================================================
-   BOOKING WIDGET & INPUTS
+   BOOKING WIDGET
    =================================================================== */
 .booking-widget {
-    background: rgba(10, 10, 10, 0.9);
-    padding: 24px;
+    background: rgba(10, 10, 10, 0.95);
+    padding: 20px;
     border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
 
 .booking-widget__tabs {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     margin-bottom: 20px;
     justify-content: center;
 }
@@ -250,10 +260,11 @@ a {
     background: none;
     border: none;
     color: var(--silver-dark);
-    font-size: 0.9rem;
-    padding: 8px 16px;
+    font-size: 0.85rem;
+    padding: 8px 12px;
     cursor: pointer;
     border-bottom: 2px solid transparent;
+    font-weight: 600;
 }
 
 .booking-widget__tab.active {
@@ -272,8 +283,8 @@ a {
 
 .booking-widget__row {
     display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .booking-widget__field {
@@ -283,77 +294,57 @@ a {
 
 .field-label {
     display: block;
-    font-size: 0.75rem;
-    color: var(--silver-dark);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
-.leg-label {
-    text-align: left;
-    margin-bottom: 8px;
-    color: #C0C0C0;
     font-size: 0.7rem;
-    font-weight: bold;
+    color: var(--silver-dark);
+    margin-bottom: 4px;
     text-transform: uppercase;
+    font-weight: 700;
 }
 
 .st-input,
 .people-addon-trigger {
     width: 100% !important;
-    padding: 14px 16px;
+    padding: 12px 14px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
     color: white;
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: 0.95rem;
     outline: none;
-    transition: border-color var(--transition);
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
 }
 
-.st-input:focus,
-.people-addon-trigger:hover {
-    border-color: var(--silver);
-    background: rgba(255,255,255,0.08);
-}
-
-input[type="date"], input[type="time"] {
-    min-height: 48px;
-    display: block;
-    color-scheme: dark;
-}
-
 .booking-widget__submit {
     width: 100%;
-    padding: 16px;
-    background: var(--silver);
+    padding: 15px;
+    background: var(--white);
     color: black;
     border: none;
     border-radius: 8px;
-    font-weight: bold;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     cursor: pointer;
     margin-top: 10px;
 }
 
 /* ===================================================================
-   ADDON MODAL DESIGN
+   ADDON MODAL
    =================================================================== */
 .addon-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     backdrop-filter: blur(10px);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 3000;
-    padding: 20px;
+    padding: 16px;
 }
 
 .addon-overlay.active { display: flex; }
@@ -362,138 +353,61 @@ input[type="date"], input[type="time"] {
     background: #ffffff;
     color: #000000;
     width: 100%;
-    max-width: 400px;
-    border-radius: 24px;
+    max-width: 360px;
+    border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    animation: modalUp 0.3s ease-out;
-}
-
-@keyframes modalUp {
-    from { transform: translateY(50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
 }
 
 .addon-header {
-    padding: 20px 24px;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.addon-header h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.addon-close {
-    background: #f5f5f5;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
 .addon-content {
-    padding: 24px;
+    padding: 20px;
 }
 
 .addon-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .addon-label {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-}
-
-.addon-label span {
-    display: block;
-    font-size: 0.8rem;
-    color: #888;
-    font-weight: 400;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .addon-counter {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .addon-counter button {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    border: none;
-    background: #522d41;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
+    border: 1px solid #ddd;
+    background: white;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-weight: bold;
 }
-
-.addon-counter span {
-    font-size: 1.1rem;
-    font-weight: 600;
-    min-width: 20px;
-    text-align: center;
-}
-
-/* Switch Styling */
-.st-switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-}
-
-.st-switch input { opacity: 0; width: 0; height: 0; }
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #e0e0e0;
-  transition: .4s;
-  border-radius: 34px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .slider { background-color: #522d41; }
-input:checked + .slider:before { transform: translateX(20px); }
 
 .addon-confirm-btn {
     width: 100%;
-    padding: 16px;
-    background: #522d41;
+    padding: 14px;
+    background: #000000;
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     font-weight: 700;
-    font-size: 1rem;
     cursor: pointer;
-    margin-top: 10px;
 }
 
 /* ===================================================================
@@ -515,7 +429,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 .vs-panel, .payment-modal {
     width: 100%;
-    max-width: 480px;
+    max-width: 440px;
     max-height: 90vh;
     background: #0a0a0a;
     border: 1px solid rgba(255,255,255,0.1);
@@ -525,10 +439,10 @@ input:checked + .slider:before { transform: translateX(20px); }
     overflow: hidden;
 }
 
-.vs-list { overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.vs-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.vs-list { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.vs-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
 .vs-card--selected { border-color: var(--silver) !important; background: rgba(192, 192, 192, 0.05); }
-.clear-price { font-size: 1.1rem !important; color: white !important; font-weight: 700 !important; font-family: var(--font-sans) !important; }
+.clear-price { font-size: 1rem !important; color: white !important; font-weight: 800 !important; font-family: var(--font-sans) !important; }
 
 @media (max-width: 768px) {
     .booking-widget__row { flex-direction: column; }
