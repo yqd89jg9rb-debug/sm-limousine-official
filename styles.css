@@ -63,6 +63,26 @@ a {
     padding: 0 24px;
 }
 
+/* --- Section Titles --- */
+.section-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 600;
+    color: var(--silver-light);
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+    font-size: 1.05rem;
+    color: var(--silver-dark);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 56px;
+    font-weight: 300;
+}
+
 /* ===================================================================
    HEADER — Centered Luxury Logo
    =================================================================== */
@@ -211,7 +231,7 @@ a {
 }
 
 /* ===================================================================
-   BOOKING WIDGET
+   BOOKING WIDGET — Fixed Field Widths
    =================================================================== */
 .booking-widget {
     background: rgba(10, 10, 10, 0.9);
@@ -262,15 +282,28 @@ a {
     font-weight: 600;
 }
 
-.booking-widget__field input, .booking-widget__field select {
-    width: 100%;
-    padding: 14px;
+/* Base styles for all inputs in the widget */
+.booking-widget__field input, 
+.booking-widget__field select,
+.st-input {
+    width: 100% !important;
+    flex: 1 !important;
+    padding: 14px 16px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
     color: white;
     font-family: var(--font-sans);
     font-size: 1rem;
+    outline: none;
+    transition: border-color var(--transition);
+    display: block;
+}
+
+.booking-widget__field input:focus,
+.st-input:focus {
+    border-color: var(--silver);
+    background: rgba(255,255,255,0.08);
 }
 
 /* Fix for mobile date/time inputs appearance */
