@@ -15,14 +15,12 @@
 <body>
     <header class="header">
         <div class="header__inner">
-            <a href="/" class="header__logo-centered">
+            <div class="header__logo-centered">
                 <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
-            </a>
+            </div>
             <div class="header__actions">
                 <a href="tel:+18177234592" class="header__phone">+1817-723-4592</a>
-                <button class="header__burger" id="burgerBtn">
-                    <span></span><span></span><span></span>
-                </button>
+                <button class="header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
             </div>
         </div>
     </header>
@@ -79,51 +77,74 @@
         </div>
     </section>
 
-    <section id="fleet" style="padding: 80px 20px; background: #000; text-align: center;">
-        <h2 class="section-title">Our Elite Fleet</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png"><div class="fleet-card__content"><h3>Mercedes-Maybach</h3><p>Ultra Luxury Sedan</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg"><div class="fleet-card__content"><h3>Cadillac XT6</h3><p>Premium Luxury Sedan</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg"><div class="fleet-card__content"><h3>Cadillac Escalade</h3><p>First Class SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg"><div class="fleet-card__content"><h3>Motor Coach</h3><p>Grand Motor Coach</p></div></div>
+    <!-- CUSTOM ELITE FOOTER (Matching Bookinglane style) -->
+    <footer class="elite-footer">
+        <div class="elite-footer__top">
+            <div class="elite-footer__logo">
+                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
+            </div>
+            <a href="#hero" class="elite-footer__contact-btn">Contact us</a>
         </div>
-    </section>
 
-    <section id="services" style="padding: 80px 20px; background: #0a0a0a; text-align: center;">
-        <h2 class="section-title">Luxury Services</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-            <div style="padding:30px; background:#111; border-radius:12px;" onclick="setBookingTab('oneway')"><h3>Airport Transfers</h3><p>Reliable, on-time arrivals at DFW and Dallas Love Field.</p></div>
-            <div style="padding:30px; background:#111; border-radius:12px;" onclick="setBookingTab('hourly')"><h3>Corporate Events</h3><p>Professional ground logistics for executives and teams.</p></div>
-            <div style="padding:30px; background:#111; border-radius:12px;" onclick="setBookingTab('oneway')"><h3>Special Occasions</h3><p>Celebrate in style with our premium chauffeur service.</p></div>
-        </div>
-    </section>
-
-    <footer id="contact" style="padding: 80px 20px; background: #000; text-align: center; border-top: 1px solid #222;">
-        <h2 class="section-title">Contact Us</h2>
-        <div style="margin-top: 20px;">
-            <p style="color: #888; font-size: 0.8rem; text-transform: uppercase;">Email</p>
-            <a href="mailto:smlimo@mail.com" style="color:#D4AF37; font-size:1.2rem; text-decoration:none;">smlimo@mail.com</a>
-            <p style="color: #888; font-size: 0.8rem; text-transform: uppercase; margin-top:20px;">Phone</p>
-            <a href="tel:+18177234592" style="color:#fff; font-size:1.5rem; text-decoration:none; font-weight:800;">+1817-723-4592</a>
-        </div>
-        <p style="margin-top: 40px; font-size: 0.8rem; color: #444;">&copy; 2026 SM LIMOUSINE. All rights reserved.</p>
-    </footer>
-
-    <div class="addon-overlay" id="addonOverlay" onclick="if(event.target===this)closeAddonModal()">
-        <div class="addon-modal">
-            <div class="addon-sheet-handle"></div>
-            <div class="addon-header"><h3>Passengers & add-ons</h3><button onclick="closeAddonModal()">&times;</button></div>
-            <div class="addon-content">
-                <div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div>
-                <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
-                <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button>
+        <div class="elite-footer__accordion-wrap">
+            <div class="elite-accordion" onclick="this.classList.toggle('active')">
+                <div class="elite-accordion__header">Our services <span class="arrow">⌄</span></div>
+                <div class="elite-accordion__content">
+                    <p>Airport Transfers</p>
+                    <p>Corporate Events</p>
+                    <p>Special Occasions</p>
+                    <p>Hourly Charter</p>
+                </div>
+            </div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')">
+                <div class="elite-accordion__header">Company <span class="arrow">⌄</span></div>
+                <div class="elite-accordion__content">
+                    <p>About Us</p>
+                    <p>Fleet</p>
+                    <p>Careers</p>
+                </div>
+            </div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')">
+                <div class="elite-accordion__header">Top destinations <span class="arrow">⌄</span></div>
+                <div class="elite-accordion__content">
+                    <p>Dallas (DFW)</p>
+                    <p>Fort Worth</p>
+                    <p>Houston</p>
+                    <p>Austin</p>
+                </div>
+            </div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')">
+                <div class="elite-accordion__header">Top routes <span class="arrow">⌄</span></div>
+                <div class="elite-accordion__content">
+                    <p>DFW to Dallas Downtown</p>
+                    <p>DFW to Fort Worth</p>
+                    <p>Keller to DAL</p>
+                </div>
             </div>
         </div>
-    </div>
 
+        <div class="elite-footer__social">
+            <a href="#" class="social-icon fb"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="24"></a>
+            <a href="#" class="social-icon insta"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="24"></a>
+            <a href="#" class="social-icon x"><img src="https://cdn-icons-png.flaticon.com/512/5969/5969020.png" width="24"></a>
+            <a href="#" class="social-icon in"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="24"></a>
+        </div>
+
+        <div class="elite-footer__bottom">
+            <div class="elite-footer__legal">
+                <a href="#">Terms of service</a>
+                <a href="#">Privacy policy</a>
+            </div>
+            <div class="elite-footer__copyright">
+                © 2026 SM LIMOUSINE, Inc. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Rest of modals & script -->
+    <div class="addon-overlay" id="addonOverlay" onclick="if(event.target===this)closeAddonModal()">
+        <div class="addon-modal"><div class="addon-sheet-handle"></div><div class="addon-header"><h3>Passengers & add-ons</h3><button onclick="closeAddonModal()">&times;</button></div><div class="addon-content"><div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div><div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div><button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button></div></div>
+    </div>
     <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled>Continue</button></div></div></div>
     <div class="payment-overlay" id="paymentOverlay"><div class="payment-modal"><button class="payment-modal__close" id="paymentClose">&times;</button><div class="payment-modal__summary"><h3 id="pay-vehicle"></h3><p id="pay-total" class="clear-price"></p></div><div class="payment-modal__form"><button id="payBtn" class="pm-book-btn">Book Now</button></div></div></div>
 
