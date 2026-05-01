@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version)
-   Active Distance Matrix & Stripe Payment Engine
+   SM LIMOUSINE — Main Script (Precision Version 2.0)
+   Robust Distance Matrix & convert meters to precise miles
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,25 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let calculatedMiles = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
 
-    /* --- UI ELEMENTS --- */
-    const vsOverlay = document.getElementById('vsOverlay');
-    const vsList = document.getElementById('vsList');
-    const vsContinueBtn = document.getElementById('vsContinueBtn');
-    const payOverlay = document.getElementById('paymentOverlay');
-
     /* --- GOOGLE PLACES SETUP --- */
-    const options = { types: ['geocode', 'establishment'] };
-    const autocompleteIds = ['pickup-oneway', 'dropoff-oneway', 'pickup-hourly'];
+    function initAutocomplete() {
+        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
+        const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-hourly'];
 
-    autocompleteIds.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            const ac = new google.maps.places.Autocomplete(input, options);
-            ac.addListener('place_changed', () => {
-                if (id.includes('oneway')) updateDistancePreview();
-            });
-        }
-    });
+        ids.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                const ac = new google.maps.places.Autocomplete(input, options);
+                ac.addListener('place_changed', () => {
+                    if (id.includes('oneway')) updateDistancePreview();
+                });
+            }
+        });
+    }
+
+    // Run init when Google Maps is ready
+    if (typeof google !== 'undefined') initAutocomplete();
 
     async function updateDistancePreview() {
         const origin = document.getElementById('pickup-oneway').value;
@@ -56,7 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, (response, status) => {
             if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
                 const element = response.rows[0].elements[0];
-                calculatedMiles = parseFloat(element.distance.text.replace(/[^0-9.]/g, ''));
+                // Use meters for high precision (1609.34 meters = 1 mile)
+                calculatedMiles = Math.round((element.distance.value / 1609.34) * 10) / 10;
+                
                 document.getElementById('preview-oneway').style.display = 'block';
                 document.getElementById('dist-val-oneway').textContent = calculatedMiles + ' mi';
             }
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.hourly * hours : v.perMile * (calculatedMiles || 20);
             
-            // Minimum charge safeguard (e.g., $90 min)
+            // Minimum pricing safeguard ($90)
             if (total < 90) total = 90;
 
             const card = document.createElement('div');
@@ -133,9 +134,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('payBtn').onclick = async () => {
+        const btn = document.getElementById('payBtn');
+        btn.disabled = true;
+        btn.textContent = 'Authorizing...';
+        
         const {token, error} = await stripe.createToken(cardNumber);
-        if (token) alert('Payment Authorized!');
-        else alert('Error: ' + error.message);
+        if (token) {
+            alert('Success! Your reservation has been sent to dispatch. We will contact you shortly.');
+            payOverlay.classList.remove('active');
+        } else {
+            alert('Error: ' + error.message);
+        }
+        btn.disabled = false;
+        btn.textContent = 'Book Now';
     };
 
     document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
