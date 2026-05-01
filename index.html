@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://js.stripe.com/v3/"></script>
-    <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
     <script>
         window.gm_authFailure = function() {
@@ -58,7 +57,7 @@
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
 
-                <!-- Forms -->
+                <!-- One Way Form -->
                 <form class="booking-widget__form active" id="form-oneway">
                     <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input address-input"></div></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input address-input"></div></div>
@@ -71,6 +70,7 @@
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
+                <!-- Round Trip Form -->
                 <form class="booking-widget__form" id="form-roundtrip">
                     <div class="leg-label">Departing Trip</div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input address-input"></div></div>
@@ -85,6 +85,7 @@
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
+                <!-- Hourly Form -->
                 <form class="booking-widget__form" id="form-hourly">
                     <div class="booking-widget__row"><div class="booking-widget__field"><input type="text" id="pickup-hourly" placeholder="Pickup Location" required class="st-input address-input"></div></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div><div class="booking-widget__field"><select data-field="hours" id="hours-val" class="st-input"><option value="3">3 Hours (Min)</option><option value="4">4 Hours</option><option value="5">5 Hours</option></select></div></div>
@@ -95,79 +96,75 @@
         </div>
     </section>
 
-    <!-- Passengers & Add-ons Modal (Redesigned for Bottom Sheet Shape) -->
+    <!-- ===== FLEET SECTION ===== -->
+    <section id="fleet" style="padding: 100px 0; background: #000; text-align: center;">
+        <div class="container">
+            <h2 class="section-title">Our Elite Fleet</h2>
+            <p class="section-subtitle">Premium vehicles meticulously maintained for your comfort and safety.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+                <!-- Mercedes-Maybach -->
+                <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left; cursor: pointer; transition: 0.3s;" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png" style="width: 100%; height: 220px; object-fit: cover;">
+                    <div style="padding: 24px;"><h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Mercedes-Maybach</h3><p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Ultra Luxury Sedan — The pinnacle of exclusivity and world-class craftsmanship.</p></div>
+                </div>
+                <!-- Cadillac XT6 -->
+                <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left; cursor: pointer; transition: 0.3s;" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
+                    <div style="padding: 24px;"><h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Cadillac XT6</h3><p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Premium Luxury Sedan — Refined and sophisticated for executive travel.</p></div>
+                </div>
+                <!-- Cadillac Escalade -->
+                <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left; cursor: pointer; transition: 0.3s;" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
+                    <div style="padding: 24px;"><h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Cadillac Escalade</h3><p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">First Class SUV — The iconic standard for luxury ground transport.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LUXURY SERVICES SECTION ===== -->
+    <section id="services" style="padding: 100px 0; background: #0a0a0a; text-align: center;">
+        <div class="container">
+            <h2 class="section-title">Luxury Services</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('oneway')">
+                    <h3 style="color: white; margin-bottom: 12px;">Airport Transfers</h3>
+                    <p style="color: #888; font-size: 0.95rem;">Reliable, on-time arrivals at DFW and Dallas Love Field.</p>
+                </div>
+                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('hourly')">
+                    <h3 style="color: white; margin-bottom: 12px;">Corporate Events</h3>
+                    <p style="color: #888; font-size: 0.95rem;">Professional ground logistics for executives and teams.</p>
+                </div>
+                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('oneway')">
+                    <h3 style="color: white; margin-bottom: 12px;">Special Occasions</h3>
+                    <p style="color: #888; font-size: 0.95rem;">Celebrate in style with our premium chauffeur service.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <footer class="footer" id="contact" style="padding: 80px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h2 class="section-title">Contact Us</h2>
+        <p style="color: #888; margin-bottom: 30px;">Available 24/7 for your luxury transportation needs.</p>
+        <div style="display: flex; flex-direction: column; gap: 25px; align-items: center;">
+            <div><span style="color:#888; font-size:0.9rem; text-transform:uppercase; display:block; margin-bottom:8px;">Email</span><a href="mailto:smlimo@mail.com" style="font-size:1.2rem; color:#D4AF37; font-weight:600; text-decoration:none;">smlimo@mail.com</a></div>
+            <div><span style="color:#888; font-size:0.9rem; text-transform:uppercase; display:block; margin-bottom:8px;">Phone</span><a href="tel:+18177234592" style="font-size:1.5rem; color:white; font-weight:800; text-decoration:none;">+1817-723-4592</a></div>
+        </div>
+        <p style="margin-top:50px; font-size:0.8rem; color:#555;">&copy; 2026 SM LIMOUSINE. All rights reserved.</p>
+    </footer>
+
+    <!-- Modals -->
     <div class="addon-overlay" id="addonOverlay" onclick="if(event.target===this)closeAddonModal()">
         <div class="addon-modal">
             <div class="addon-sheet-handle"></div>
-            <div class="addon-header">
-                <h3 class="addon-title">Passengers & add-ons</h3>
-                <button class="addon-close-btn" onclick="closeAddonModal()">&times;</button>
-            </div>
+            <div class="addon-header"><h3>Passengers & add-ons</h3><button onclick="closeAddonModal()">&times;</button></div>
             <div class="addon-content">
-                <!-- Passengers Row -->
-                <div class="addon-row">
-                    <div class="addon-info-cell">
-                        <span class="addon-icon">👥</span>
-                        <span class="addon-name">Passengers</span>
-                    </div>
-                    <div class="addon-control-cell">
-                        <div class="addon-counter">
-                            <button class="counter-btn btn--minus" onclick="updateCounter('passengers', -1)">−</button>
-                            <span class="counter-value" id="count-passengers">1</span>
-                            <button class="counter-btn btn--plus" onclick="updateCounter('passengers', 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Luggage Row -->
-                <div class="addon-row">
-                    <div class="addon-info-cell">
-                        <span class="addon-icon">💼</span>
-                        <span class="addon-name">Luggage</span>
-                    </div>
-                    <div class="addon-control-cell">
-                        <div class="addon-counter">
-                            <button class="counter-btn btn--minus" onclick="updateCounter('luggage', -1)">−</button>
-                            <span class="counter-value" id="count-luggage">1</span>
-                            <button class="counter-btn btn--plus" onclick="updateCounter('luggage', 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Luggage Assistance Row -->
-                <div class="addon-row">
-                    <div class="addon-info-cell">
-                        <span class="addon-icon">🧍</span>
-                        <span class="addon-name">Luggage assistance <span class="price-tag">ⓢ</span></span>
-                    </div>
-                    <div class="addon-control-cell">
-                        <label class="st-switch">
-                            <input type="checkbox" id="check-meet-greet" onchange="syncAddons()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Child Seat Row -->
-                <div class="addon-row">
-                    <div class="addon-info-cell">
-                        <span class="addon-icon">🚼</span>
-                        <span class="addon-name">Traveling with a child <span class="price-tag">ⓢ</span></span>
-                    </div>
-                    <div class="addon-control-cell">
-                        <label class="st-switch">
-                            <input type="checkbox" id="check-child" onchange="syncAddons()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
+                <div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div>
+                <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
                 <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button>
             </div>
         </div>
     </div>
-
-    <!-- Other Modals (Fleet, Selection, Payment) -->
     <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled>Continue</button></div></div></div>
     <div class="payment-overlay" id="paymentOverlay"><div class="payment-modal"><button class="payment-modal__close" id="paymentClose">&times;</button><div class="payment-modal__summary"><h3 id="pay-vehicle"></h3><p id="pay-total" class="clear-price"></p></div><div class="payment-modal__form"><button id="payBtn" class="pm-book-btn">Book Now</button></div></div></div>
 
