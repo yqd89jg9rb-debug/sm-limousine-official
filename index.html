@@ -88,7 +88,7 @@
                     </div>
                     <div class="price-preview" id="preview-oneway" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-bottom: 12px; text-align: center;">
                         <span style="color: #C0C0C0; font-size: 0.8rem;">Estimated Distance: </span>
-                        <span id="dist-val-oneway" style="color: white; font-weight: bold;">0 mi</span>
+                        <span id="dist-val-oneway" class="clear-price">0 mi</span>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
@@ -144,8 +144,7 @@
                     </div>
 
                     <div class="price-preview" id="preview-roundtrip" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-top: 12px; margin-bottom: 12px; text-align: center;">
-                        <span style="color: #C0C0C0; font-size: 0.8rem;">Total Round-Trip Distance: </span>
-                        <span id="dist-val-roundtrip" style="color: white; font-weight: bold;">0 mi</span>
+                        <span id="dist-val-roundtrip" class="clear-price">0 mi</span>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
@@ -204,9 +203,17 @@
             <button class="payment-modal__close" id="paymentClose">&times;</button>
             <div class="payment-modal__summary">
                 <h3 id="pay-vehicle" style="color:white; margin-bottom:10px"></h3>
-                <p id="pay-total" style="font-size: 1.5rem; font-weight: bold; color:white"></p>
+                <p id="pay-total" class="clear-price"></p>
+                <div id="discount-display" style="display:none; color:#2ecc71; font-size:0.85rem; margin-top:5px;">Discount Applied!</div>
             </div>
             <div class="payment-modal__form">
+                <div class="pm-field">
+                    <label style="color:#C0C0C0; font-size:0.75rem; display:block; margin-bottom:5px; text-transform:uppercase;">Discount Code</label>
+                    <div style="display:flex; gap:8px; margin-bottom:15px;">
+                        <input type="text" id="discount-input" placeholder="Enter code" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px; color:white; outline:none;">
+                        <button id="apply-discount-btn" style="background:rgba(192,192,192,0.2); border:1px solid rgba(192,192,192,0.3); color:white; padding:0 15px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.8rem;">Apply</button>
+                    </div>
+                </div>
                 <div class="pm-field"><label style="color:#C0C0C0; font-size:0.8rem; display:block; margin-bottom:5px">Card Number</label><div id="card-number-element" class="stripe-box"></div></div>
                 <div class="pm-row" style="display:flex; gap:10px; margin-top:15px;">
                     <div class="pm-field" style="flex:1"><label style="color:#C0C0C0; font-size:0.8rem; display:block; margin-bottom:5px">Expiry</label><div id="card-expiry-element" class="stripe-box"></div></div>
