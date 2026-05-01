@@ -51,7 +51,7 @@ html, body { background: var(--black); color: var(--white); font-family: 'Inter'
 .elite-footer__contact-btn { background: #fff; color: #000; padding: 12px 28px; border-radius: 100px; font-weight: 700; text-decoration: none; }
 
 /* Forced Horizontal Social Line */
-.elite-footer__social-row {
+.elite-footer__social {
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
