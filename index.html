@@ -58,6 +58,7 @@
             <div class="booking-widget" id="bookingWidget">
                 <div class="booking-widget__tabs">
                     <button class="booking-widget__tab active" data-tab="oneway">One Way</button>
+                    <button class="booking-widget__tab" data-tab="roundtrip">Round Trip</button>
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
 
@@ -88,6 +89,47 @@
                     <div class="price-preview" id="preview-oneway" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-bottom: 12px; text-align: center;">
                         <span style="color: #C0C0C0; font-size: 0.8rem;">Estimated Distance: </span>
                         <span id="dist-val-oneway" style="color: white; font-weight: bold;">0 mi</span>
+                    </div>
+                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
+                </form>
+
+                <!-- Round Trip Form -->
+                <form class="booking-widget__form" id="form-roundtrip">
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Pickup Address</label>
+                            <input type="text" id="pickup-roundtrip" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input address-input">
+                        </div>
+                    </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Dropoff Address</label>
+                            <input type="text" id="dropoff-roundtrip" placeholder="Enter Destination" required data-field="dropoff" class="st-input address-input">
+                        </div>
+                    </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Pickup Date</label>
+                            <input type="date" required class="st-input">
+                        </div>
+                        <div class="booking-widget__field">
+                            <label class="field-label">Pickup Time</label>
+                            <input type="time" required class="st-input">
+                        </div>
+                    </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Return Date</label>
+                            <input type="date" required class="st-input">
+                        </div>
+                        <div class="booking-widget__field">
+                            <label class="field-label">Return Time</label>
+                            <input type="time" required class="st-input">
+                        </div>
+                    </div>
+                    <div class="price-preview" id="preview-roundtrip" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-bottom: 12px; text-align: center;">
+                        <span style="color: #C0C0C0; font-size: 0.8rem;">Total Round-Trip Distance: </span>
+                        <span id="dist-val-roundtrip" style="color: white; font-weight: bold;">0 mi</span>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
