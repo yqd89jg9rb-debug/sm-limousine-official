@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Premium Black Car Service
+   SM LIMOUSINE — Main Script (Precision Version 2.14)
    Robust Tab Controller & Service Shortcut Logic
    =================================================================== */
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
         forms.forEach(f => f.classList.toggle('active', f.id === 'form-' + tabName));
         initAutocomplete();
-        window.scrollTo({ top: document.getElementById('hero').offsetTop, behavior: 'smooth' });
+        window.scrollTo({ top: document.getElementById('hero').offsetTop - 80, behavior: 'smooth' });
     };
 
     /* --- MOBILE MENU --- */
@@ -52,8 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         syncAddons();
     };
     window.syncAddons = () => {
-        meetGreet = document.getElementById('check-meet-greet').checked;
-        childSeat = document.getElementById('check-child').checked;
         const summary = `${passengerCount} People, ${luggageCount} Luggage`;
         ['oneway', 'roundtrip', 'hourly'].forEach(m => { const el = document.getElementById(`people-summary-${m}`); if (el) el.textContent = summary; });
     };
@@ -134,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.hourly * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
-            if (meetGreet) total += 25; if (childSeat) total += 15;
+
             const minBase = Math.max(90, v.perMile * 20);
             if (total < minBase) total = minBase;
 
@@ -156,8 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle;
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
-        document.getElementById('discount-display').style.display = 'none';
-        document.getElementById('discount-input').value = '';
         document.getElementById('paymentOverlay').classList.add('active');
         setTimeout(() => {
             if (!stripe) {
@@ -172,20 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 500);
     }
-
-    document.getElementById('apply-discount-btn').onclick = () => {
-        const code = document.getElementById('discount-input').value.toUpperCase().trim();
-        const display = document.getElementById('discount-display');
-        const totalEl = document.getElementById('pay-total');
-        if (DISCOUNT_CODES[code]) {
-            const discount = DISCOUNT_CODES[code];
-            let newTotal = (discount <= 1) ? currentTotal * (1 - discount) : currentTotal - discount;
-            if (newTotal < 0) newTotal = 0;
-            totalEl.textContent = `$${newTotal.toFixed(2)}`;
-            display.style.display = 'block'; display.textContent = `Discount Applied!`;
-            alert('Discount Applied!');
-        } else alert('Invalid Code.');
-    };
 
     document.getElementById('payBtn').onclick = async () => {
         const btn = document.getElementById('payBtn'); btn.disabled = true; btn.textContent = 'Authorizing...';
