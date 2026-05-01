@@ -27,13 +27,7 @@
             <div class="header__logo-centered">
                 <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
             </div>
-            <nav class="header__nav" id="mainNav">
-                <a href="#fleet" class="header__link">Fleet</a>
-                <a href="#services" class="header__link">Services</a>
-                <a href="#contact" class="header__link">Contact</a>
-            </nav>
             <div class="header__actions">
-                <!-- Burger Menu ABOVE phone number -->
                 <button class="header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
                 <a href="tel:+18177234592" class="header__phone">+1817-723-4592</a>
             </div>
@@ -107,7 +101,10 @@
     </section>
 
     <footer class="elite-footer">
-        <div class="elite-footer__top"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32"><a href="mailto:smlimo@mail.com" class="elite-footer__contact-btn">Contact us</a></div>
+        <div class="elite-footer__top">
+            <div class="elite-footer__logo"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32"></div>
+            <a href="mailto:smlimo@mail.com" class="elite-footer__contact-btn">Contact us</a>
+        </div>
         <div class="elite-footer__accordion-wrap">
             <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Our services <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p onclick="setBookingTab('oneway')">Airport Transfers</p><p onclick="setBookingTab('hourly')">Corporate Events</p><p onclick="setBookingTab('oneway')">Special Occasions</p></div></div>
             <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Company <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p onclick="window.location.href='about.html'">About Us</p><p onclick="document.getElementById('fleet').scrollIntoView({behavior: 'smooth'})">Fleet</p></div></div>
@@ -127,6 +124,12 @@
                 <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
                 <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button></div></div>
     </div>
+
+    <!-- Chat Button Integration -->
+    <div class="chat-trigger" onclick="window.location.href='mailto:smlimo@mail.com'">
+        <img src="https://cdn-icons-png.flaticon.com/512/2040/2040946.png" alt="Chat">
+    </div>
+
     <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled="">Continue</button></div></div></div>
     <div class="payment-overlay" id="paymentOverlay"><div class="payment-modal"><button class="payment-modal__close" id="paymentClose">×</button><div class="payment-modal__summary"><h3 id="pay-vehicle"></h3><p id="pay-total" class="clear-price"></p></div><div class="payment-modal__form"><button id="payBtn" class="pm-book-btn">Book Now</button></div></div></div>
 
