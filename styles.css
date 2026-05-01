@@ -425,13 +425,13 @@ input[type="date"], input[type="time"] {
     margin-bottom: 4px;
 }
 
-/* CLEAR PRICE FONT */
+/* CLEAR PRICE FONT - SMALLER VERSION */
 .vs-card__price, .price-preview span[id*='val'], #pay-total {
-    font-size: 1.35rem !important;
+    font-size: 1.1rem !important;
     color: white !important;
-    font-weight: 800 !important;
+    font-weight: 700 !important;
     font-family: var(--font-sans) !important;
-    letter-spacing: -0.02em !important;
+    letter-spacing: 0.02em !important;
 }
 
 .vs-card__capacity {
