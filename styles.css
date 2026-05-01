@@ -137,10 +137,11 @@ a {
 }
 
 .header__phone {
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 800;
     color: #FFFFFF;
     white-space: nowrap;
+    letter-spacing: 0.02em;
 }
 
 .header__burger {
@@ -168,7 +169,7 @@ a {
     }
 
     .header__nav {
-        display: none; /* Hide links on mobile to prevent overlap */
+        display: none;
     }
 
     .header__logo-img-large {
@@ -176,11 +177,11 @@ a {
     }
 
     .header__phone {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
     }
 
     .header__burger {
-        display: flex; /* Show burger instead of links */
+        display: flex;
     }
 }
 
