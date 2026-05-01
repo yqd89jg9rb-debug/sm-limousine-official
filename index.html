@@ -25,7 +25,9 @@
             </nav>
             <div class="header__actions">
                 <a href="tel:+18177234592" class="header__phone">817-723-4592</a>
-                <button class="header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
+                <button class="header__burger" id="burgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
     </header>
@@ -52,10 +54,16 @@
                 <!-- One Way Form -->
                 <form class="booking-widget__form active" id="form-oneway">
                     <div class="booking-widget__row">
-                        <input type="text" placeholder="Pickup Address" required data-field="pickup" class="st-input">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Pickup Address</label>
+                            <input type="text" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input">
+                        </div>
                     </div>
                     <div class="booking-widget__row">
-                        <input type="text" placeholder="Dropoff Address" required data-field="dropoff" class="st-input">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Dropoff Address</label>
+                            <input type="text" placeholder="Enter Destination" required data-field="dropoff" class="st-input">
+                        </div>
                     </div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
@@ -73,7 +81,10 @@
                 <!-- Hourly Form -->
                 <form class="booking-widget__form" id="form-hourly">
                     <div class="booking-widget__row">
-                        <input type="text" placeholder="Pickup Address" required data-field="pickup" class="st-input">
+                        <div class="booking-widget__field">
+                            <label class="field-label">Pickup Address</label>
+                            <input type="text" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input">
+                        </div>
                     </div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
