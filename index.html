@@ -10,8 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://js.stripe.com/v3/"></script>
-    <!-- Google Maps API with Libraries -->
+    <!-- Google Maps API with Error Suppression -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
+    <script>
+        // Prevents the "Oops! Something went wrong" box from appearing in UI
+        window.gm_authFailure = function() {
+            console.warn("Google Maps authentication failed. Switching to manual input mode.");
+            const errorBoxes = document.querySelectorAll('.gm-err-container');
+            errorBoxes.forEach(box => box.style.display = 'none');
+        };
+    </script>
 </head>
 <body>
     <!-- ===== HEADER ===== -->
