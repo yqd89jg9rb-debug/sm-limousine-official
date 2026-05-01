@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://js.stripe.com/v3/"></script>
+    <!-- Google Maps API with Libraries -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
 </head>
 <body>
     <!-- ===== HEADER ===== -->
@@ -48,7 +50,6 @@
             <div class="booking-widget" id="bookingWidget">
                 <div class="booking-widget__tabs">
                     <button class="booking-widget__tab active" data-tab="oneway">One Way</button>
-                    <button class="booking-widget__tab" data-tab="roundtrip">Round Trip</button>
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
 
@@ -57,13 +58,13 @@
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
                             <label class="field-label">Pickup Address</label>
-                            <input type="text" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input">
+                            <input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input address-input">
                         </div>
                     </div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
                             <label class="field-label">Dropoff Address</label>
-                            <input type="text" placeholder="Enter Destination" required data-field="dropoff" class="st-input">
+                            <input type="text" id="dropoff-oneway" placeholder="Enter Destination" required data-field="dropoff" class="st-input address-input">
                         </div>
                     </div>
                     <div class="booking-widget__row">
@@ -76,32 +77,9 @@
                             <input type="time" required data-field="time" class="st-input">
                         </div>
                     </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
-
-                <!-- Round Trip Form -->
-                <form class="booking-widget__form" id="form-roundtrip">
-                    <div class="booking-widget__row">
-                        <div class="booking-widget__field">
-                            <label class="field-label">Pickup Address</label>
-                            <input type="text" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input">
-                        </div>
-                    </div>
-                    <div class="booking-widget__row">
-                        <div class="booking-widget__field">
-                            <label class="field-label">Dropoff Address</label>
-                            <input type="text" placeholder="Enter Destination" required data-field="dropoff" class="st-input">
-                        </div>
-                    </div>
-                    <div class="booking-widget__row">
-                        <div class="booking-widget__field">
-                            <label class="field-label">Pickup Date</label>
-                            <input type="date" required class="st-input">
-                        </div>
-                        <div class="booking-widget__field">
-                            <label class="field-label">Pickup Time</label>
-                            <input type="time" required class="st-input">
-                        </div>
+                    <div class="price-preview" id="preview-oneway" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-bottom: 12px; text-align: center;">
+                        <span style="color: #C0C0C0; font-size: 0.8rem;">Estimated Distance: </span>
+                        <span id="dist-val-oneway" style="color: white; font-weight: bold;">0 mi</span>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
@@ -111,7 +89,7 @@
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
                             <label class="field-label">Pickup Address</label>
-                            <input type="text" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input">
+                            <input type="text" id="pickup-hourly" placeholder="Enter Pickup Location" required data-field="pickup" class="st-input address-input">
                         </div>
                     </div>
                     <div class="booking-widget__row">
@@ -125,7 +103,7 @@
                         </div>
                         <div class="booking-widget__field">
                             <label class="field-label">Hours</label>
-                            <select data-field="hours" class="st-input">
+                            <select data-field="hours" id="hours-val" class="st-input">
                                 <option value="3">3 Hours (Min)</option>
                                 <option value="4">4 Hours</option>
                                 <option value="5">5 Hours</option>
@@ -144,6 +122,7 @@
         <div class="vs-panel">
             <div class="vs-header">
                 <h2 style="color:white">Select Your Vehicle</h2>
+                <div id="vs-distance-summary" style="color:#C0C0C0; font-size: 0.8rem; margin-top: 5px;"></div>
             </div>
             <div class="vs-list" id="vsList"></div>
             <div class="vs-footer">
