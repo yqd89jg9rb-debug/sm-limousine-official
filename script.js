@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.9)
-   Full Addon Modal Logic & Integrated Competitive Pricing
+   SM LIMOUSINE — Main Script (Precision Version 2.10)
+   Full Addon Modal Logic & Mobile Menu Controller
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,49 +15,43 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
-    const DISCOUNT_CODES = {
-        'SMLIMO10': 0.10, 'VIP20': 0.20, 'SMLIMO30': 0.30, 'WELCOME': 5.00
-    };
+    const DISCOUNT_CODES = { 'SMLIMO10': 0.10, 'VIP20': 0.20, 'SMLIMO30': 0.30, 'WELCOME': 5.00 };
 
     /* --- STATE --- */
     let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, activeDiscount = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
-
-    // Addon State
     let passengerCount = 1, luggageCount = 1, meetGreet = false, childSeat = false;
+
+    /* --- MOBILE MENU --- */
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mainNav = document.getElementById('mainNav');
+    if (burgerBtn) {
+        burgerBtn.onclick = () => {
+            mainNav.classList.toggle('open');
+            burgerBtn.classList.toggle('open');
+        };
+    }
 
     /* --- MODAL LOGIC --- */
     window.openAddonModal = () => document.getElementById('addonOverlay').classList.add('active');
     window.closeAddonModal = () => document.getElementById('addonOverlay').classList.remove('active');
-
     window.updateCounter = (type, change) => {
-        if (type === 'passengers') {
-            passengerCount = Math.max(1, passengerCount + change);
-            document.getElementById('count-passengers').textContent = passengerCount;
-        } else {
-            luggageCount = Math.max(0, luggageCount + change);
-            document.getElementById('count-luggage').textContent = luggageCount;
-        }
+        if (type === 'passengers') { passengerCount = Math.max(1, passengerCount + change); document.getElementById('count-passengers').textContent = passengerCount; }
+        else { luggageCount = Math.max(0, luggageCount + change); document.getElementById('count-luggage').textContent = luggageCount; }
         syncAddons();
     };
-
     window.syncAddons = () => {
         meetGreet = document.getElementById('check-meet-greet').checked;
         childSeat = document.getElementById('check-child').checked;
-        
         const summary = `${passengerCount} People, ${luggageCount} Luggage`;
-        ['oneway', 'roundtrip', 'hourly'].forEach(m => {
-            const el = document.getElementById(`people-summary-${m}`);
-            if (el) el.textContent = summary;
-        });
+        ['oneway', 'roundtrip', 'hourly'].forEach(m => { const el = document.getElementById(`people-summary-${m}`); if (el) el.textContent = summary; });
     };
 
-    /* --- GOOGLE PLACES SETUP --- */
+    /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
         const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
-        
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
@@ -76,16 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const origin1 = document.getElementById(`pickup-${mode}`).value;
         const dest1 = document.getElementById(`dropoff-${mode}`).value;
         if (!origin1 || !dest1) return;
-
         const service = new google.maps.DistanceMatrixService();
         leg1Miles = await getLegMiles(service, origin1, dest1);
-
         if (mode === 'roundtrip') {
             const origin2 = document.getElementById('return-pickup-roundtrip').value;
             const dest2 = document.getElementById('return-dropoff-roundtrip').value;
             leg2Miles = (origin2 && dest2) ? await getLegMiles(service, origin2, dest2) : leg1Miles;
         }
-
         updateUI(mode);
     }
 
@@ -105,12 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const distVal = document.getElementById(`dist-val-${mode}`);
         if (!previewBox) return;
         previewBox.style.display = 'block';
-        if (mode === 'roundtrip') {
-            distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${(leg1Miles + leg2Miles).toFixed(1)} mi</div>`;
-        } else distVal.textContent = leg1Miles + ' mi';
+        if (mode === 'roundtrip') distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${(leg1Miles + leg2Miles).toFixed(1)} mi</div>`;
+        else distVal.textContent = leg1Miles + ' mi';
     }
 
-    /* --- FORM SUBMISSION --- */
+    /* --- FORM FLOW --- */
     document.querySelectorAll('.booking-widget__form').forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -125,8 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function openVehicleSelector(type, hours) {
-        vsList.innerHTML = '';
-        vsContinueBtn.disabled = true;
+        vsList.innerHTML = ''; vsContinueBtn.disabled = true;
         const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
         const finalMiles = totalMiles || 20;
         document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
@@ -134,11 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.hourly * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
-            
-            // Addon Fees
-            if (meetGreet) total += 25;
-            if (childSeat) total += 15;
-
+            if (meetGreet) total += 25; if (childSeat) total += 15;
             const minBase = Math.max(90, v.perMile * 20);
             if (total < minBase) total = minBase;
 
@@ -156,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         vsOverlay.classList.add('active');
     }
 
-    /* --- STRIPE --- */
+    /* --- PAYMENTS --- */
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle;
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
@@ -186,15 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let newTotal = (discount <= 1) ? currentTotal * (1 - discount) : currentTotal - discount;
             if (newTotal < 0) newTotal = 0;
             totalEl.textContent = `$${newTotal.toFixed(2)}`;
-            display.style.display = 'block'; display.textContent = `Discount Applied: ${(discount <= 1 ? (discount * 100) + '%' : '$' + discount.toFixed(2))} Off!`;
-            alert('Discount Code Applied Successfully!');
-        } else alert('Invalid Discount Code.');
+            display.style.display = 'block'; display.textContent = `Discount Applied!`;
+            alert('Discount Applied!');
+        } else alert('Invalid Code.');
     };
 
     document.getElementById('payBtn').onclick = async () => {
         const btn = document.getElementById('payBtn'); btn.disabled = true; btn.textContent = 'Authorizing...';
         const {token, error} = await stripe.createToken(cardNumber);
-        if (token) { alert('Success! Your reservation has been sent to dispatch. We will contact you shortly.'); document.getElementById('paymentOverlay').classList.remove('active'); } 
+        if (token) { alert('Success! Reservation sent.'); document.getElementById('paymentOverlay').classList.remove('active'); }
         else alert('Error: ' + error.message);
         btn.disabled = false; btn.textContent = 'Book Now';
     };
@@ -207,6 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs.forEach(x => x.classList.remove('active')); t.classList.add('active');
         document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
         document.getElementById('form-' + t.dataset.tab).classList.add('active');
-        initAutocomplete(); leg1Miles = 0; leg2Miles = 0;
+        initAutocomplete();
     });
 });
