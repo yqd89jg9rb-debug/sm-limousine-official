@@ -262,6 +262,16 @@ a {
     border-bottom-color: var(--white);
 }
 
+/* IMPORTANT: Hide forms by default */
+.booking-widget__form {
+    display: none;
+    flex-direction: column;
+}
+
+.booking-widget__form.active {
+    display: flex;
+}
+
 .booking-widget__row {
     display: flex;
     gap: 12px;
@@ -287,7 +297,6 @@ a {
 .booking-widget__field select,
 .st-input {
     width: 100% !important;
-    flex: 1 !important;
     padding: 14px 16px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
@@ -297,7 +306,6 @@ a {
     font-size: 1rem;
     outline: none;
     transition: border-color var(--transition);
-    display: block;
 }
 
 .booking-widget__field input:focus,
