@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.1)
-   Robust Distance Matrix & Tiered Pricing Logic with Round-Trip
+   SM LIMOUSINE — Main Script (Precision Version 2.2)
+   Fixed Round-Trip Calculation & Tab Switching Logic
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* --- STATE --- */
     let calculatedMiles = 0;
+    let currentMode = 'oneway';
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
 
     /* --- GOOGLE PLACES SETUP --- */
@@ -30,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (input) {
                 const ac = new google.maps.places.Autocomplete(input, options);
                 ac.addListener('place_changed', () => {
-                    if (id.includes('oneway') || id.includes('roundtrip')) updateDistancePreview(id.includes('oneway') ? 'oneway' : 'roundtrip');
+                    const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
+                    if (mode) updateDistancePreview(mode);
                 });
             }
         });
@@ -59,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const distVal = document.getElementById(`dist-val-${mode}`);
                 if (previewBox && distVal) {
                     previewBox.style.display = 'block';
-                    distVal.textContent = (mode === 'roundtrip' ? calculatedMiles * 2 : calculatedMiles) + ' mi';
+                    const totalDisplay = (mode === 'roundtrip' ? calculatedMiles * 2 : calculatedMiles);
+                    distVal.textContent = totalDisplay.toFixed(1) + ' mi';
                 }
             }
         });
@@ -67,11 +70,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* --- FORM SUBMISSION --- */
     document.querySelectorAll('.booking-widget__form').forEach(form => {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const type = form.id.replace('form-', '');
+            currentMode = type;
             const hours = parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS);
-            openVehicleSelector(type, hours);
+            
+            // Force distance refresh on submit for accuracy
+            if (type !== 'hourly') {
+                await updateDistancePreview(type);
+                // Small delay to ensure state update
+                setTimeout(() => openVehicleSelector(type, hours), 300);
+            } else {
+                openVehicleSelector(type, hours);
+            }
         });
     });
 
@@ -79,14 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
         vsList.innerHTML = '';
         vsContinueBtn.disabled = true;
         
-        let displayMiles = calculatedMiles;
-        if (type === 'roundtrip') displayMiles *= 2;
+        // CRUCIAL: Determine exactly which distance to use
+        let finalDistance = calculatedMiles;
+        if (type === 'roundtrip') finalDistance = calculatedMiles * 2;
 
-        document.getElementById('vs-distance-summary').textContent = (type === 'oneway' || type === 'roundtrip') ? `Est. Distance: ${displayMiles} miles` : `Duration: ${hours} hours`;
+        const summaryLabel = (type === 'oneway' || type === 'roundtrip') ? `Est. Distance: ${finalDistance.toFixed(1)} miles` : `Duration: ${hours} hours`;
+        document.getElementById('vs-distance-summary').textContent = summaryLabel;
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
-            let total = type === 'hourly' ? v.hourly * hours : v.perMile * (displayMiles || 20);
+            let total = type === 'hourly' ? v.hourly * hours : v.perMile * (finalDistance || 20);
             
             // Apply minimum pricing by category
             const minPrice = v.perMile * 15;
@@ -163,6 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs.forEach(x => x.classList.remove('active'));
         t.classList.add('active');
         document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
-        document.getElementById('form-' + t.dataset.tab).classList.add('active');
+        const targetFormId = 'form-' + t.dataset.tab;
+        document.getElementById(targetFormId).classList.add('active');
+        // Reset calculated miles when switching to prevent bleed-over
+        calculatedMiles = 0;
     });
 });
