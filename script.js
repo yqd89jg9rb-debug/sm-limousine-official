@@ -15,10 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
+    const DISCOUNT_CODES = {
+        'SMLIMO10': 0.10, // 10% off
+        'VIP20': 0.20,    // 20% off
+        'WELCOME': 5.00   // $5.00 off
+    };
 
     /* --- STATE --- */
     let leg1Miles = 0;
     let leg2Miles = 0;
+    let currentTotal = 0;
+    let activeDiscount = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
 
     /* --- GOOGLE PLACES SETUP --- */
@@ -135,10 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (type === 'hourly') {
                 total = v.hourly * hours;
             } else if (type === 'roundtrip') {
-                // Billed as two separate legs (Double Base + Full Distance)
                 total = (v.base * 2) + (v.perMile * totalMiles);
             } else {
-                // One Way (Single Base + Distance)
                 total = v.base + (v.perMile * totalMiles);
             }
 
@@ -159,6 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 vsContinueBtn.disabled = false;
                 vsContinueBtn.onclick = () => {
                     vsOverlay.classList.remove('active');
+                    currentTotal = total;
+                    activeDiscount = 0;
                     openPayment(v.name, total);
                 };
             };
@@ -171,6 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle;
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
+        document.getElementById('discount-display').style.display = 'none';
+        document.getElementById('discount-input').value = '';
         document.getElementById('paymentOverlay').classList.add('active');
 
         setTimeout(() => {
@@ -187,6 +196,38 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 500);
     }
+
+    // DISCOUNT LOGIC
+    document.getElementById('apply-discount-btn').onclick = () => {
+        const code = document.getElementById('discount-input').value.toUpperCase().trim();
+        const display = document.getElementById('discount-display');
+        const totalEl = document.getElementById('pay-total');
+
+        if (DISCOUNT_CODES[code]) {
+            const discount = DISCOUNT_CODES[code];
+            let newTotal = currentTotal;
+            
+            if (discount <= 1) {
+                // Percentage
+                newTotal = currentTotal * (1 - discount);
+                display.textContent = `Discount Applied: ${(discount * 100)}% Off!`;
+            } else {
+                // Flat Amount
+                newTotal = currentTotal - discount;
+                display.textContent = `Discount Applied: $${discount.toFixed(2)} Off!`;
+            }
+
+            if (newTotal < 0) newTotal = 0;
+            totalEl.textContent = `$${newTotal.toFixed(2)}`;
+            display.style.display = 'block';
+            activeDiscount = discount;
+            alert('Discount Code Applied Successfully!');
+        } else {
+            alert('Invalid Discount Code. Please check and try again.');
+            display.style.display = 'none';
+            totalEl.textContent = `$${currentTotal.toFixed(2)}`;
+        }
+    };
 
     document.getElementById('payBtn').onclick = async () => {
         const btn = document.getElementById('payBtn');
