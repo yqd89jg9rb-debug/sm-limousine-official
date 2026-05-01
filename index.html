@@ -58,6 +58,7 @@
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
 
+                <!-- Forms (Managed by script.js) -->
                 <form class="booking-widget__form active" id="form-oneway">
                     <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input address-input"></div></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input address-input"></div></div>
@@ -94,23 +95,71 @@
         </div>
     </section>
 
-    <!-- ===== FLEET SECTION ===== -->
+    <!-- ===== FLEET SECTION (ALL TYPES RESTORED) ===== -->
     <section id="fleet" style="padding: 100px 0; background: #000; text-align: center;">
         <div class="container">
             <h2 class="section-title">Our Elite Fleet</h2>
             <p class="section-subtitle">Premium vehicles meticulously maintained for your comfort and safety.</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+                
+                <!-- Cadillac XT6 -->
                 <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
                     <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
-                    <div style="padding: 24px;"><h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Cadillac XT6</h3><p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Premium Luxury Sedan — Refined and sophisticated for executive travel.</p></div>
+                    <div style="padding: 24px;">
+                        <h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Cadillac XT6</h3>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Premium Luxury Sedan — Refined and sophisticated for executive travel.</p>
+                        <div style="display: flex; gap: 15px;"><span style="color:#C0C0C0; font-size:0.85rem;">👥 4 Pass</span><span style="color:#C0C0C0; font-size:0.85rem;">💼 3 Bags</span></div>
+                    </div>
                 </div>
+
+                <!-- Chevrolet Suburban -->
+                <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
+                    <div style="padding: 24px;">
+                        <h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Chevrolet Suburban</h3>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Premium SUV — Extra room for groups and airport transfers.</p>
+                        <div style="display: flex; gap: 15px;"><span style="color:#C0C0C0; font-size:0.85rem;">👥 6 Pass</span><span style="color:#C0C0C0; font-size:0.85rem;">💼 5 Bags</span></div>
+                    </div>
+                </div>
+
+                <!-- GMC Denali -->
+                <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
+                    <div style="padding: 24px;">
+                        <h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">GMC Denali</h3>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Luxury SUV — Command the road with ultimate comfort and style.</p>
+                        <div style="display: flex; gap: 15px;"><span style="color:#C0C0C0; font-size:0.85rem;">👥 7 Pass</span><span style="color:#C0C0C0; font-size:0.85rem;">💼 5 Bags</span></div>
+                    </div>
+                </div>
+
+                <!-- Cadillac Escalade -->
                 <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
                     <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
-                    <div style="padding: 24px;"><h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Cadillac Escalade</h3><p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">First Class SUV — The iconic standard for premium luxury transportation.</p></div>
+                    <div style="padding: 24px;">
+                        <h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Cadillac Escalade</h3>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">First Class SUV — The iconic standard for luxury ground transport.</p>
+                        <div style="display: flex; gap: 15px;"><span style="color:#C0C0C0; font-size:0.85rem;">👥 7 Pass</span><span style="color:#C0C0C0; font-size:0.85rem;">💼 5 Bags</span></div>
+                    </div>
                 </div>
+
+                <!-- Mercedes Sprinter -->
                 <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
                     <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
-                    <div style="padding: 24px;"><h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Mercedes Sprinter</h3><p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Luxury Sprinter — Perfect for corporate groups and event shuttles.</p></div>
+                    <div style="padding: 24px;">
+                        <h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Mercedes Sprinter</h3>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Luxury Sprinter — Elite group transportation and corporate shuttles.</p>
+                        <div style="display: flex; gap: 15px;"><span style="color:#C0C0C0; font-size:0.85rem;">👥 14 Pass</span><span style="color:#C0C0C0; font-size:0.85rem;">💼 10 Bags</span></div>
+                    </div>
+                </div>
+
+                <!-- Motor Coach -->
+                <div style="background: #111; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); text-align: left;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg" style="width: 100%; height: 220px; object-fit: cover;">
+                    <div style="padding: 24px;">
+                        <h3 style="color: white; font-family: var(--font-serif); margin-bottom: 8px;">Motor Coach</h3>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Grand Motor Coach — High-capacity luxury for large groups.</p>
+                        <div style="display: flex; gap: 15px;"><span style="color:#C0C0C0; font-size:0.85rem;">👥 56 Pass</span><span style="color:#C0C0C0; font-size:0.85rem;">💼 56 Bags</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,19 +170,28 @@
         <div class="container">
             <h2 class="section-title">Luxury Services</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                <!-- Active Service Cards with robust setBookingTab logic -->
-                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('oneway')" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
-                    <h3 style="color: white; margin-bottom: 12px;">Airport Transfers</h3>
-                    <p style="color: #888; font-size: 0.95rem;">Reliable, on-time arrivals at DFW and Dallas Love Field.</p>
-                </div>
-                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('hourly')" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
-                    <h3 style="color: white; margin-bottom: 12px;">Corporate Events</h3>
-                    <p style="color: #888; font-size: 0.95rem;">Professional ground logistics for executives and teams.</p>
-                </div>
-                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('oneway')" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
-                    <h3 style="color: white; margin-bottom: 12px;">Special Occasions</h3>
-                    <p style="color: #888; font-size: 0.95rem;">Celebrate in style with our premium chauffeur service.</p>
-                </div>
+                
+                <a href="#hero" class="service-shortcut" onclick="setBookingTab('oneway')" style="text-decoration: none; display: block;">
+                    <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                        <h3 style="color: white; margin-bottom: 12px;">Airport Transfers</h3>
+                        <p style="color: #888; font-size: 0.95rem;">Reliable, on-time arrivals at DFW and Dallas Love Field.</p>
+                    </div>
+                </a>
+
+                <a href="#hero" class="service-shortcut" onclick="setBookingTab('hourly')" style="text-decoration: none; display: block;">
+                    <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                        <h3 style="color: white; margin-bottom: 12px;">Corporate Events</h3>
+                        <p style="color: #888; font-size: 0.95rem;">Professional ground logistics for executives and teams.</p>
+                    </div>
+                </a>
+
+                <a href="#hero" class="service-shortcut" onclick="setBookingTab('oneway')" style="text-decoration: none; display: block;">
+                    <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                        <h3 style="color: white; margin-bottom: 12px;">Special Occasions</h3>
+                        <p style="color: #888; font-size: 0.95rem;">Celebrate in style with our premium chauffeur service.</p>
+                    </div>
+                </a>
+
             </div>
         </div>
     </section>
@@ -149,7 +207,7 @@
         <p style="margin-top:50px; font-size:0.8rem; color:#555;">&copy; 2026 SM LIMOUSINE. All rights reserved.</p>
     </footer>
 
-    <!-- Modals -->
+    <!-- Modals (Addons, Selection, Payment) -->
     <div class="addon-overlay" id="addonOverlay"><div class="addon-modal"><div class="addon-header"><h3>Passengers & add-ons</h3><button onclick="closeAddonModal()">&times;</button></div><div class="addon-content"><div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div><div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div><button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button></div></div></div>
     <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled>Continue</button></div></div></div>
     <div class="payment-overlay" id="paymentOverlay"><div class="payment-modal"><button class="payment-modal__close" id="paymentClose">&times;</button><div class="payment-modal__summary"><h3 id="pay-vehicle"></h3><p id="pay-total" class="clear-price"></p></div><div class="payment-modal__form"><button id="payBtn" class="pm-book-btn">Book Now</button></div></div></div>
