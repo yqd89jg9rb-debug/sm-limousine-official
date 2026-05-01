@@ -13,7 +13,9 @@
     <!-- Google Maps API with Error Suppression -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
     <script>
+        // Prevents the "Oops! Something went wrong" box from appearing in UI
         window.gm_authFailure = function() {
+            console.warn("Google Maps authentication failed. Switching to manual input mode.");
             const errorBoxes = document.querySelectorAll('.gm-err-container');
             errorBoxes.forEach(box => box.style.display = 'none');
         };
@@ -32,7 +34,7 @@
                 <a href="#contact" class="header__link">Contact</a>
             </nav>
             <div class="header__actions">
-                <a href="tel:+18177234592" class="header__phone">817-723-4592</a>
+                <a href="tel:+18177234592" class="header__phone">+1817-723-4592</a>
                 <button class="header__burger" id="burgerBtn">
                     <span></span><span></span><span></span>
                 </button>
