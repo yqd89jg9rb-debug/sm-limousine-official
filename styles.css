@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Master Stylesheet (v3.4)
-   Horizontal Social Icons Alignment Fix
+   SM LIMOUSINE — Elite Master Stylesheet (v3.5)
+   Final Layout Correction: Removed excessive hero padding
    =================================================================== */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,7 +25,13 @@ html, body { background: var(--black); color: var(--white); font-family: 'Inter'
 .header__burger span { width: 24px; height: 2px; background: #fff; transition: 0.3s; }
 
 /* HERO & BOOKING */
-.hero { position: relative; min-height: 100vh; padding-top: calc(var(--header-h) + 400px); text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed; }
+.hero { 
+    position: relative; 
+    min-height: 100vh; 
+    padding-top: calc(var(--header-h) + 40px); /* FIXED: Removed excessive 400px padding */
+    text-align: center; 
+    background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed; 
+}
 .hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 0; }
 .hero__content { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; }
 .hero__logo-img { height: 100px; width: auto; margin-bottom: 15px; }
@@ -50,7 +56,6 @@ html, body { background: var(--black); color: var(--white); font-family: 'Inter'
 .elite-footer__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
 .elite-footer__contact-btn { background: #fff; color: #000; padding: 12px 28px; border-radius: 100px; font-weight: 700; text-decoration: none; }
 
-/* FIXED: Matching index.html class name for horizontal row */
 .elite-footer__social-row {
     display: flex !important;
     flex-direction: row !important;
@@ -71,8 +76,6 @@ html, body { background: var(--black); color: var(--white); font-family: 'Inter'
     justify-content: center;
     transition: 0.3s;
 }
-
-.social-icon:hover { background: #2a2a2b; }
 .social-icon img { filter: invert(1); }
 
 .elite-footer__bottom { text-align: center; padding-top: 30px; border-top: 1px solid #1a1a1b; }
