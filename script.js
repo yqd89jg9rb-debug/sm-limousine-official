@@ -1,17 +1,17 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.7)
-   Competitive Round-Trip Pricing & Leg-by-Leg Visibility
+   SM LIMOUSINE — Main Script (Precision Version 2.8)
+   Competitive Market Pricing (Base + Distance Logic)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const VEHICLE_RATES = {
-        xt6:        { name: 'Cadillac XT6',          hourly: 95,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        suburban:   { name: 'Chevrolet Suburban',    hourly: 110, perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
-        denali:     { name: 'GMC Denali',            hourly: 125, perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
-        escalade:   { name: 'Cadillac Escalade',    hourly: 155, perMile: 6.50, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
-        sprinter:   { name: 'Mercedes Sprinter',     hourly: 210, perMile: 8.50, category: 'Sprinter van',     passengers: '6-14', suitcases: '6-10', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' },
-        motorcoach: { name: 'Motor Coach',           hourly: 290, perMile: 14.00, category: 'Motor coach',      passengers: '20-56', suitcases: '20-56', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg' }
+        xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
+        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
+        denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
+        escalade:   { name: 'Cadillac Escalade',    base: 125, perMile: 6.50, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
+        sprinter:   { name: 'Mercedes Sprinter',     base: 185, perMile: 9.00, category: 'Sprinter van',     passengers: '6-14', suitcases: '6-10', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' },
+        motorcoach: { name: 'Motor Coach',           base: 250, perMile: 15.00, category: 'Motor coach',      passengers: '20-56', suitcases: '20-56', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg' }
     };
 
     const MIN_HOURS = 3;
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (origin2 && dest2) {
                 leg2Miles = await getLegMiles(service, origin2, dest2);
             } else {
-                leg2Miles = 0; // Don't guess, let the user fill it
+                leg2Miles = leg1Miles; // Fallback: Default return leg to same as outbound
             }
         }
 
@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         previewBox.style.display = 'block';
         if (mode === 'roundtrip') {
-            const total = (leg1Miles + (leg2Miles || leg1Miles)); // Default to double if return empty
-            distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles || leg1Miles} mi</div><div>Total: ${total.toFixed(1)} mi</div>`;
+            const total = leg1Miles + leg2Miles;
+            distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${total.toFixed(1)} mi</div>`;
         } else {
             distVal.textContent = leg1Miles + ' mi';
         }
@@ -104,12 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.booking-widget__form').forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitBtn = form.querySelector('.booking-widget__submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Calculating...';
+
             const type = form.id.replace('form-', '');
             const hours = parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS);
             
-            // Final sync check
             await refreshDistances(type);
             openVehicleSelector(type, hours);
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Get a Quote';
         });
     });
 
@@ -117,18 +123,24 @@ document.addEventListener('DOMContentLoaded', () => {
         vsList.innerHTML = '';
         vsContinueBtn.disabled = true;
         
-        const totalMiles = type === 'roundtrip' ? (leg1Miles + (leg2Miles || leg1Miles)) : leg1Miles;
+        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
         const finalMiles = totalMiles || 20;
 
         document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
-            let total = type === 'hourly' ? v.hourly * hours : v.perMile * finalMiles;
-            
-            // COMPETITIVE MINIMUMS: Min charge is $90 OR per-mile rate x 20 miles
-            const minBase = Math.max(90, v.perMile * 20);
-            if (total < minBase) total = minBase;
+            let total = 0;
+
+            if (type === 'hourly') {
+                total = v.hourly * hours;
+            } else if (type === 'roundtrip') {
+                // Billed as two separate legs (Double Base + Full Distance)
+                total = (v.base * 2) + (v.perMile * totalMiles);
+            } else {
+                // One Way (Single Base + Distance)
+                total = v.base + (v.perMile * totalMiles);
+            }
 
             const card = document.createElement('div');
             card.className = 'vs-card';
