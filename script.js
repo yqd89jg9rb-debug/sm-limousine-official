@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.13)
-   Full Addon Modal Logic & Mobile Menu Controller
+   SM LIMOUSINE — Premium Black Car Service
+   Robust Tab Controller & Service Shortcut Logic
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,17 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.setBookingTab = (tabName) => {
         const tabs = document.querySelectorAll('.booking-widget__tab');
         const forms = document.querySelectorAll('.booking-widget__form');
-        
-        tabs.forEach(t => {
-            if (t.dataset.tab === tabName) t.classList.add('active');
-            else t.classList.remove('active');
-        });
-
-        forms.forEach(f => {
-            if (f.id === 'form-' + tabName) f.classList.add('active');
-            else f.classList.remove('active');
-        });
-
+        tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+        forms.forEach(f => f.classList.toggle('active', f.id === 'form-' + tabName));
         initAutocomplete();
         window.scrollTo({ top: document.getElementById('hero').offsetTop, behavior: 'smooth' });
     };
@@ -61,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         syncAddons();
     };
     window.syncAddons = () => {
+        meetGreet = document.getElementById('check-meet-greet').checked;
+        childSeat = document.getElementById('check-child').checked;
         const summary = `${passengerCount} People, ${luggageCount} Luggage`;
         ['oneway', 'roundtrip', 'hourly'].forEach(m => { const el = document.getElementById(`people-summary-${m}`); if (el) el.textContent = summary; });
     };
@@ -141,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.hourly * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
-
+            if (meetGreet) total += 25; if (childSeat) total += 15;
             const minBase = Math.max(90, v.perMile * 20);
             if (total < minBase) total = minBase;
 
