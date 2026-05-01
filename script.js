@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.10)
+   SM LIMOUSINE — Main Script (Precision Version 2.11)
    Full Addon Modal Logic & Mobile Menu Controller
    =================================================================== */
 
@@ -31,6 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
             burgerBtn.classList.toggle('open');
         };
     }
+
+    // Close menu when a link is clicked
+    document.querySelectorAll('.header__link').forEach(link => {
+        link.onclick = () => {
+            mainNav.classList.remove('open');
+            burgerBtn.classList.remove('open');
+        };
+    });
 
     /* --- MODAL LOGIC --- */
     window.openAddonModal = () => document.getElementById('addonOverlay').classList.add('active');
