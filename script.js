@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.14)
-   Robust Tab Controller & Service Shortcut Logic
+   SM LIMOUSINE — Main Script (Precision VersionAy 2.15)
+   Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,17 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
     let passengerCount = 1, luggageCount = 1, meetGreet = false, childSeat = false;
 
-    /* --- GLOBAL TAB CONTROLLER --- */
-    window.setBookingTab = (tabName) => {
-        const tabs = document.querySelectorAll('.booking-widget__tab');
-        const forms = document.querySelectorAll('.booking-widget__form');
-        tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
-        forms.forEach(f => f.classList.toggle('active', f.id === 'form-' + tabName));
-        initAutocomplete();
-        window.scrollTo({ top: document.getElementById('hero').offsetTop - 80, behavior: 'smooth' });
-    };
-
-    /* --- MOBILE MENU --- */
+    /* --- MOBILE MENU CONTROL --- */
     const burgerBtn = document.getElementById('burgerBtn');
     const mainNav = document.getElementById('mainNav');
     if (burgerBtn) {
@@ -42,6 +32,30 @@ document.addEventListener('DOMContentLoaded', () => {
             burgerBtn.classList.toggle('open');
         };
     }
+
+    // Close menu when links are clicked
+    document.querySelectorAll('.header__link').forEach(link => {
+        link.onclick = () => {
+            mainNav.classList.remove('open');
+            burgerBtn.classList.remove('open');
+        };
+    });
+
+    /* --- TAB CONTROL --- */
+    const tabs = document.querySelectorAll('.booking-widget__tab');
+    tabs.forEach(t => t.onclick = () => {
+        tabs.forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
+        document.getElementById('form-' + t.dataset.tab).classList.add('active');
+        initAutocomplete();
+    });
+
+    /* --- GLOBAL TAB SETTER (FOR SERVICE CARDS) --- */
+    window.setBookingTab = (name) => {
+        document.querySelector(`[data-tab="${name}"]`).click();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
 
     /* --- MODAL LOGIC --- */
     window.openAddonModal = () => document.getElementById('addonOverlay').classList.add('active');
@@ -109,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else distVal.textContent = leg1Miles + ' mi';
     }
 
-    /* --- FORM FLOW --- */
+    /* --- FORM SUBMISSION --- */
     document.querySelectorAll('.booking-widget__form').forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -132,10 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.hourly * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
-
             const minBase = Math.max(90, v.perMile * 20);
             if (total < minBase) total = minBase;
-
             const card = document.createElement('div');
             card.className = 'vs-card';
             card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
@@ -179,12 +191,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
     document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
-
-    const tabs = document.querySelectorAll('.booking-widget__tab');
-    tabs.forEach(t => t.onclick = () => {
-        tabs.forEach(x => x.classList.remove('active')); t.classList.add('active');
-        document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
-        document.getElementById('form-' + t.dataset.tab).classList.add('active');
-        initAutocomplete();
-    });
 });
