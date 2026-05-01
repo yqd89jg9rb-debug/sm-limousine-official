@@ -13,9 +13,7 @@
     <!-- Google Maps API with Error Suppression -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
     <script>
-        // Prevents the "Oops! Something went wrong" box from appearing in UI
         window.gm_authFailure = function() {
-            console.warn("Google Maps authentication failed. Switching to manual input mode.");
             const errorBoxes = document.querySelectorAll('.gm-err-container');
             errorBoxes.forEach(box => box.style.display = 'none');
         };
@@ -86,8 +84,15 @@
                             <input type="time" required data-field="time" class="st-input">
                         </div>
                     </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <div class="people-addon-trigger st-input" onclick="openAddonModal()">
+                                <span id="people-summary-oneway">Select number of people</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
                     <div class="price-preview" id="preview-oneway" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-bottom: 12px; text-align: center;">
-                        <span style="color: #C0C0C0; font-size: 0.8rem;">Estimated Distance: </span>
                         <span id="dist-val-oneway" class="clear-price">0 mi</span>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
@@ -95,7 +100,7 @@
 
                 <!-- Round Trip Form -->
                 <form class="booking-widget__form" id="form-roundtrip">
-                    <div style="text-align: left; margin-bottom: 8px; color: #C0C0C0; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;">Departing Trip</div>
+                    <div class="leg-label">Departing Trip</div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
                             <label class="field-label">Pickup Address</label>
@@ -118,8 +123,7 @@
                             <input type="time" required class="st-input">
                         </div>
                     </div>
-
-                    <div style="text-align: left; margin-top: 15px; margin-bottom: 8px; color: #C0C0C0; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">Return Trip</div>
+                    <div class="leg-label" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">Return Trip</div>
                     <div class="booking-widget__row">
                         <div class="booking-widget__field">
                             <label class="field-label">Return Pickup</label>
@@ -142,7 +146,14 @@
                             <input type="time" required class="st-input">
                         </div>
                     </div>
-
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <div class="people-addon-trigger st-input" onclick="openAddonModal()">
+                                <span id="people-summary-roundtrip">Select number of people</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
                     <div class="price-preview" id="preview-roundtrip" style="display:none; padding: 10px; background: rgba(192,192,192,0.1); border-radius: 8px; margin-top: 12px; margin-bottom: 12px; text-align: center;">
                         <span id="dist-val-roundtrip" class="clear-price">0 mi</span>
                     </div>
@@ -176,11 +187,62 @@
                             </select>
                         </div>
                     </div>
+                    <div class="booking-widget__row">
+                        <div class="booking-widget__field">
+                            <div class="people-addon-trigger st-input" onclick="openAddonModal()">
+                                <span id="people-summary-hourly">Select number of people</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
             </div>
         </div>
     </section>
+
+    <!-- Addons Modal -->
+    <div class="addon-overlay" id="addonOverlay">
+        <div class="addon-modal">
+            <div class="addon-header">
+                <h3>Passengers & add-ons</h3>
+                <button class="addon-close" onclick="closeAddonModal()">&times;</button>
+            </div>
+            <div class="addon-content">
+                <div class="addon-row">
+                    <div class="addon-label">👥 Passengers</div>
+                    <div class="addon-counter">
+                        <button onclick="updateCounter('passengers', -1)">-</button>
+                        <span id="count-passengers">1</span>
+                        <button onclick="updateCounter('passengers', 1)">+</button>
+                    </div>
+                </div>
+                <div class="addon-row">
+                    <div class="addon-label">💼 Luggage</div>
+                    <div class="addon-counter">
+                        <button onclick="updateCounter('luggage', -1)">-</button>
+                        <span id="count-luggage">1</span>
+                        <button onclick="updateCounter('luggage', 1)">+</button>
+                    </div>
+                </div>
+                <div class="addon-row">
+                    <div class="addon-label">🛡️ Meet & greet service <span>+$25</span></div>
+                    <label class="st-switch">
+                        <input type="checkbox" id="check-meet-greet" onchange="syncAddons()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="addon-row">
+                    <div class="addon-label">👶 Traveling with a child <span>+$15</span></div>
+                    <label class="st-switch">
+                        <input type="checkbox" id="check-child" onchange="syncAddons()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Vehicle Selection Overlay -->
     <div class="vs-overlay" id="vsOverlay">
