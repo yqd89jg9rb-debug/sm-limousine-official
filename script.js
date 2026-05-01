@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.0)
-   Robust Distance Matrix & Tiered Pricing Logic
+   SM LIMOUSINE — Main Script (Precision Version 2.1)
+   Robust Distance Matrix & Tiered Pricing Logic with Round-Trip
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,14 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- GOOGLE PLACES SETUP --- */
     function initAutocomplete() {
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
-        const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-hourly'];
+        const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'pickup-hourly'];
 
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input) {
                 const ac = new google.maps.places.Autocomplete(input, options);
                 ac.addListener('place_changed', () => {
-                    if (id.includes('oneway')) updateDistancePreview();
+                    if (id.includes('oneway') || id.includes('roundtrip')) updateDistancePreview(id.includes('oneway') ? 'oneway' : 'roundtrip');
                 });
             }
         });
@@ -38,9 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (typeof google !== 'undefined') initAutocomplete();
 
-    async function updateDistancePreview() {
-        const origin = document.getElementById('pickup-oneway').value;
-        const destination = document.getElementById('dropoff-oneway').value;
+    async function updateDistancePreview(mode) {
+        const origin = document.getElementById(`pickup-${mode}`).value;
+        const destination = document.getElementById(`dropoff-${mode}`).value;
 
         if (!origin || !destination) return;
 
@@ -55,8 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const element = response.rows[0].elements[0];
                 calculatedMiles = Math.round((element.distance.value / 1609.34) * 10) / 10;
                 
-                document.getElementById('preview-oneway').style.display = 'block';
-                document.getElementById('dist-val-oneway').textContent = calculatedMiles + ' mi';
+                const previewBox = document.getElementById(`preview-${mode}`);
+                const distVal = document.getElementById(`dist-val-${mode}`);
+                if (previewBox && distVal) {
+                    previewBox.style.display = 'block';
+                    distVal.textContent = (mode === 'roundtrip' ? calculatedMiles * 2 : calculatedMiles) + ' mi';
+                }
             }
         });
     }
@@ -74,14 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function openVehicleSelector(type, hours) {
         vsList.innerHTML = '';
         vsContinueBtn.disabled = true;
-        document.getElementById('vs-distance-summary').textContent = type === 'oneway' ? `Est. Distance: ${calculatedMiles} miles` : `Duration: ${hours} hours`;
+        
+        let displayMiles = calculatedMiles;
+        if (type === 'roundtrip') displayMiles *= 2;
+
+        document.getElementById('vs-distance-summary').textContent = (type === 'oneway' || type === 'roundtrip') ? `Est. Distance: ${displayMiles} miles` : `Duration: ${hours} hours`;
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
-            let total = type === 'hourly' ? v.hourly * hours : v.perMile * (calculatedMiles || 20);
+            let total = type === 'hourly' ? v.hourly * hours : v.perMile * (displayMiles || 20);
             
             // Apply minimum pricing by category
-            const minPrice = v.perMile * 15; // Set base min as 15 miles worth of driving
+            const minPrice = v.perMile * 15;
             if (total < minPrice) total = minPrice;
 
             const card = document.createElement('div');
