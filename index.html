@@ -58,7 +58,6 @@
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
 
-                <!-- Forms -->
                 <form class="booking-widget__form active" id="form-oneway">
                     <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input address-input"></div></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input address-input"></div></div>
@@ -122,25 +121,19 @@
         <div class="container">
             <h2 class="section-title">Luxury Services</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                <!-- Active Service Cards -->
-                <a href="#hero" style="text-decoration: none; display: block;" onclick="document.querySelector('[data-tab=\'oneway\']').click()">
-                    <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
-                        <h3 style="color: white; margin-bottom: 12px;">Airport Transfers</h3>
-                        <p style="color: #888; font-size: 0.95rem;">Reliable, on-time arrivals at DFW and Dallas Love Field.</p>
-                    </div>
-                </a>
-                <a href="#hero" style="text-decoration: none; display: block;" onclick="document.querySelector('[data-tab=\'hourly\']').click()">
-                    <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
-                        <h3 style="color: white; margin-bottom: 12px;">Corporate Events</h3>
-                        <p style="color: #888; font-size: 0.95rem;">Professional ground logistics for executives and teams.</p>
-                    </div>
-                </a>
-                <a href="#hero" style="text-decoration: none; display: block;" onclick="document.querySelector('[data-tab=\'oneway\']').click()">
-                    <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
-                        <h3 style="color: white; margin-bottom: 12px;">Special Occasions</h3>
-                        <p style="color: #888; font-size: 0.95rem;">Celebrate in style with our premium chauffeur service.</p>
-                    </div>
-                </a>
+                <!-- Active Service Cards with robust setBookingTab logic -->
+                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('oneway')" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
+                    <h3 style="color: white; margin-bottom: 12px;">Airport Transfers</h3>
+                    <p style="color: #888; font-size: 0.95rem;">Reliable, on-time arrivals at DFW and Dallas Love Field.</p>
+                </div>
+                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('hourly')" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
+                    <h3 style="color: white; margin-bottom: 12px;">Corporate Events</h3>
+                    <p style="color: #888; font-size: 0.95rem;">Professional ground logistics for executives and teams.</p>
+                </div>
+                <div style="padding: 40px; background: #111; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="setBookingTab('oneway')" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
+                    <h3 style="color: white; margin-bottom: 12px;">Special Occasions</h3>
+                    <p style="color: #888; font-size: 0.95rem;">Celebrate in style with our premium chauffeur service.</p>
+                </div>
             </div>
         </div>
     </section>
