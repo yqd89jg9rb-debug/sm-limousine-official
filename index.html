@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SM LIMOUSINE | Premium Black Car & Chauffeur Service</title>
-    <meta name="description" content="SM LIMOUSINE — Premium black car and chauffeur service. Escalade, Suburban, Sprinter & Motor Coach. Airport transfers, corporate travel, special events.">
+    <meta name="description" content="SM LIMOUSINE — Premium black car and chauffeur service.">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -49,7 +52,7 @@
                         <div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
                     </div>
                     <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-oneway">Select number of people</span></div></div>
-                    <div class="price-preview" id="preview-oneway" style="display:none; padding:10px; background:rgba(255,255,255,0.1); border-radius:8px;"><span id="dist-val-oneway" class="clear-price">0 mi</span></div>
+                    <div class="price-preview" id="preview-oneway" style="display:none;"><span id="dist-val-oneway" class="clear-price">0 mi</span></div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
@@ -63,7 +66,7 @@
                     <div class="booking-widget__field"><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input address-input"></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
                     <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-roundtrip">Select number of people</span></div></div>
-                    <div class="price-preview" id="preview-roundtrip" style="display:none; padding:10px; background:rgba(255,255,255,0.1); border-radius:8px;"><span id="dist-val-roundtrip" class="clear-price">0 mi</span></div>
+                    <div class="price-preview" id="preview-roundtrip" style="display:none;"><span id="dist-val-roundtrip" class="clear-price">0 mi</span></div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
@@ -77,71 +80,30 @@
         </div>
     </section>
 
-    <!-- CUSTOM ELITE FOOTER (Matching Bookinglane style) -->
+    <section id="fleet" class="fleet-section">
+        <h2 class="section-title">Our Elite Fleet</h2>
+        <p class="section-subtitle">Premium vehicles meticulously maintained for your journey.</p>
+        <div class="fleet-grid">
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png"><div class="fleet-card__content"><h3>Mercedes-Maybach</h3><p>Ultra Luxury Sedan</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg"><div class="fleet-card__content"><h3>Cadillac Escalade</h3><p>First Class Executive SUV</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg"><div class="fleet-card__content"><h3>Cadillac XT6</h3><p>Premium Luxury Sedan</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg"><div class="fleet-card__content"><h3>Motor Coach</h3><p>Grand Motor Coach</p></div></div>
+        </div>
+    </section>
+
     <footer class="elite-footer">
-        <div class="elite-footer__top">
-            <div class="elite-footer__logo">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
-            </div>
-            <a href="#hero" class="elite-footer__contact-btn">Contact us</a>
-        </div>
-
+        <div class="elite-footer__top"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32"><a href="#hero" class="elite-footer__contact-btn">Contact us</a></div>
         <div class="elite-footer__accordion-wrap">
-            <div class="elite-accordion" onclick="this.classList.toggle('active')">
-                <div class="elite-accordion__header">Our services <span class="arrow">⌄</span></div>
-                <div class="elite-accordion__content">
-                    <p>Airport Transfers</p>
-                    <p>Corporate Events</p>
-                    <p>Special Occasions</p>
-                    <p>Hourly Charter</p>
-                </div>
-            </div>
-            <div class="elite-accordion" onclick="this.classList.toggle('active')">
-                <div class="elite-accordion__header">Company <span class="arrow">⌄</span></div>
-                <div class="elite-accordion__content">
-                    <p>About Us</p>
-                    <p>Fleet</p>
-                    <p>Careers</p>
-                </div>
-            </div>
-            <div class="elite-accordion" onclick="this.classList.toggle('active')">
-                <div class="elite-accordion__header">Top destinations <span class="arrow">⌄</span></div>
-                <div class="elite-accordion__content">
-                    <p>Dallas (DFW)</p>
-                    <p>Fort Worth</p>
-                    <p>Houston</p>
-                    <p>Austin</p>
-                </div>
-            </div>
-            <div class="elite-accordion" onclick="this.classList.toggle('active')">
-                <div class="elite-accordion__header">Top routes <span class="arrow">⌄</span></div>
-                <div class="elite-accordion__content">
-                    <p>DFW to Dallas Downtown</p>
-                    <p>DFW to Fort Worth</p>
-                    <p>Keller to DAL</p>
-                </div>
-            </div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Our services <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p>Airport Transfers</p><p>Corporate Events</p><p>Special Occasions</p></div></div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Company <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p>About Us</p><p>Fleet</p></div></div>
         </div>
-
-        <div class="elite-footer__social">
-            <a href="#" class="social-icon fb"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="24"></a>
-            <a href="#" class="social-icon insta"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="24"></a>
-            <a href="#" class="social-icon x"><img src="https://cdn-icons-png.flaticon.com/512/5969/5969020.png" width="24"></a>
-            <a href="#" class="social-icon in"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="24"></a>
-        </div>
-
-        <div class="elite-footer__bottom">
-            <div class="elite-footer__legal">
-                <a href="#">Terms of service</a>
-                <a href="#">Privacy policy</a>
-            </div>
-            <div class="elite-footer__copyright">
-                © 2026 SM LIMOUSINE, Inc. All rights reserved.
-            </div>
-        </div>
+        <div class="elite-footer__social"><a href="#" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="24"></a><a href="#" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="24"></a></div>
+        <div class="elite-footer__bottom"><div class="elite-footer__legal"><a href="#">Terms of service</a><a href="#">Privacy policy</a></div><p class="elite-footer__copyright">© 2026 SM LIMOUSINE, Inc.</p></div>
     </footer>
 
-    <!-- Rest of modals & script -->
     <div class="addon-overlay" id="addonOverlay" onclick="if(event.target===this)closeAddonModal()">
         <div class="addon-modal"><div class="addon-sheet-handle"></div><div class="addon-header"><h3>Passengers & add-ons</h3><button onclick="closeAddonModal()">&times;</button></div><div class="addon-content"><div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div><div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div><button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button></div></div>
     </div>
