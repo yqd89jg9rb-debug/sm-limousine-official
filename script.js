@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 2.5)
-   Robust Multi-Address Autocomplete & Z-Index Fix
+   SM LIMOUSINE — Main Script (Precision Version 2.6)
+   True Dual-Leg Round Trip Calculation & Real-Time Math
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,13 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const MIN_HOURS = 3;
 
     /* --- STATE --- */
-    let calculatedMiles = 0;
+    let currentTotalMiles = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
 
     /* --- GOOGLE PLACES SETUP --- */
     function initAutocomplete() {
-        if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
-
+        if (typeof google === 'undefined') return;
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
         const ids = [
             'pickup-oneway', 'dropoff-oneway', 
@@ -36,50 +35,65 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
                 const ac = new google.maps.places.Autocomplete(input, options);
-                input.dataset.acBound = "true"; // Prevent double-binding
-                
+                input.dataset.acBound = "true";
                 ac.addListener('place_changed', () => {
-                    if (id.includes('oneway') || id.includes('roundtrip')) {
-                        const mode = id.includes('oneway') ? 'oneway' : 'roundtrip';
-                        updateDistancePreview(mode);
-                    }
+                    const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
+                    if (mode) calculateTotalDistance(mode);
                 });
             }
         });
     }
 
-    // Force init and retry to ensure mobile loading catch-up
-    initAutocomplete();
-    setTimeout(initAutocomplete, 1000);
-    setTimeout(initAutocomplete, 3000);
+    if (typeof google !== 'undefined') initAutocomplete();
 
-    function updateDistancePreview(mode) {
+    async function calculateTotalDistance(mode) {
+        const origin1 = document.getElementById(`pickup-${mode}`).value;
+        const dest1 = document.getElementById(`dropoff-${mode}`).value;
+        
+        if (!origin1 || !dest1) return 0;
+
+        const service = new google.maps.DistanceMatrixService();
+        
+        // Leg 1: Departing
+        const leg1 = await getLegDistance(service, origin1, dest1);
+        
+        let totalMeters = leg1;
+
+        // Leg 2: Return (Only for Round Trip)
+        if (mode === 'roundtrip') {
+            const origin2 = document.getElementById('return-pickup-roundtrip').value;
+            const dest2 = document.getElementById('return-dropoff-roundtrip').value;
+            if (origin2 && dest2) {
+                const leg2 = await getLegDistance(service, origin2, dest2);
+                totalMeters += leg2;
+            } else {
+                // Fallback: If return addresses aren't filled yet, just double the first leg
+                totalMeters += leg1;
+            }
+        }
+
+        currentTotalMiles = Math.round((totalMeters / 1609.34) * 10) / 10;
+        
+        const previewBox = document.getElementById(`preview-${mode}`);
+        const distVal = document.getElementById(`dist-val-${mode}`);
+        if (previewBox && distVal) {
+            previewBox.style.display = 'block';
+            distVal.textContent = currentTotalMiles + ' mi';
+        }
+
+        return currentTotalMiles;
+    }
+
+    function getLegDistance(service, origin, dest) {
         return new Promise((resolve) => {
-            const origin = document.getElementById(`pickup-${mode}`).value;
-            const destination = document.getElementById(`dropoff-${mode}`).value;
-
-            if (!origin || !destination) return resolve(0);
-
-            const service = new google.maps.DistanceMatrixService();
             service.getDistanceMatrix({
                 origins: [origin],
-                destinations: [destination],
+                destinations: [dest],
                 travelMode: 'DRIVING',
                 unitSystem: google.maps.UnitSystem.IMPERIAL
             }, (response, status) => {
                 if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
-                    const element = response.rows[0].elements[0];
-                    const meters = element.distance.value;
-                    calculatedMiles = Math.round((meters / 1609.34) * 10) / 10;
-                    
-                    const previewBox = document.getElementById(`preview-${mode}`);
-                    const distVal = document.getElementById(`dist-val-${mode}`);
-                    if (previewBox && distVal) {
-                        previewBox.style.display = 'block';
-                        const totalDisplay = (mode === 'roundtrip' ? calculatedMiles * 2 : calculatedMiles);
-                        distVal.textContent = totalDisplay.toFixed(1) + ' mi';
-                    }
-                    resolve(calculatedMiles);
+                    resolve(response.rows[0].elements[0].distance.value);
                 } else {
                     resolve(0);
                 }
@@ -92,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = form.querySelector('.booking-widget__submit');
-            const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.textContent = 'Calculating...';
 
@@ -100,26 +113,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const hours = parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS);
             
             if (type !== 'hourly') {
-                const miles = await updateDistancePreview(type);
+                const miles = await calculateTotalDistance(type);
                 openVehicleSelector(type, hours, miles);
             } else {
                 openVehicleSelector(type, hours, 0);
             }
 
             submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
+            submitBtn.textContent = 'Get a Quote';
         });
     });
 
     function openVehicleSelector(type, hours, miles) {
         vsList.innerHTML = '';
         vsContinueBtn.disabled = true;
-        
-        const distanceToBill = (type === 'roundtrip') ? (miles * 2) : miles;
-        const finalMiles = distanceToBill || 20;
+        const finalMiles = miles || 20;
 
-        const summaryLabel = (type === 'oneway' || type === 'roundtrip') ? `Total Distance: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
-        document.getElementById('vs-distance-summary').textContent = summaryLabel;
+        document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Trip Distance: ${finalMiles} miles` : `Duration: ${hours} hours`;
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
@@ -157,8 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle;
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
-        const payOverlay = document.getElementById('paymentOverlay');
-        payOverlay.classList.add('active');
+        document.getElementById('paymentOverlay').classList.add('active');
 
         setTimeout(() => {
             if (!stripe) {
@@ -179,11 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('payBtn');
         btn.disabled = true;
         btn.textContent = 'Authorizing...';
-        
         const {token, error} = await stripe.createToken(cardNumber);
         if (token) {
             alert('Success! Your reservation has been sent to dispatch. We will contact you shortly.');
-            payOverlay.classList.remove('active');
+            document.getElementById('paymentOverlay').classList.remove('active');
         } else {
             alert('Error: ' + error.message);
         }
@@ -199,11 +207,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs.forEach(x => x.classList.remove('active'));
         t.classList.add('active');
         document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
-        const targetFormId = 'form-' + t.dataset.tab;
-        document.getElementById(targetFormId).classList.add('active');
-        
-        // Re-run initAutocomplete whenever a tab is switched to catch hidden fields
+        document.getElementById('form-' + t.dataset.tab).classList.add('active');
         initAutocomplete();
-        calculatedMiles = 0;
+        currentTotalMiles = 0;
     });
 });
