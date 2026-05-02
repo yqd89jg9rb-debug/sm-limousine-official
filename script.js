@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 3.0)
+   SM LIMOUSINE — Main Script (Precision Version 3.1)
    Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
@@ -16,10 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
-    const DISCOUNT_CODES = { 'SMLIMO10': 0.10, 'VIP20': 0.20, 'SMLIMO30': 0.30, 'WELCOME': 5.00 };
 
     /* --- STATE --- */
-    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, activeDiscount = 0;
+    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
     let passengerCount = 1, luggageCount = 1;
 
@@ -89,8 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof google !== 'undefined') initAutocomplete();
 
     async function refreshDistances(mode) {
-        const origin1 = document.getElementById(`pickup-${mode}`).value;
-        const dest1 = document.getElementById(`dropoff-${mode}`).value;
+        const pInput = document.getElementById(`pickup-${mode}`);
+        const dInput = document.getElementById(`dropoff-${mode}`);
+        if (!pInput || !dInput) return;
+        const origin1 = pInput.value;
+        const dest1 = dInput.value;
         if (!origin1 || !dest1) return;
         const service = new google.maps.DistanceMatrixService();
         leg1Miles = await getLegMiles(service, origin1, dest1);
@@ -173,9 +175,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!stripe) {
                 stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
                 elements = stripe.elements();
+                const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
+                cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
+                cardExpiry = elements.create('cardExpiry', { style }); cardExpiry.mount('#card-expiry-element');
+                cardCvc = elements.create('cardCvc', { style }); cardCvc.mount('#card-cvc-element');
             }
         }, 500);
     }
+
+    document.getElementById('payBtn').onclick = async () => {
+        const btn = document.getElementById('payBtn');
+        const name = document.getElementById('pay-name').value;
+        const email = document.getElementById('pay-email').value;
+        if (!name || !email) { alert('Please fill in your name and email.'); return; }
+        
+        btn.disabled = true; btn.textContent = 'Authorizing...';
+        const {token, error} = await stripe.createToken(cardNumber);
+        if (token) { 
+            alert('Success! Your reservation for ' + document.getElementById('pay-vehicle').textContent + ' has been sent. Check your email for details.');
+            document.getElementById('paymentOverlay').classList.remove('active');
+        } else {
+            alert('Payment Error: ' + error.message);
+        }
+        btn.disabled = false; btn.textContent = 'Book Now';
+    };
 
     document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
     document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');

@@ -518,3 +518,20 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
     .fleet-grid { grid-template-columns: repeat(3, 1fr); }
     .booking-widget { max-width: 440px; }
 }
+
+/* ============================================================
+   STRIPE ELEMENT STYLES
+   ============================================================ */
+#card-number-element, #card-expiry-element, #card-cvc-element {
+    background: #000;
+    padding: 12px;
+    border: 1.5px solid #2a2a2a;
+    border-radius: 8px;
+    min-height: 44px;
+}
+.StripeElement--focus {
+    border-color: var(--purple) !important;
+}
+.StripeElement--invalid {
+    border-color: #eb1c26 !important;
+}
