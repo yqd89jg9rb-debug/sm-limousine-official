@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('paymentOverlay').classList.add('active');
         
         if (!stripe) {
-            stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
+            stripe = Stripe('pk_live_51IbYKJDTuAQjzxkZ1N0ux67FkazoNNnIBETCNDKY4ZGNPgvvhLQ6uUjllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
             elements = stripe.elements();
             const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
             cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
