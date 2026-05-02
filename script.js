@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision VersionAy 2.15)
+   SM LIMOUSINE — Main Script (Precision Version 3.0)
    Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- STATE --- */
     let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, activeDiscount = 0;
     let stripe, elements, cardNumber, cardExpiry, cardCvc;
-    let passengerCount = 1, luggageCount = 1, meetGreet = false, childSeat = false;
+    let passengerCount = 1, luggageCount = 1;
 
     /* --- MOBILE MENU CONTROL --- */
     const burgerBtn = document.getElementById('burgerBtn');
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Close menu when links are clicked
     document.querySelectorAll('.header__link').forEach(link => {
         link.onclick = () => {
             mainNav.classList.remove('open');
@@ -51,9 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
         initAutocomplete();
     });
 
-    /* --- GLOBAL TAB SETTER (FOR SERVICE CARDS) --- */
     window.setBookingTab = (name) => {
-        document.querySelector(`[data-tab="${name}"]`).click();
+        const tab = document.querySelector(`[data-tab="${name}"]`);
+        if (tab) tab.click();
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
@@ -137,6 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    const vsOverlay = document.getElementById('vsOverlay');
+    const vsList = document.getElementById('vsList');
+    const vsContinueBtn = document.getElementById('vsContinueBtn');
+
     function openVehicleSelector(type, hours) {
         vsList.innerHTML = ''; vsContinueBtn.disabled = true;
         const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
@@ -145,8 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
-            let total = type === 'hourly' ? v.hourly * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
-            const minBase = Math.max(90, v.perMile * 20);
+            let total = type === 'hourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
+            const minBase = 90;
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
@@ -155,14 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');
                 vsContinueBtn.disabled = false;
-                vsContinueBtn.onclick = () => { vsOverlay.classList.remove('active'); currentTotal = total; activeDiscount = 0; openPayment(v.name, total); };
+                vsContinueBtn.onclick = () => { vsOverlay.classList.remove('active'); currentTotal = total; openPayment(v.name, total); };
             };
             vsList.appendChild(card);
         });
         vsOverlay.classList.add('active');
     }
 
-    /* --- PAYMENTS --- */
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle;
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
@@ -171,23 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!stripe) {
                 stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
                 elements = stripe.elements();
-                cardNumber = elements.create('cardNumber', { style: { base: { color: '#ffffff', fontSize: '16px' } } });
-                cardNumber.mount('#card-number-element');
-                cardExpiry = elements.create('cardExpiry', { style: { base: { color: '#ffffff', fontSize: '16px' } } });
-                cardExpiry.mount('#card-expiry-element');
-                cardCvc = elements.create('cardCvc', { style: { base: { color: '#ffffff', fontSize: '16px' } } });
-                cardCvc.mount('#card-cvc-element');
             }
         }, 500);
     }
-
-    document.getElementById('payBtn').onclick = async () => {
-        const btn = document.getElementById('payBtn'); btn.disabled = true; btn.textContent = 'Authorizing...';
-        const {token, error} = await stripe.createToken(cardNumber);
-        if (token) { alert('Success! Reservation sent.'); document.getElementById('paymentOverlay').classList.remove('active'); }
-        else alert('Error: ' + error.message);
-        btn.disabled = false; btn.textContent = 'Book Now';
-    };
 
     document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
     document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
