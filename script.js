@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 3.4)
+   SM LIMOUSINE — Main Script (Precision Version 3.6)
    Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
@@ -172,14 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
         document.getElementById('paymentOverlay').classList.add('active');
         
-        if (!stripe) {
-            stripe = Stripe('pk_live_51IbYKJDTuAQjzxkZ1N0ux67FkazoNNnIBETCNDKY4ZGNPgvvhLQ6uUjllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
-            elements = stripe.elements();
-            const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
-            cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
-            cardExpiry = elements.create('cardExpiry', { style }); cardExpiry.mount('#card-expiry-element');
-            cardCvc = elements.create('cardCvc', { style }); cardCvc.mount('#card-cvc-element');
-        }
+        setTimeout(() => {
+            if (!stripe) {
+                stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
+                elements = stripe.elements();
+                const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
+                cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
+                cardExpiry = elements.create('cardExpiry', { style }); cardExpiry.mount('#card-expiry-element');
+                cardCvc = elements.create('cardCvc', { style }); cardCvc.mount('#card-cvc-element');
+            }
+        }, 500);
     }
 
     document.getElementById('payBtn').onclick = async () => {
