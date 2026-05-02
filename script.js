@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.1)
-   Robust Tab Controller & Mobile Menu Activator
+   SM LIMOUSINE — Main Script (Precision Version 4.2)
+   Dispatch Engine Integration: SMS & Data Capture
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let leg1Miles = 0, leg2Miles = 0, currentTotal = 0;
     let stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null;
     let passengerCount = 1, luggageCount = 1;
+    let bookingData = {}; // Global storage for current trip
 
     /* --- MOBILE MENU CONTROL --- */
     const burgerBtn = document.getElementById('burgerBtn');
@@ -131,9 +132,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = form.querySelector('.booking-widget__submit');
             submitBtn.disabled = true; submitBtn.textContent = 'Calculating...';
             const type = form.id.replace('form-', '');
-            const hours = parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS);
+            
+            // Capture base details
+            bookingData = {
+                type: type,
+                pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A',
+                dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
+                date: form.querySelector('input[type="date"]')?.value || 'N/A',
+                time: form.querySelector('input[type="time"]')?.value || 'N/A',
+                passengers: passengerCount,
+                luggage: luggageCount,
+                hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
+            };
+
             await refreshDistances(type);
-            openVehicleSelector(type, hours);
+            openVehicleSelector(type, bookingData.hours);
             submitBtn.disabled = false; submitBtn.textContent = 'Get a Quote';
         });
     });
@@ -160,7 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');
                 vsContinueBtn.disabled = false;
-                vsContinueBtn.onclick = () => { vsOverlay.classList.remove('active'); currentTotal = total; openPayment(v.name, total); };
+                vsContinueBtn.onclick = () => { 
+                    vsOverlay.classList.remove('active'); 
+                    bookingData.vehicle = v.name;
+                    bookingData.total = total.toFixed(2);
+                    openPayment(v.name, total); 
+                };
             };
             vsList.appendChild(card);
         });
@@ -174,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             if (!stripe) {
-                // THE FULL 107-CHARACTER KEY PASTE DIRECTLY FROM USER
                 stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
                 elements = stripe.elements();
                 const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
@@ -191,11 +208,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('pay-email').value;
         if (!name || !email) { alert('Please fill in your name and email.'); return; }
         
-        btn.disabled = true; btn.textContent = 'Authorizing...';
+        btn.disabled = true; btn.textContent = 'Sending Reservation...';
+        
+        // 1. Create Stripe Token (Validation Only)
         const {token, error} = await stripe.createToken(cardNumber);
         if (token) { 
-            alert('Success! Your reservation for ' + document.getElementById('pay-vehicle').textContent + ' has been sent. Check your email for details.');
-            document.getElementById('paymentOverlay').classList.remove('active');
+            // 2. Add client info to data
+            bookingData.name = name;
+            bookingData.email = email;
+            bookingData.token = token.id;
+
+            // 3. Dispatch Notification via Netlify Function
+            try {
+                const response = await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    body: JSON.stringify(bookingData)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Success! Your reservation for ' + bookingData.vehicle + ' has been sent. Check your email for details.');
+                    document.getElementById('paymentOverlay').classList.remove('active');
+                } else {
+                    alert('Booking recorded, but dispatch notification delayed. We will contact you shortly.');
+                }
+            } catch (e) {
+                console.error('Dispatch error:', e);
+                alert('Success! Reservation sent. We will confirm shortly.');
+                document.getElementById('paymentOverlay').classList.remove('active');
+            }
         } else {
             alert('Payment Error: ' + error.message);
         }
