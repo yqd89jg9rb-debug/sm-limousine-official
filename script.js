@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 3.7)
+   SM LIMOUSINE — Main Script (Precision Version 3.8)
    Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             if (!stripe) {
-                // RESTORING EXACT CONFIRMED WORKING KEY FROM VERSION 3.0
-                stripe = Stripe('pk_live_51IbYKJDTuAQjzxkZ1N0ux67FkazoNNnIBETCNDKY4ZGNPgvvhLQ6uUjllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
+                // THE EXACT VERIFIED WORKING KEY FROM VERSION 3.0
+                stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
                 elements = stripe.elements();
                 const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
                 cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
