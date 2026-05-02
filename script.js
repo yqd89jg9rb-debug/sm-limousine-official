@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 3.3)
+   SM LIMOUSINE — Main Script (Precision Version 3.4)
    Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* --- STATE --- */
     let leg1Miles = 0, leg2Miles = 0, currentTotal = 0;
-    let stripe = null, elements, card;
+    let stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null;
     let passengerCount = 1, luggageCount = 1;
 
     /* --- MOBILE MENU CONTROL --- */
@@ -175,14 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!stripe) {
             stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
             elements = stripe.elements();
-            const style = { base: { color: '#ffffff', fontSize: '18px', '::placeholder': { color: '#888888' } } };
-            card = elements.create('card', { style, hidePostalCode: true });
-            card.mount('#card-element');
-            card.on('change', (event) => {
-                const displayError = document.getElementById('card-errors');
-                if (event.error) displayError.textContent = event.error.message;
-                else displayError.textContent = '';
-            });
+            const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
+            cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
+            cardExpiry = elements.create('cardExpiry', { style }); cardExpiry.mount('#card-expiry-element');
+            cardCvc = elements.create('cardCvc', { style }); cardCvc.mount('#card-cvc-element');
         }
     }
 
@@ -193,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !email) { alert('Please fill in your name and email.'); return; }
         
         btn.disabled = true; btn.textContent = 'Authorizing...';
-        const {token, error} = await stripe.createToken(card);
+        const {token, error} = await stripe.createToken(cardNumber);
         if (token) { 
             alert('Success! Your reservation for ' + document.getElementById('pay-vehicle').textContent + ' has been sent. Check your email for details.');
             document.getElementById('paymentOverlay').classList.remove('active');

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SM LIMOUSINE | Premium Black Car & Chauffeur Service</title>
+    <title>SM LIMOUSINE | Premium Black Car &amp; Chauffeur Service</title>
     <meta name="description" content="SM LIMOUSINE — Premium black car and chauffeur service.">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
@@ -137,7 +137,11 @@
             <div class="payment-modal__form">
                 <div class="pm-field"><label class="field-label">Full Name</label><input type="text" id="pay-name" class="st-input" placeholder="Name on card"></div>
                 <div class="pm-field"><label class="field-label">Email</label><input type="email" id="pay-email" class="st-input" placeholder="Email for receipt"></div>
-                <div class="pm-field"><label class="field-label">Card Information</label><div id="card-element" class="st-input"></div><div id="card-errors" role="alert" style="color: #ff4b4b; font-size: 0.8rem; margin-top: 5px;"></div></div>
+                <div class="pm-field"><label class="field-label">Card Number</label><div id="card-number-element" class="st-input"></div></div>
+                <div class="booking-widget__row">
+                    <div class="pm-field"><label class="field-label">Expiry</label><div id="card-expiry-element" class="st-input"></div></div>
+                    <div class="pm-field"><label class="field-label">CVC</label><div id="card-cvc-element" class="st-input"></div></div>
+                </div>
                 <button id="payBtn" class="pm-book-btn">Book Now</button>
             </div>
         </div>
