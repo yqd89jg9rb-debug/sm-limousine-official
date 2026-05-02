@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 3.9)
+   SM LIMOUSINE — Main Script (Precision Version 3.10)
    Robust Tab Controller & Mobile Menu Activator
    =================================================================== */
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = form.querySelector('.booking-widget__submit');
             submitBtn.disabled = true; submitBtn.textContent = 'Calculating...';
             const type = form.id.replace('form-', '');
-            const hours = parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS);
+            const hours = parseInt(form.querySelector('[data-field=\"hours\"]')?.value || MIN_HOURS);
             await refreshDistances(type);
             openVehicleSelector(type, hours);
             submitBtn.disabled = false; submitBtn.textContent = 'Get a Quote';
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
-            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
+            card.innerHTML = `<div class=\"vs-card__info\"><div class=\"vs-card__category\">${v.category}</div><div class=\"vs-card__name\">${v.name}</div><div class=\"vs-card__price\">$${total.toFixed(2)} USD</div><div class=\"vs-card__capacity\">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class=\"vs-card__right\"><img src=\"${v.image}\"></div>`;
             card.onclick = () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             if (!stripe) {
-                // THE EXACT VERIFIED WORKING KEY FROM VERSION 3.0
-                stripe = Stripe('pk_live_51IbYKJDTuAQjzxkZ1N0ux67FkazoNNnIBETCNDKY4ZGNPgvvhLQ6uUjllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
+                // THE CORRECT STRIPE PUBLISHABLE KEY FROM YOUR DASHBOARD
+                stripe = Stripe('pk_live_51TQZ7FGTeUSAyICLrkgY4aRJwR2ZEqJucZVFuJlMe6q8qIyz7gp00');
                 elements = stripe.elements();
                 const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
                 cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
