@@ -1,7 +1,7 @@
 /* ===================================================================
    SM LIMOUSINE — Main Script (Precision Version 3.3)
    Robust Tab Controller & Mobile Menu Activator
-   ==================================================================== */
+   =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    /* --- MODAL FLOGIC --- */
+    /* --- MODAL LOGIC --- */
     window.openAddonModal = () => document.getElementById('addonOverlay').classList.add('active');
     window.closeAddonModal = () => document.getElementById('addonOverlay').classList.remove('active');
     window.updateCounter = (type, change) => {
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('paymentOverlay').classList.add('active');
         
         if (!stripe) {
-            stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkz1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJh0UCMJo5UFiQW008pn1ZBYX');
+            stripe = Stripe('pk_live_51IbYKJDTuAQjzzxkZ1M0ux67FkazoNNlIBETCNDKY4ZGNPyvvhLQ6uUjmllR00Hx6974pr4g0x7PJH0UCMJo5UFiQW008pn1ZBYX');
             elements = stripe.elements();
             const style = { base: { color: '#ffffff', fontSize: '18px', '::placeholder': { color: '#888888' } } };
             card = elements.create('card', { style, hidePostalCode: true });
