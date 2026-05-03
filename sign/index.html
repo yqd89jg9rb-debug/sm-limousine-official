@@ -16,33 +16,32 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Start from top to control spacing */
             overflow: hidden;
         }
 
         .logo-container {
-            position: absolute;
-            top: 5%;
+            margin-top: 8vh; /* Control logo height from top */
             width: 100%;
             display: flex;
             justify-content: center;
         }
 
         .logo-img {
-            height: 120px;
+            height: 140px; /* Made logo slightly larger too */
             width: auto;
             border-radius: 8px;
         }
 
         .name-container {
-            width: 90%;
+            width: 95%;
             text-align: center;
-            padding: 20px;
+            margin-top: 15vh; /* Pushes the name further down from the logo */
         }
 
         .client-name {
-            font-size: 8vw;
-            font-weight: 800;
+            font-size: 12vw; /* Increased from 8vw to 12vw for a bigger look */
+            font-weight: 900;
             text-transform: uppercase;
             border: none;
             background: transparent;
@@ -51,19 +50,22 @@
             width: 100%;
             outline: none;
             word-wrap: break-word;
+            line-height: 1.1;
         }
 
         .instruction {
             position: absolute;
             bottom: 20px;
             font-size: 14px;
-            color: #444;
+            color: #333;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         @media print {
             .instruction { display: none; }
+            .logo-container { margin-top: 2cm; }
+            .name-container { margin-top: 4cm; }
         }
     </style>
 </head>
@@ -82,12 +84,19 @@
     <div class="instruction">Digital Greeting Sign — SM LIMOUSINE</div>
 
     <script>
-        // Auto-focus the name field on load
-        document.querySelector('.client-name').addEventListener('focus', function() {
+        // Clear default text on focus
+        const nameField = document.querySelector('.client-name');
+        nameField.addEventListener('focus', function() {
             if (this.innerText === 'TAP TO TYPE NAME') {
                 this.innerText = '';
             }
         });
+
+        // Optional: Keep focus for better tablet experience
+        window.onload = () => {
+            // Add a small delay to ensure rendering
+            setTimeout(() => nameField.focus(), 500);
+        };
     </script>
 </body>
 </html>
