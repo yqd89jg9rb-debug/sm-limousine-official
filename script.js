@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.45)
-   Discount Engine Integration
+   SM LIMOUSINE — Main Script (Precision Version 4.50)
+   Motor Coach Rate Update
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A', 
                 dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
                 date: form.querySelector('input[type="date"]')?.value || 'N/A', 
-                time: form.querySelector('input[type="time"]')?.value || 'N/A',
+                time: form.querySelector('input[type="time"]')?.value || 'N/A', 
                 phone: form.querySelector('.phone-input')?.value || 'N/A',
                 contactEmail: form.querySelector('.contact-email-input')?.value || 'N/A',
                 passengers: passengerCount, 
@@ -124,6 +124,17 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key]; 
             let total = type === 'hourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
+            
+            // --- CUSTOM RULES ---
+            if (key === 'motorcoach') {
+                // Minimum $800 for 35 miles or less
+                if (totalMiles <= 35 && type !== 'hourly') {
+                    total = 800.00;
+                } else {
+                    total = Math.max(800.00, total);
+                }
+            }
+
             const minBase = 90;
             if (total < minBase) total = minBase;
             const card = document.createElement('div'); card.className = 'vs-card';
