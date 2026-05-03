@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.26)
-   Fleet Rates Restored
+   SM LIMOUSINE — Main Script (Precision Version 4.40)
+   Contact Fields Addition (Phone & Email)
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
-    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
+    let leg1Miles = 0, leg2Miles = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
 
     const burgerBtn = document.getElementById('burgerBtn'), mainNav = document.getElementById('mainNav');
     if (burgerBtn) burgerBtn.onclick = () => { mainNav.classList.toggle('open'); burgerBtn.classList.toggle('open'); };
@@ -91,11 +91,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = form.querySelector('.booking-widget__submit');
             submitBtn.disabled = true; submitBtn.textContent = 'Calculating...';
             const type = form.id.replace('form-', '');
+            
             bookingData = {
-                type: type, pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A', dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
-                date: form.querySelector('input[type="date"]')?.value || 'N/A', time: form.querySelector('input[type="time"]')?.value || 'N/A',
-                passengers: passengerCount, luggage: luggageCount, hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
+                type: type, 
+                pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A', 
+                dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
+                date: form.querySelector('input[type="date"]')?.value || 'N/A', 
+                time: form.querySelector('input[type="time"]')?.value || 'N/A',
+                phone: form.querySelector('.phone-input')?.value || 'N/A',
+                contactEmail: form.querySelector('.contact-email-input')?.value || 'N/A',
+                passengers: passengerCount, 
+                luggage: luggageCount, 
+                hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
             };
+
             if (type === 'roundtrip') {
                 const rtDateInputs = form.querySelectorAll('input[type="date"]'), rtTimeInputs = form.querySelectorAll('input[type="time"]');
                 bookingData.returnDate = rtDateInputs[1]?.value || 'N/A'; bookingData.returnTime = rtTimeInputs[1]?.value || 'N/A';

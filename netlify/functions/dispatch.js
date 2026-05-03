@@ -6,7 +6,7 @@ exports.handler = async (event) => {
 
   try {
     const data = JSON.parse(event.body);
-    const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
+    const { name, email, phone, contactEmail, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
 
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
     const DISPATCH_TO = process.env.DISPATCH_TO;
@@ -15,7 +15,8 @@ exports.handler = async (event) => {
     let bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE
 
 Client: ${name}
-Email: ${email}
+Contact Email: ${contactEmail || email}
+Phone: ${phone || 'N/A'}
 Vehicle: ${vehicle}
 Total: $${total}
 
@@ -39,7 +40,7 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         });
         return transporter.sendMail({
             from: `"SM Limousine Dispatch" <${SENDER_EMAIL}>`,
-            to: `smlimo@mail.com, smlimo2@yahoo.com, ${email}`,
+            to: `smlimo@mail.com, smlimo2@yahoo.com, ${contactEmail || email}`,
             subject: `🚨 Booking: ${name} - ${vehicle}`,
             text: bookingSummary
         });
