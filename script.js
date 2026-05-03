@@ -1,13 +1,13 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.2)
-   Dispatch Engine Integration: SMS & Data Capture
+   SM LIMOUSINE — Main Script (Precision Version 4.5)
+   Full Transaction Engine: Tokenization + Charge + SMS Dispatch
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const VEHICLE_RATES = {
         xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
+        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
         denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
         escalade:   { name: 'Cadillac Escalade',    base: 125, perMile: 6.50, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
         maybach:    { name: 'Mercedes-Maybach',     base: 150, perMile: 7.50, category: 'Ultra Luxury',     passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let leg1Miles = 0, leg2Miles = 0, currentTotal = 0;
     let stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null;
     let passengerCount = 1, luggageCount = 1;
-    let bookingData = {}; // Global storage for current trip
+    let bookingData = {};
 
     /* --- MOBILE MENU CONTROL --- */
     const burgerBtn = document.getElementById('burgerBtn');
@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true; submitBtn.textContent = 'Calculating...';
             const type = form.id.replace('form-', '');
             
-            // Capture base details
             bookingData = {
                 type: type,
                 pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A',
@@ -208,37 +207,52 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('pay-email').value;
         if (!name || !email) { alert('Please fill in your name and email.'); return; }
         
-        btn.disabled = true; btn.textContent = 'Sending Reservation...';
+        btn.disabled = true; btn.textContent = 'Processing Payment...';
         
-        // 1. Create Stripe Token (Validation Only)
+        // 1. Create Stripe Token (Safe sensitive data handle)
         const {token, error} = await stripe.createToken(cardNumber);
+        
         if (token) { 
-            // 2. Add client info to data
-            bookingData.name = name;
-            bookingData.email = email;
-            bookingData.token = token.id;
-
-            // 3. Dispatch Notification via Netlify Function
+            // 2. ACTUALLY CHARGE THE CARD via Netlify Function
             try {
-                const response = await fetch('/.netlify/functions/dispatch', {
+                const chargeResponse = await fetch('/.netlify/functions/create-charge', {
                     method: 'POST',
-                    body: JSON.stringify(bookingData)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: token.id,
+                        amount: bookingData.total,
+                        email: email,
+                        description: `SM LIMOUSINE Booking: ${bookingData.vehicle} for ${name}`
+                    })
                 });
-                const result = await response.json();
                 
-                if (result.success) {
-                    alert('Success! Your reservation for ' + bookingData.vehicle + ' has been sent. Check your email for details.');
+                const chargeResult = await chargeResponse.json();
+
+                if (chargeResult.success) {
+                    btn.textContent = 'Sending Reservation...';
+                    
+                    // 3. Dispatch Notification (SMS Alert)
+                    bookingData.name = name;
+                    bookingData.email = email;
+                    bookingData.chargeId = chargeResult.chargeId;
+
+                    await fetch('/.netlify/functions/dispatch', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    alert('Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed. You will receive a text confirmation shortly.');
                     document.getElementById('paymentOverlay').classList.remove('active');
                 } else {
-                    alert('Booking recorded, but dispatch notification delayed. We will contact you shortly.');
+                    alert('Payment Failed: ' + chargeResult.error);
                 }
             } catch (e) {
-                console.error('Dispatch error:', e);
-                alert('Success! Reservation sent. We will confirm shortly.');
-                document.getElementById('paymentOverlay').classList.remove('active');
+                console.error('System error:', e);
+                alert('A system error occurred. Your card was not charged. Please call us at +1817-723-4592.');
             }
         } else {
-            alert('Payment Error: ' + error.message);
+            alert('Card Error: ' + error.message);
         }
         btn.disabled = false; btn.textContent = 'Book Now';
     };

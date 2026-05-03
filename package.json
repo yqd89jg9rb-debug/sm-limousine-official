@@ -4,6 +4,7 @@
   "description": "SM LIMOUSINE - Dispatch Engine",
   "main": "index.html",
   "dependencies": {
-    "twilio": "^5.0.0"
+    "twilio": "^5.0.0",
+    "stripe": "^14.0.0"
   }
 }
