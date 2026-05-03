@@ -1,6 +1,6 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.8)
-   Advanced Debug Reporting for Dispatch Engine
+   SM LIMOUSINE — Main Script (Precision Version 4.12)
+   Notification Restoration & Deep Debugging
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.setBookingTab = (name) => {
-        const tab = document.querySelector(`[data-tab="${name}"]`);
+        const tab = document.querySelector(`[data-tab=\"${name}\"]`);
         if (tab) tab.click();
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
-        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
+        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: \"us\" } };
         const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
                 const ac = new google.maps.places.Autocomplete(input, options);
-                input.dataset.acBound = "true";
+                input.dataset.acBound = \"true\";
                 ac.addListener('place_changed', () => {
                     const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
                     if (mode) refreshDistances(mode);
@@ -137,11 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 type: type,
                 pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A',
                 dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
-                date: form.querySelector('input[type="date"]')?.value || 'N/A',
-                time: form.querySelector('input[type="time"]')?.value || 'N/A',
+                date: form.querySelector('input[type=\"date\"]')?.value || 'N/A',
+                time: form.querySelector('input[type=\"time\"]')?.value || 'N/A',
                 passengers: passengerCount,
                 luggage: luggageCount,
-                hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
+                hours: parseInt(form.querySelector('[data-field=\"hours\"]')?.value || MIN_HOURS)
             };
 
             await refreshDistances(type);
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
-            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
+            card.innerHTML = `<div class=\"vs-card__info\"><div class=\"vs-card__category\">${v.category}</div><div class=\"vs-card__name\">${v.name}</div><div class=\"vs-card__price\">$${total.toFixed(2)} USD</div><div class=\"vs-card__capacity\">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class=\"vs-card__right\"><img src=\"${v.image}\"></div>`;
             card.onclick = () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');
@@ -227,7 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (chargeResult.success) {
                     btn.textContent = 'Sending Notifications...';
-                    
                     bookingData.name = name;
                     bookingData.email = email;
                     bookingData.chargeId = chargeResult.chargeId;
@@ -239,78 +238,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     const dispatchResult = await dispatchRes.json();
 
+                    let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
+                    
+                    if (dispatchResult.email_status.includes('failed')) {
+                        finalMsg += '\n\n🚨 Email snag: ' + dispatchResult.email_error;
+                        finalMsg += '\n\nPlease screenshot this error and send it to Mike.';
+                    } else {
+                        finalMsg += '\n\nCheck your emails for confirmation details.';
+                    }
+
+                    alert(finalMsg);
                     document.getElementById('paymentOverlay').classList.remove('active');
-                    showBookingConfirmation(bookingData.vehicle, dispatchResult);
                 } else {
                     alert('Payment Failed: ' + chargeResult.error);
                 }
             } catch (e) {
                 console.error('System error:', e);
+                alert('Payment Success, but notification engine is syncing. Check your account.');
                 document.getElementById('paymentOverlay').classList.remove('active');
-                showBookingConfirmation(bookingData.vehicle, { email_status: 'snag: Network error — ' + e.message, sms_status: 'unknown', email_debug: { message: e.message } });
             }
         } else {
             alert('Card Error: ' + error.message);
         }
         btn.disabled = false; btn.textContent = 'Book Now';
     };
-
-    function showBookingConfirmation(vehicle, dispatch) {
-        const emailOk = dispatch.email_status === 'sent';
-        const smsOk = dispatch.sms_status === 'sent';
-        const dbg = dispatch.email_debug;
-
-        let html = `
-            <div id="confirmOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;">
-              <div style="background:#111;border:1px solid #333;border-radius:12px;max-width:520px;width:100%;padding:28px 24px;font-family:Inter,sans-serif;color:#fff;max-height:90vh;overflow-y:auto;">
-                <div style="font-size:2rem;text-align:center;margin-bottom:8px;">&#9989;</div>
-                <h2 style="text-align:center;font-size:1.2rem;margin:0 0 4px;">Payment Confirmed</h2>
-                <p style="text-align:center;color:#aaa;font-size:0.85rem;margin:0 0 20px;">Your <strong style="color:#d4af37">${vehicle}</strong> reservation is confirmed.</p>
-
-                <div style="display:grid;gap:8px;margin-bottom:20px;">
-                  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:${emailOk ? '#0d2b0d' : '#2b0d0d'};border:1px solid ${emailOk ? '#1a5c1a' : '#5c1a1a'};">
-                    <span style="font-size:1.2rem;">${emailOk ? '&#128231;' : '&#9888;&#65039;'}</span>
-                    <div>
-                      <div style="font-size:0.8rem;font-weight:600;color:${emailOk ? '#4caf50' : '#f44336'};">Email Alert — ${emailOk ? 'Sent' : 'FAILED'}</div>
-                      ${!emailOk && dbg ? `<div style="font-size:0.72rem;color:#e57373;margin-top:3px;word-break:break-all;">${dbg.message || ''}</div>` : ''}
-                    </div>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:${smsOk ? '#0d2b0d' : '#2b0d0d'};border:1px solid ${smsOk ? '#1a5c1a' : '#5c1a1a'};">
-                    <span style="font-size:1.2rem;">${smsOk ? '&#128241;' : '&#9888;&#65039;'}</span>
-                    <div style="font-size:0.8rem;font-weight:600;color:${smsOk ? '#4caf50' : '#f44336'};">SMS Alert — ${smsOk ? 'Sent' : 'FAILED'}</div>
-                  </div>
-                </div>`;
-
-        if (!emailOk && dbg) {
-            const fields = [
-                ['Error Code', dbg.code],
-                ['SMTP Command', dbg.command],
-                ['Response Code', dbg.responseCode],
-                ['Server Response', dbg.response],
-                ['Stack Trace', dbg.stack]
-            ].filter(([, v]) => v);
-
-            if (fields.length > 0) {
-                html += `
-                <details open style="margin-bottom:16px;">
-                  <summary style="cursor:pointer;font-size:0.8rem;color:#f0c040;font-weight:600;margin-bottom:8px;outline:none;">&#128269; Debug Details — Why mail.com blocked the connection</summary>
-                  <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:12px;font-size:0.72rem;">`;
-                fields.forEach(([label, val]) => {
-                    html += `<div style="margin-bottom:6px;"><span style="color:#888;text-transform:uppercase;font-size:0.65rem;letter-spacing:0.05em;">${label}</span><div style="color:#e0e0e0;word-break:break-all;margin-top:2px;">${val}</div></div>`;
-                });
-                html += `</div></details>`;
-            }
-        }
-
-        html += `
-                <button onclick="document.getElementById('confirmOverlay').remove()" style="width:100%;padding:12px;background:#d4af37;color:#000;border:none;border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:4px;">Close</button>
-              </div>
-            </div>`;
-
-        const el = document.createElement('div');
-        el.innerHTML = html;
-        document.body.appendChild(el.firstElementChild);
-    }
 
     document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
     document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
