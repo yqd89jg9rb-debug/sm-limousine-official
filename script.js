@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.21)
-   Turbo Notification Engine + Error Reporting
+   SM LIMOUSINE — Main Script (Precision Version 4.22)
+   Turbo Notification Engine + Password Debug
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -257,14 +257,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (!emailSent || !smsSent) {
                         finalMsg += '\n\n🚨 Notification Status:';
-                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Timeout'));
+                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Auth issue'));
                         finalMsg += '\n- Text: ' + (smsSent ? 'SENT' : (dispatchResult.sms_error || 'Carrier block'));
+                        
+                        if (dispatchResult.debug) {
+                            finalMsg += '\n\n🛠 Debug Info:';
+                            finalMsg += '\n- Pass Length: ' + dispatchResult.debug.pass_len;
+                            finalMsg += '\n- SMTP Ready: ' + (dispatchResult.debug.pass_len > 10 ? 'YES' : 'NO');
+                        }
                         finalMsg += '\n\nPlease screenshot this if things are missing.';
                     } else {
                         finalMsg += '\n\nCheck your emails for confirmation details.';
-                        if (dispatchResult.accepted_emails && dispatchResult.accepted_emails.length > 0) {
-                             finalMsg += '\n\nSent to: ' + dispatchResult.accepted_emails.join(', ');
-                        }
                     }
 
                     alert(finalMsg);
