@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.40)
-   Contact Fields Addition (Phone & Email)
+   SM LIMOUSINE — Main Script (Precision Version 4.45)
+   Discount Engine Integration
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         motorcoach: { name: 'Motor Coach',           base: 250, perMile: 15.00, category: 'Motor coach',      passengers: '20-56', suitcases: '20-56', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg' }
     };
 
+    const DISCOUNTS = { 'LIMO10': 0.10, 'LIMO20': 0.20, 'LIMO30': 0.30, 'LIMO40': 0.40 };
     const MIN_HOURS = 3;
+
     let leg1Miles = 0, leg2Miles = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
 
     const burgerBtn = document.getElementById('burgerBtn'), mainNav = document.getElementById('mainNav');
@@ -138,6 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
     async function openPayment(vehicle, total) {
         document.getElementById('pay-vehicle').textContent = vehicle; document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
         document.getElementById('paymentOverlay').classList.add('active');
+        document.getElementById('discount-code').value = '';
+        document.getElementById('applyDiscountBtn').disabled = false;
+        bookingData.originalTotal = total;
+
         setTimeout(() => {
             if (!stripe) {
                 stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
@@ -148,6 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 500);
     }
+
+    document.getElementById('applyDiscountBtn').onclick = () => {
+        const code = document.getElementById('discount-code').value.toUpperCase().trim();
+        if (DISCOUNTS[code]) {
+            const factor = DISCOUNTS[code];
+            const newTotal = bookingData.originalTotal * (1 - factor);
+            document.getElementById('pay-total').textContent = `$${newTotal.toFixed(2)}`;
+            bookingData.total = newTotal.toFixed(2);
+            alert(`Success! ${factor * 100}% discount applied.`);
+            document.getElementById('applyDiscountBtn').disabled = true;
+        } else { alert('Invalid discount code.'); }
+    };
 
     document.getElementById('payBtn').onclick = async () => {
         const btn = document.getElementById('payBtn'), name = document.getElementById('pay-name').value, email = document.getElementById('pay-email').value;
@@ -166,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const emailSent = dispatchResult.email_status === 'SENT', smsSent = dispatchResult.sms_status === 'SENT';
                     if (!emailSent || !smsSent) {
                         finalMsg += '\n\n🚨 Notification Status:';
-                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Auth error'));
+                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Carrier block'));
                         finalMsg += '\n- Text: ' + (smsSent ? 'SENT' : (dispatchResult.sms_error || 'Carrier block'));
                         if (dispatchResult.debug) {
                             finalMsg += '\n\n🛠 Debug Info:';
