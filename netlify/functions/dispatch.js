@@ -13,14 +13,14 @@ exports.handler = async (event) => {
 
     const bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
 
-    // --- SMART EMAIL DISPATCH (Try Port 587 first, then 465) ---
+    // --- ENHANCED EMAIL DISPATCH (Try 587, 465, and 2525 fallback) ---
     const sendEmail = async (port, secure) => {
       const transporter = nodemailer.createTransport({
         host: 'smtp.mail.com',
         port: port,
         secure: secure,
         auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
-        connectionTimeout: 5000
+        connectionTimeout: 8000
       });
       return transporter.sendMail({
         from: '"SM DISPATCH" <smlimo@mail.com>',
@@ -31,6 +31,8 @@ exports.handler = async (event) => {
     };
 
     let emailStatus = 'pending';
+    let detailedError = null;
+
     try {
       await sendEmail(587, false);
       emailStatus = 'sent (587)';
@@ -39,7 +41,13 @@ exports.handler = async (event) => {
         await sendEmail(465, true);
         emailStatus = 'sent (465)';
       } catch (e2) {
-        emailStatus = `failed: ${e2.message}`;
+        try {
+          await sendEmail(2525, false);
+          emailStatus = 'sent (2525)';
+        } catch (e3) {
+          emailStatus = 'FAILED';
+          detailedError = e1.message; 
+        }
       }
     }
 
@@ -63,8 +71,8 @@ exports.handler = async (event) => {
       body: JSON.stringify({ 
         success: true, 
         email_status: emailStatus,
-        sms_status: smsStatus,
-        debug_pass_exists: !!EMAIL_PASS
+        email_error: detailedError,
+        sms_status: smsStatus
       })
     };
   } catch (error) {
