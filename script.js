@@ -1,5 +1,5 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.14)
+   SM LIMOUSINE — Main Script (Precision Version 4.15)
    Notification Restoration & Deep Debugging
    ============================================================================= */
 
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
                 if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
                     const m = response.rows[0].elements[0].distance.value;
-                    resolve(Math.round((m / 1609.34) * 100) / 10);
+                    resolve(Math.round((m / 1609.34) * 10) / 10);
                 } else resolve(0);
             });
         });
