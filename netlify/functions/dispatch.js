@@ -30,15 +30,16 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- TURBO EMAIL TASK (Simultaneous Port Attempt) ---
+    // --- SEQUENTIAL EMAIL DISPATCH (Capture REAL errors) ---
     const doEmail = async () => {
-        const sendOnPort = async (port, secure) => {
+        const sendAttempt = async (port, secure) => {
             const transporter = nodemailer.createTransport({
                 host: 'smtp.mail.com',
                 port: port,
                 secure: secure,
                 auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
-                connectionTimeout: 5000
+                connectionTimeout: 6000, // 6 seconds
+                greetingTimeout: 5000
             });
             return transporter.sendMail({
                 from: 'smlimo@mail.com',
@@ -48,12 +49,13 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
             });
         };
 
-        // Race all three ports simultaneously - fastest one wins
-        return Promise.any([
-            sendOnPort(465, true),
-            sendOnPort(587, false),
-            sendOnPort(2525, false)
-        ]);
+        try { 
+            // Try 587 first - most standard for authenticated submission
+            return await sendAttempt(587, false); 
+        } catch (e1) {
+            // Fallback to 465
+            return await sendAttempt(465, true);
+        }
     };
 
     // --- SMS TASK ---
@@ -66,11 +68,12 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         });
     };
 
-    // Fire everything in parallel
+    // Fire in parallel
     const [emailRes, smsRes] = await Promise.allSettled([doEmail(), doSMS()]);
 
     const emailStatus = emailRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
-    const emailErr = emailRes.status === 'rejected' ? 'Connection timeout' : null;
+    // CAPTURE REAL ERROR MESSAGE
+    const emailErr = emailRes.status === 'rejected' ? emailRes.reason.message : null;
     const accepted = emailRes.status === 'fulfilled' ? emailRes.value.accepted : [];
 
     const smsStatus = smsRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
@@ -90,7 +93,7 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
     };
   } catch (error) {
     return {
-      statusCode: 500,
+      statusCode: 200, // Still return 200 so UI can show the error alert
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ success: false, error: error.message })
     };
