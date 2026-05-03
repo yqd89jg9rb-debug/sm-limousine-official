@@ -36,9 +36,9 @@
         }
 
         .logo-img {
-            height: 80px; /* Increased from 45px for better visibility */
+            height: 110px; /* Increased from 80px */
             width: auto;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .name-container {
@@ -83,7 +83,7 @@
         }
 
         @media (orientation: landscape) {
-            .logo-img { height: 60px; }
+            .logo-img { height: 75px; }
             .client-name { font-size: 22vh; }
         }
     </style>
@@ -103,18 +103,43 @@
              spellcheck="false">TAP NAME</div>
     </div>
 
-    <div class="instruction">Use 'Add to Home Screen' for Full Screen View</div>
+    <div class="instruction">Screen will stay awake while open</div>
 
     <script>
         const el = document.getElementById('nameField');
         const body = document.body;
         
+        // --- WAKE LOCK API (Prevents screen from sleeping) ---
+        let wakeLock = null;
+        const requestWakeLock = async () => {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Wake Lock is active');
+                }
+            } catch (err) {
+                console.error(`${err.name}, ${err.message}`);
+            }
+        };
+
+        // Re-request wake lock if tab becomes visible again
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                await requestWakeLock();
+            }
+        });
+
+        // Initialize wake lock on first interaction
+        document.addEventListener('click', requestWakeLock, { once: true });
+        document.addEventListener('touchstart', requestWakeLock, { once: true });
+
         el.addEventListener('focus', function() {
             body.classList.add('is-typing');
             if (this.innerText === 'TAP NAME') {
                 this.innerText = '';
             }
             window.scrollTo(0, 1);
+            requestWakeLock(); // Request on focus too
         });
 
         el.addEventListener('blur', function() {
