@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.25)
-   Final Gmail Dispatch Engine
+   SM LIMOUSINE — Main Script (Precision Version 4.26)
+   Fleet Rates Restored
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
-    let leg1Miles = 0, leg2Miles = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
+    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
 
     const burgerBtn = document.getElementById('burgerBtn'), mainNav = document.getElementById('mainNav');
     if (burgerBtn) burgerBtn.onclick = () => { mainNav.classList.toggle('open'); burgerBtn.classList.toggle('open'); };
@@ -111,7 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
         document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${totalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
         Object.keys(VEHICLE_RATES).forEach(key => {
-            const v = VEHICLE_RATES[key]; let total = 50.00; // FLAT $50
+            const v = VEHICLE_RATES[key]; 
+            let total = type === 'hourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
+            const minBase = 90;
+            if (total < minBase) total = minBase;
             const card = document.createElement('div'); card.className = 'vs-card';
             card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">🧑 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
             card.onclick = () => {
