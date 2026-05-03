@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.18)
-   Parallel Notification Engine
+   SM LIMOUSINE — Main Script (Precision Version 4.19)
+   Turbo Notification Engine
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -255,15 +255,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
                     
-                    // Enhanced Case-Insensitive Error Check
-                    const emailFailed = dispatchResult.email_status.toUpperCase().includes('FAILED');
-                    const smsFailed = dispatchResult.sms_status.toUpperCase().includes('FAILED');
+                    const emailSent = dispatchResult.email_status === 'SENT';
+                    const smsSent = dispatchResult.sms_status === 'SENT';
 
-                    if (emailFailed || smsFailed) {
-                        finalMsg += '\n\n🚨 Notification Alert:';
-                        if (emailFailed) finalMsg += '\n- Email: ' + (dispatchResult.email_error || 'Timeout');
-                        if (smsFailed) finalMsg += '\n- SMS: ' + (dispatchResult.sms_error || 'Provider issue');
-                        finalMsg += '\n\nPlease screenshot this and send to Mike.';
+                    if (!emailSent || !smsSent) {
+                        finalMsg += '\n\n🚨 Notification Status:';
+                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Timeout'));
+                        finalMsg += '\n- Text: ' + (smsSent ? 'SENT' : (dispatchResult.sms_error || 'Carrier block'));
+                        finalMsg += '\n\nPlease screenshot this if things are missing.';
                     } else {
                         finalMsg += '\n\nCheck your emails for confirmation details.';
                         if (dispatchResult.accepted_emails && dispatchResult.accepted_emails.length > 0) {

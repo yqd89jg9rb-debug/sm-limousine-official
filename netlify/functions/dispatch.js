@@ -30,15 +30,15 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- EMAIL TASK ---
+    // --- TURBO EMAIL TASK (Simultaneous Port Attempt) ---
     const doEmail = async () => {
-        const sendAttempt = async (port, secure) => {
+        const sendOnPort = async (port, secure) => {
             const transporter = nodemailer.createTransport({
                 host: 'smtp.mail.com',
                 port: port,
                 secure: secure,
                 auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
-                connectionTimeout: 4000
+                connectionTimeout: 5000
             });
             return transporter.sendMail({
                 from: 'smlimo@mail.com',
@@ -48,11 +48,12 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
             });
         };
 
-        try { return await sendAttempt(465, true); }
-        catch (e1) {
-            try { return await sendAttempt(587, false); }
-            catch (e2) { return await sendAttempt(2525, false); }
-        }
+        // Race all three ports simultaneously - fastest one wins
+        return Promise.any([
+            sendOnPort(465, true),
+            sendOnPort(587, false),
+            sendOnPort(2525, false)
+        ]);
     };
 
     // --- SMS TASK ---
@@ -65,11 +66,11 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         });
     };
 
-    // Fire both in parallel to save time
+    // Fire everything in parallel
     const [emailRes, smsRes] = await Promise.allSettled([doEmail(), doSMS()]);
 
     const emailStatus = emailRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
-    const emailErr = emailRes.status === 'rejected' ? emailRes.reason.message : null;
+    const emailErr = emailRes.status === 'rejected' ? 'Connection timeout' : null;
     const accepted = emailRes.status === 'fulfilled' ? emailRes.value.accepted : [];
 
     const smsStatus = smsRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
