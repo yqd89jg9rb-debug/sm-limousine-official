@@ -1,13 +1,13 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.5)
-   Full Transaction Engine: Tokenization + Charge + SMS Dispatch
+   SM LIMOUSINE — Main Script (Precision Version 4.8)
+   Advanced Debug Reporting for Dispatch Engine
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const VEHICLE_RATES = {
         xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
+        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
         denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
         escalade:   { name: 'Cadillac Escalade',    base: 125, perMile: 6.50, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
         maybach:    { name: 'Mercedes-Maybach',     base: 150, perMile: 7.50, category: 'Ultra Luxury',     passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.setBookingTab = (name) => {
-        const tab = document.querySelector(`[data-tab="${name}"]`);
+        const tab = document.querySelector(`[data-tab=\"${name}\"]`);
         if (tab) tab.click();
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
-        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
+        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: \"us\" } };
         const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
                 const ac = new google.maps.places.Autocomplete(input, options);
-                input.dataset.acBound = "true";
+                input.dataset.acBound = \"true\";
                 ac.addListener('place_changed', () => {
                     const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
                     if (mode) refreshDistances(mode);
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             if (!stripe) {
-                stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
+                stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlOe6q8qIyz7gp00Tg6GQXrd');
                 elements = stripe.elements();
                 const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
                 cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
@@ -209,11 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         btn.disabled = true; btn.textContent = 'Processing Payment...';
         
-        // 1. Create Stripe Token (Safe sensitive data handle)
         const {token, error} = await stripe.createToken(cardNumber);
-        
         if (token) { 
-            // 2. ACTUALLY CHARGE THE CARD via Netlify Function
             try {
                 const chargeResponse = await fetch('/.netlify/functions/create-charge', {
                     method: 'POST',
@@ -229,33 +226,92 @@ document.addEventListener('DOMContentLoaded', () => {
                 const chargeResult = await chargeResponse.json();
 
                 if (chargeResult.success) {
-                    btn.textContent = 'Sending Reservation...';
+                    btn.textContent = 'Sending Notifications...';
                     
-                    // 3. Dispatch Notification (SMS Alert)
                     bookingData.name = name;
                     bookingData.email = email;
                     bookingData.chargeId = chargeResult.chargeId;
 
-                    await fetch('/.netlify/functions/dispatch', {
+                    const dispatchRes = await fetch('/.netlify/functions/dispatch', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(bookingData)
                     });
+                    const dispatchResult = await dispatchRes.json();
 
-                    alert('Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed. You will receive a text confirmation shortly.');
                     document.getElementById('paymentOverlay').classList.remove('active');
+                    showBookingConfirmation(bookingData.vehicle, dispatchResult);
                 } else {
                     alert('Payment Failed: ' + chargeResult.error);
                 }
             } catch (e) {
                 console.error('System error:', e);
-                alert('A system error occurred. Your card was not charged. Please call us at +1817-723-4592.');
+                document.getElementById('paymentOverlay').classList.remove('active');
+                showBookingConfirmation(bookingData.vehicle, { email_status: 'snag: Network error — 
+' + e.message, sms_status: 'unknown', email_debug: { message: e.message } });
             }
         } else {
             alert('Card Error: ' + error.message);
         }
         btn.disabled = false; btn.textContent = 'Book Now';
     };
+
+    function showBookingConfirmation(vehicle, dispatch) {
+        const emailOk = dispatch.email_status === 'sent';
+        const smsOk = dispatch.sms_status === 'sent';
+        const dbg = dispatch.email_debug;
+
+        let html = `
+            <div id="confirmOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;">
+              <div style="background:#111;border:1px solid #333;border-radius:12px;max-width:520px;width:100%;padding:28px 24px;font-family:Inter,sans-serif;color:#fff;max-height:90vh;overflow-y:auto;">
+                <div style="font-size:2rem;text-align:center;margin-bottom:8px;"✅</div>
+                <h2 style="text-align:center;font-size:1.2rem;margin:0 0 4px;">Payment Confirmed</h2>
+                <p style="text-align:center;color:#aaa;font-size:0.85rem;margin:0 0 20px;">Your <strong style="color:#d4af37">${vehicle}</strong> reservation is confirmed.</p>
+
+                <div style="display:grid;gap:8px;margin-bottom:20px;">
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:${emailOk ? '#0d2b0d' : '#2b0d0d'};border:1px solid ${emailOk ? '#1a5c1a' : '#5c1a1a'};">
+                    <span style="font-size:1.2rem;">${emailOk ? '📧' : '⚠️'}</span>
+                    <div>
+                      <div style="font-size:0.8rem;font-weight:600;color:${emailOk ? '#4caf50' : '#f44336'};">Email Alert — ${emailOk ? 'Sent' : 'FAILED'}</div>
+                      ${!emailOk && dbg ? `<div style="font-size:0.72rem;color:#e57373;margin-top:3px;word-break:break-all;">${dbg.message || ''}</div>` : ''}
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:${smsOk ? '#0d2b0d' : '#2b0d0d'};border:1px solid ${smsOk ? '#1a5c1a' : '#5c1a1a'};">
+                    <span style="font-size:1.2rem;">${smsOk ? '📱' : '⚠️'}</span>
+                    <div style="font-size:0.8rem;font-weight:600;color:${smsOk ? '#4caf50' : '#f44336'};">SMS Alert — ${smsOk ? 'Sent' : 'FAILED'}</div>
+                  </div>
+                </div>`;
+
+        if (!emailOk && dbg) {
+            const fields = [
+                ['Error Code', dbg.code],
+                ['SMTP Command', dbg.command],
+                ['Response Code', dbg.responseCode],
+                ['Server Response', dbg.response],
+                ['Stack Trace', dbg.stack]
+            ].filter(([, v]) => v);
+
+            if (fields.length > 0) {
+                html += `
+                <details open style="margin-bottom:16px;">
+                  <summary style="cursor:pointer;font-size:0.8rem;color:#f0c040;font-weight:600;margin-bottom:8px;outline:none;"🔍 Debug Details — Why mail.com blocked the connection</summary>
+                  <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:12px;font-size:0.72rem;">`;
+                fields.forEach(([label, val]) => {
+                    html += `<div style="margin-bottom:6px;"><span style="color:#888;text-transform:uppercase;font-size:0.65rem;letter-spacing:0.05em;">${label}</span><div style="color:#e0e0e0;word-break:break-all;margin-top:2px;">${val}</div></div>`;
+                });
+                html += `</div></details>`;
+            }
+        }
+
+        html += `
+                <button onclick="document.getElementById('confirmOverlay').remove()" style="width:100%;padding:12px;background:#d4af37;color:#000;border:none;border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:4px;">Close</button>
+              </div>
+            </div>`;
+
+        const el = document.createElement('div');
+        el.innerHTML = html;
+        document.body.appendChild(el.firstElementChild);
+    }
 
     document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
     document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
