@@ -30,66 +30,50 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- HIGH-SPEED EMAIL DISPATCH (Prevent Netlify 10s Timeout) ---
-    const sendEmail = async (port, secure) => {
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.mail.com',
-        port: port,
-        secure: secure,
-        auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
-        connectionTimeout: 3000,
-        greetingTimeout: 3000,
-        socketTimeout: 3000
-      });
-      return transporter.sendMail({
-        from: 'smlimo@mail.com',
-        to: 'smlimo@mail.com, smlimo2@yahoo.com, ' + email,
-        subject: `🚨 Booking: ${name} - ${vehicle}`,
-        text: bookingSummary
-      });
+    // --- EMAIL TASK ---
+    const doEmail = async () => {
+        const sendAttempt = async (port, secure) => {
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.mail.com',
+                port: port,
+                secure: secure,
+                auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
+                connectionTimeout: 4000
+            });
+            return transporter.sendMail({
+                from: 'smlimo@mail.com',
+                to: `smlimo@mail.com, smlimo2@yahoo.com, ${email}`,
+                subject: `🚨 Booking: ${name} - ${vehicle}`,
+                text: bookingSummary
+            });
+        };
+
+        try { return await sendAttempt(465, true); }
+        catch (e1) {
+            try { return await sendAttempt(587, false); }
+            catch (e2) { return await sendAttempt(2525, false); }
+        }
     };
 
-    let emailStatus = 'pending';
-    let detailedError = null;
-    let acceptedEmails = [];
+    // --- SMS TASK ---
+    const doSMS = async () => {
+        const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+        return client.messages.create({
+            body: bookingSummary,
+            from: process.env.TWILIO_FROM,
+            to: DISPATCH_TO
+        });
+    };
 
-    try {
-      // Try 465 (Most reliable for mail.com) FIRST
-      const info = await sendEmail(465, true);
-      emailStatus = 'sent (465)';
-      acceptedEmails = info.accepted || [];
-    } catch (e1) {
-      console.log('465 failed, trying 587...');
-      try {
-        const info = await sendEmail(587, false);
-        emailStatus = 'sent (587)';
-        acceptedEmails = info.accepted || [];
-      } catch (e2) {
-        console.log('587 failed, trying 2525 fallback...');
-        try {
-          const info = await sendEmail(2525, false);
-          emailStatus = 'sent (2525)';
-          acceptedEmails = info.accepted || [];
-        } catch (e3) {
-          emailStatus = 'FAILED';
-          detailedError = e1.message;
-        }
-      }
-    }
+    // Fire both in parallel to save time
+    const [emailRes, smsRes] = await Promise.allSettled([doEmail(), doSMS()]);
 
-    // --- SMS DISPATCH ---
-    let smsStatus = 'pending';
-    try {
-      const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-      await client.messages.create({
-        body: bookingSummary,
-        from: process.env.TWILIO_FROM,
-        to: DISPATCH_TO
-      });
-      smsStatus = 'sent';
-    } catch (e) {
-      smsStatus = `snag: ${e.message}`;
-    }
+    const emailStatus = emailRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
+    const emailErr = emailRes.status === 'rejected' ? emailRes.reason.message : null;
+    const accepted = emailRes.status === 'fulfilled' ? emailRes.value.accepted : [];
+
+    const smsStatus = smsRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
+    const smsErr = smsRes.status === 'rejected' ? smsRes.reason.message : null;
 
     return {
       statusCode: 200,
@@ -97,9 +81,10 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
       body: JSON.stringify({ 
         success: true, 
         email_status: emailStatus,
-        email_error: detailedError,
-        accepted_emails: acceptedEmails,
-        sms_status: smsStatus
+        email_error: emailErr,
+        accepted_emails: accepted,
+        sms_status: smsStatus,
+        sms_error: smsErr
       })
     };
   } catch (error) {

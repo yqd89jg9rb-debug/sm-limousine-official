@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.17)
-   Notification Restoration & Deep Debugging
+   SM LIMOUSINE — Main Script (Precision Version 4.18)
+   Parallel Notification Engine
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -255,9 +255,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
                     
-                    if (dispatchResult.email_status.includes('FAILED')) {
-                        finalMsg += '\n\n🚨 Email snag: ' + dispatchResult.email_error;
-                        finalMsg += '\n\nPlease screenshot this error and send it to Mike.';
+                    // Enhanced Case-Insensitive Error Check
+                    const emailFailed = dispatchResult.email_status.toUpperCase().includes('FAILED');
+                    const smsFailed = dispatchResult.sms_status.toUpperCase().includes('FAILED');
+
+                    if (emailFailed || smsFailed) {
+                        finalMsg += '\n\n🚨 Notification Alert:';
+                        if (emailFailed) finalMsg += '\n- Email: ' + (dispatchResult.email_error || 'Timeout');
+                        if (smsFailed) finalMsg += '\n- SMS: ' + (dispatchResult.sms_error || 'Provider issue');
+                        finalMsg += '\n\nPlease screenshot this and send to Mike.';
                     } else {
                         finalMsg += '\n\nCheck your emails for confirmation details.';
                         if (dispatchResult.accepted_emails && dispatchResult.accepted_emails.length > 0) {
