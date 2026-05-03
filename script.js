@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.19)
-   Turbo Notification Engine
+   SM LIMOUSINE — Main Script (Precision Version 4.20)
+   Turbo Notification Engine + Flat Rate Update
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -171,14 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
-            let total = type === 'hourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
             
-            // --- TEMPORARY DISCOUNT ---
-            total -= 60;
-            const minBase = 30;
+            // --- TEMPORARY FLAT RATE $50 ---
+            let total = 50.00;
             // --------------------------
 
-            if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
             card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">🧑 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
