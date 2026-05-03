@@ -26,7 +26,7 @@
 
         .logo-container {
             margin-top: 3dvh;
-            padding-left: 10px; /* Moved left from 20px */
+            padding-left: 10px;
             width: 100%;
             display: flex; 
             justify-content: flex-start;
@@ -36,7 +36,7 @@
         }
 
         .logo-img {
-            height: 135px; /* Reduced by 10% from 150px */
+            height: 135px;
             width: auto;
             border-radius: 8px;
         }
@@ -47,7 +47,7 @@
             flex-grow: 1;
             display: flex; align-items: center; justify-content: center;
             padding: 0 20px;
-            margin-top: -20px;
+            margin-top: -10dvh; /* Pulling the name higher up the screen */
         }
 
         .client-name {
@@ -82,6 +82,7 @@
         @media (orientation: landscape) {
             .logo-img { height: 90px; }
             .client-name { font-size: 18vh; }
+            .name-container { margin-top: -5dvh; }
         }
     </style>
 </head>
