@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Greeting Sign | SM LIMOUSINE</title>
     
-    <!-- Mobile Full Screen Support -->
+    <!-- Full Screen Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
@@ -24,33 +24,30 @@
             align-items: center;
             justify-content: flex-start;
             overflow: hidden;
-            transition: background-color 0.5s ease;
         }
 
         .logo-container {
-            margin-top: 8vh;
+            margin-top: 5vh; /* Pushed slightly higher */
             width: 100%;
             display: flex;
             justify-content: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 1;
+            transition: all 0.3s ease;
         }
 
         .logo-img {
-            height: 90px; /* Reduced from 140px */
+            height: 70px; /* Reduced from 90px to 70px as requested */
             width: auto;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         .name-container {
             width: 95%;
             text-align: center;
-            margin-top: 12vh;
+            margin-top: 10vh;
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: margin-top 0.4s ease;
         }
 
         .client-name {
@@ -73,29 +70,21 @@
             position: absolute;
             bottom: 30px;
             font-size: 11px;
-            color: #444;
+            color: #333;
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: opacity 0.3s ease;
         }
 
-        /* Hiding state when typing */
-        body.is-typing .logo-container {
+        /* Hiding UI elements while typing */
+        body.is-typing .logo-container,
+        body.is-typing .instruction {
             opacity: 0;
-            margin-top: -50px;
             pointer-events: none;
         }
 
-        body.is-typing .instruction {
-            opacity: 0;
-        }
-
         body.is-typing .name-container {
-            margin-top: 0; /* Center the name better when typing */
-        }
-
-        @media print {
-            .instruction { display: none; }
+            margin-top: 0;
         }
     </style>
 </head>
@@ -119,9 +108,25 @@
     <script>
         const el = document.getElementById('nameField');
         const body = document.body;
+
+        // Function to attempt fullscreen
+        function enterFullscreen() {
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen(); // Safari logic
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
+        }
         
         el.addEventListener('focus', function() {
             body.classList.add('is-typing');
+            
+            // Try to hide the browser bars by entering fullscreen
+            enterFullscreen();
+
             if (this.innerText === 'TAP TO TYPE NAME') {
                 this.innerText = '';
             }
@@ -139,6 +144,11 @@
                 e.preventDefault();
                 this.blur();
             }
+        });
+
+        // Support for tap-to-fullscreen anywhere else
+        document.addEventListener('click', function(e) {
+            if (e.target !== el) enterFullscreen();
         });
     </script>
 </body>
