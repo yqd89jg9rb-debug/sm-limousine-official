@@ -1,5 +1,5 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.15)
+   SM LIMOUSINE — Main Script (Precision Version 4.16)
    Notification Restoration & Deep Debugging
    ============================================================================= */
 
@@ -172,7 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
             let total = type === 'hourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
-            const minBase = 90;
+            
+            // --- TEMPORARY DISCOUNT ---
+            total -= 60;
+            const minBase = 30;
+            // --------------------------
+
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
