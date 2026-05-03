@@ -8,40 +8,40 @@ exports.handler = async (event) => {
     const data = JSON.parse(event.body);
     const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
 
-    // Credentials from Netlify
     const TWILIO_SID = process.env.TWILIO_SID;
     const TWILIO_TOKEN = process.env.TWILIO_TOKEN;
     const TWILIO_FROM = process.env.TWILIO_FROM;
     const DISPATCH_TO = process.env.DISPATCH_TO;
+    const EMAIL_PASS = process.env.EMAIL_PASSWORD;
 
-    // Detailed summary for both SMS and Email
     const bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
 
-    // --- 1. EMAIL NOTIFICATION (via Dispatch Email smlimo@mail.com) ---
-    // Note: We use process.env for these as well
+    // --- 1. EMAIL NOTIFICATION (Using Port 465 for SSL) ---
     const transporter = nodemailer.createTransport({
-      host: 'smtp.mail.com', // standard mail.com SMTP
-      port: 587,
-      secure: false,
+      host: 'smtp.mail.com',
+      port: 465,
+      secure: true, // SSL
       auth: {
         user: 'smlimo@mail.com',
-        pass: process.env.EMAIL_PASSWORD
+        pass: EMAIL_PASS
       }
     });
 
+    let emailError = null;
     try {
       await transporter.sendMail({
         from: '"SM DISPATCH" <smlimo@mail.com>',
-        to: 'smlimo@mail.com',
-        subject: `New Booking: ${name} - ${vehicle}`,
+        to: 'smlimo@mail.com, smlimo2@yahoo.com',
+        subject: `🚨 Booking: ${name} - ${vehicle}`,
         text: bookingSummary
       });
-      console.log('Email sent successfully');
     } catch (e) {
-      console.error('Email Failed:', e.message);
+      emailError = e.message;
+      console.error('Email snag:', e.message);
     }
 
-    // --- 2. SMS NOTIFICATION (Twilio) ---
+    // --- 2. SMS NOTIFICATION ---
+    let smsError = null;
     try {
       const client = twilio(TWILIO_SID, TWILIO_TOKEN);
       await client.messages.create({
@@ -49,9 +49,9 @@ exports.handler = async (event) => {
         from: TWILIO_FROM,
         to: DISPATCH_TO
       });
-      console.log('SMS attempt completed');
     } catch (e) {
-      console.error('SMS Alert Failed (Likely Twilio Verification):', e.message);
+      smsError = e.message;
+      console.error('SMS snag:', e.message);
     }
 
     return {
@@ -59,11 +59,11 @@ exports.handler = async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
         success: true, 
-        message: 'Dispatch notifications triggered' 
+        email_status: emailError ? `snag: ${emailError}` : 'sent',
+        sms_status: smsError ? `snag: ${smsError}` : 'sent'
       })
     };
   } catch (error) {
-    console.error('Dispatch Engine Error:', error);
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
