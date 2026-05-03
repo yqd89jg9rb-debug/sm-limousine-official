@@ -31,14 +31,11 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- GMAIL OPTIMIZED DISPATCH ---
+    // --- GMAIL DISPATCH ---
     const doEmail = async () => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
-            auth: { 
-                user: SENDER_EMAIL, 
-                pass: EMAIL_PASS 
-            }
+            auth: { user: SENDER_EMAIL, pass: EMAIL_PASS }
         });
         return transporter.sendMail({
             from: `"SM Limousine Dispatch" <${SENDER_EMAIL}>`,
@@ -48,7 +45,6 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         });
     };
 
-    // --- SMS TASK ---
     const doSMS = async () => {
         const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
         return client.messages.create({
@@ -58,12 +54,10 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         });
     };
 
-    // Fire in parallel
     const [emailRes, smsRes] = await Promise.allSettled([doEmail(), doSMS()]);
 
     const emailStatus = emailRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
     const emailErr = emailRes.status === 'rejected' ? emailRes.reason.message : null;
-    const accepted = emailRes.status === 'fulfilled' ? emailRes.value.accepted : [];
 
     const smsStatus = smsRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
     const smsErr = smsRes.status === 'rejected' ? smsRes.reason.message : null;
@@ -75,9 +69,12 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         success: true, 
         email_status: emailStatus,
         email_error: emailErr,
-        accepted_emails: accepted,
         sms_status: smsStatus,
-        sms_error: smsErr
+        sms_error: smsErr,
+        debug: {
+            pass_len: EMAIL_PASS ? EMAIL_PASS.length : 0,
+            email_user: SENDER_EMAIL
+        }
       })
     };
   } catch (error) {

@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.23)
-   Gmail Provider Switch Update
+   SM LIMOUSINE — Main Script (Precision Version 4.24)
+   Gmail Debugging Mode
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,47 +16,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
+    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
 
-    /* --- STATE --- */
-    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0;
-    let stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null;
-    let passengerCount = 1, luggageCount = 1;
-    let bookingData = {};
+    const burgerBtn = document.getElementById('burgerBtn'), mainNav = document.getElementById('mainNav');
+    if (burgerBtn) burgerBtn.onclick = () => { mainNav.classList.toggle('open'); burgerBtn.classList.toggle('open'); };
+    document.querySelectorAll('.header__link').forEach(link => link.onclick = () => { mainNav.classList.remove('open'); burgerBtn.classList.remove('open'); });
 
-    /* --- MOBILE MENU CONTROL --- */
-    const burgerBtn = document.getElementById('burgerBtn');
-    const mainNav = document.getElementById('mainNav');
-    if (burgerBtn) {
-        burgerBtn.onclick = () => {
-            mainNav.classList.toggle('open');
-            burgerBtn.classList.toggle('open');
-        };
-    }
-
-    document.querySelectorAll('.header__link').forEach(link => {
-        link.onclick = () => {
-            mainNav.classList.remove('open');
-            burgerBtn.classList.remove('open');
-        };
-    });
-
-    /* --- TAB CONTROL --- */
     const tabs = document.querySelectorAll('.booking-widget__tab');
     tabs.forEach(t => t.onclick = () => {
-        tabs.forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
+        tabs.forEach(x => x.classList.remove('active')); t.classList.add('active');
         document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
         document.getElementById('form-' + t.dataset.tab).classList.add('active');
         initAutocomplete();
     });
 
-    window.setBookingTab = (name) => {
-        const tab = document.querySelector(`[data-tab="${name}"]`);
-        if (tab) tab.click();
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    };
-
-    /* --- MODAL LOGIC --- */
+    window.setBookingTab = (name) => { const tab = document.querySelector(`[data-tab="${name}"]`); if (tab) tab.click(); window.scrollTo({top: 0, behavior: 'smooth'}); };
     window.openAddonModal = () => document.getElementById('addonOverlay').classList.add('active');
     window.closeAddonModal = () => document.getElementById('addonOverlay').classList.remove('active');
     window.updateCounter = (type, change) => {
@@ -69,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ['oneway', 'roundtrip', 'hourly'].forEach(m => { const el = document.getElementById(`people-summary-${m}`); if (el) el.textContent = summary; });
     };
 
-    /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
@@ -77,29 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
-                const ac = new google.maps.places.Autocomplete(input, options);
-                input.dataset.acBound = "true";
-                ac.addListener('place_changed', () => {
-                    const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
-                    if (mode) refreshDistances(mode);
-                });
+                const ac = new google.maps.places.Autocomplete(input, options); input.dataset.acBound = "true";
+                ac.addListener('place_changed', () => { const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null); if (mode) refreshDistances(mode); });
             }
         });
     }
     if (typeof google !== 'undefined') initAutocomplete();
 
     async function refreshDistances(mode) {
-        const pInput = document.getElementById(`pickup-${mode}`);
-        const dInput = document.getElementById(`dropoff-${mode}`);
+        const pInput = document.getElementById(`pickup-${mode}`), dInput = document.getElementById(`dropoff-${mode}`);
         if (!pInput || !dInput) return;
-        const origin1 = pInput.value;
-        const dest1 = dInput.value;
+        const origin1 = pInput.value, dest1 = dInput.value;
         if (!origin1 || !dest1) return;
         const service = new google.maps.DistanceMatrixService();
         leg1Miles = await getLegMiles(service, origin1, dest1);
         if (mode === 'roundtrip') {
-            const origin2 = document.getElementById('return-pickup-roundtrip').value;
-            const dest2 = document.getElementById('return-dropoff-roundtrip').value;
+            const origin2 = document.getElementById('return-pickup-roundtrip').value, dest2 = document.getElementById('return-dropoff-roundtrip').value;
             leg2Miles = (origin2 && dest2) ? await getLegMiles(service, origin2, dest2) : leg1Miles;
         }
         updateUI(mode);
@@ -109,86 +75,52 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Promise((resolve) => {
             service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
                 if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
-                    const m = response.rows[0].elements[0].distance.value;
-                    resolve(Math.round((m / 1609.34) * 10) / 10);
+                    const m = response.rows[0].elements[0].distance.value; resolve(Math.round((m / 1609.34) * 10) / 10);
                 } else resolve(0);
             });
         });
     }
 
     function updateUI(mode) {
-        const previewBox = document.getElementById(`preview-${mode}`);
-        const distVal = document.getElementById(`dist-val-${mode}`);
-        if (!previewBox) return;
-        previewBox.style.display = 'block';
+        const previewBox = document.getElementById(`preview-${mode}`), distVal = document.getElementById(`dist-val-${mode}`);
+        if (!previewBox) return; previewBox.style.display = 'block';
         if (mode === 'roundtrip') distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${(leg1Miles + leg2Miles).toFixed(1)} mi</div>`;
         else distVal.textContent = leg1Miles + ' mi';
     }
 
-    /* --- FORM SUBMISSION --- */
     document.querySelectorAll('.booking-widget__form').forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = form.querySelector('.booking-widget__submit');
             submitBtn.disabled = true; submitBtn.textContent = 'Calculating...';
             const type = form.id.replace('form-', '');
-            
             bookingData = {
-                type: type,
-                pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A',
-                dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
-                date: form.querySelector('input[type="date"]')?.value || 'N/A',
-                time: form.querySelector('input[type="time"]')?.value || 'N/A',
-                passengers: passengerCount,
-                luggage: luggageCount,
-                hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
+                type: type, pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A', dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
+                date: form.querySelector('input[type="date"]')?.value || 'N/A', time: form.querySelector('input[type="time"]')?.value || 'N/A',
+                passengers: passengerCount, luggage: luggageCount, hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
             };
-
             if (type === 'roundtrip') {
-                const rtDateInputs = form.querySelectorAll('input[type="date"]');
-                const rtTimeInputs = form.querySelectorAll('input[type="time"]');
-                bookingData.returnDate = rtDateInputs[1]?.value || 'N/A';
-                bookingData.returnTime = rtTimeInputs[1]?.value || 'N/A';
-                bookingData.returnPickup = document.getElementById('return-pickup-roundtrip')?.value || 'N/A';
-                bookingData.returnDropoff = document.getElementById('return-dropoff-roundtrip')?.value || 'N/A';
+                const rtDateInputs = form.querySelectorAll('input[type="date"]'), rtTimeInputs = form.querySelectorAll('input[type="time"]');
+                bookingData.returnDate = rtDateInputs[1]?.value || 'N/A'; bookingData.returnTime = rtTimeInputs[1]?.value || 'N/A';
+                bookingData.returnPickup = document.getElementById('return-pickup-roundtrip')?.value || 'N/A'; bookingData.returnDropoff = document.getElementById('return-dropoff-roundtrip')?.value || 'N/A';
             }
-
-            await refreshDistances(type);
-            openVehicleSelector(type, bookingData.hours);
+            await refreshDistances(type); openVehicleSelector(type, bookingData.hours);
             submitBtn.disabled = false; submitBtn.textContent = 'Get a Quote';
         });
     });
 
-    const vsOverlay = document.getElementById('vsOverlay');
-    const vsList = document.getElementById('vsList');
-    const vsContinueBtn = document.getElementById('vsContinueBtn');
-
+    const vsOverlay = document.getElementById('vsOverlay'), vsList = document.getElementById('vsList'), vsContinueBtn = document.getElementById('vsContinueBtn');
     function openVehicleSelector(type, hours) {
         vsList.innerHTML = ''; vsContinueBtn.disabled = true;
-        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
-        const finalMiles = totalMiles || 20;
+        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles, finalMiles = totalMiles || 20;
         document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
-
         Object.keys(VEHICLE_RATES).forEach(key => {
-            const v = VEHICLE_RATES[key];
-            
-            // --- TEMPORARY FLAT RATE $50 ---
-            let total = 50.00;
-            // --------------------------
-
-            const card = document.createElement('div');
-            card.className = 'vs-card';
+            const v = VEHICLE_RATES[key]; let total = 50.00; // FLAT $50
+            const card = document.createElement('div'); card.className = 'vs-card';
             card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">🧑 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
             card.onclick = () => {
-                document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
-                card.classList.add('vs-card--selected');
-                vsContinueBtn.disabled = false;
-                vsContinueBtn.onclick = () => { 
-                    vsOverlay.classList.remove('active'); 
-                    bookingData.vehicle = v.name;
-                    bookingData.total = total.toFixed(2);
-                    openPayment(v.name, total); 
-                };
+                document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected')); card.classList.add('vs-card--selected');
+                vsContinueBtn.disabled = false; vsContinueBtn.onclick = () => { vsOverlay.classList.remove('active'); bookingData.vehicle = v.name; bookingData.total = total.toFixed(2); openPayment(v.name, total); };
             };
             vsList.appendChild(card);
         });
@@ -196,15 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function openPayment(vehicle, total) {
-        document.getElementById('pay-vehicle').textContent = vehicle;
-        document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
+        document.getElementById('pay-vehicle').textContent = vehicle; document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
         document.getElementById('paymentOverlay').classList.add('active');
-        
         setTimeout(() => {
             if (!stripe) {
                 stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
-                elements = stripe.elements();
-                const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
+                elements = stripe.elements(); const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
                 cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
                 cardExpiry = elements.create('cardExpiry', { style }); cardExpiry.mount('#card-expiry-element');
                 cardCvc = elements.create('cardCvc', { style }); cardCvc.mount('#card-cvc-element');
@@ -213,70 +142,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('payBtn').onclick = async () => {
-        const btn = document.getElementById('payBtn');
-        const name = document.getElementById('pay-name').value;
-        const email = document.getElementById('pay-email').value;
+        const btn = document.getElementById('payBtn'), name = document.getElementById('pay-name').value, email = document.getElementById('pay-email').value;
         if (!name || !email) { alert('Please fill in your name and email.'); return; }
-        
         btn.disabled = true; btn.textContent = 'Processing Payment...';
-        
         const {token, error} = await stripe.createToken(cardNumber);
         if (token) { 
             try {
-                const chargeResponse = await fetch('/.netlify/functions/create-charge', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        token: token.id,
-                        amount: bookingData.total,
-                        email: email,
-                        description: `SM LIMOUSINE Booking: ${bookingData.vehicle} for ${name}`
-                    })
-                });
-                
+                const chargeResponse = await fetch('/.netlify/functions/create-charge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: token.id, amount: bookingData.total, email: email, description: `SM LIMOUSINE Booking: ${bookingData.vehicle} for ${name}` }) });
                 const chargeResult = await chargeResponse.json();
-
                 if (chargeResult.success) {
-                    btn.textContent = 'Sending Notifications...';
-                    bookingData.name = name;
-                    bookingData.email = email;
-                    bookingData.chargeId = chargeResult.chargeId;
-
-                    const dispatchRes = await fetch('/.netlify/functions/dispatch', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingData)
-                    });
+                    btn.textContent = 'Sending Notifications...'; bookingData.name = name; bookingData.email = email; bookingData.chargeId = chargeResult.chargeId;
+                    const dispatchRes = await fetch('/.netlify/functions/dispatch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bookingData) });
                     const dispatchResult = await dispatchRes.json();
-                    console.log('Dispatch Result:', dispatchResult);
-
                     let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
-                    
-                    const emailSent = dispatchResult.email_status === 'SENT';
-                    const smsSent = dispatchResult.sms_status === 'SENT';
-
+                    const emailSent = dispatchResult.email_status === 'SENT', smsSent = dispatchResult.sms_status === 'SENT';
                     if (!emailSent || !smsSent) {
                         finalMsg += '\n\n🚨 Notification Status:';
-                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Carrier block'));
+                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Auth error'));
                         finalMsg += '\n- Text: ' + (smsSent ? 'SENT' : (dispatchResult.sms_error || 'Carrier block'));
+                        if (dispatchResult.debug) {
+                            finalMsg += '\n\n🛠 Debug Info:';
+                            finalMsg += '\n- Pass Length: ' + dispatchResult.debug.pass_len + ' chars';
+                            finalMsg += '\n- User: ' + dispatchResult.debug.email_user;
+                        }
                         finalMsg += '\n\nPlease screenshot this if things are missing.';
                     } else {
                         finalMsg += '\n\nCheck your emails for confirmation details.';
                     }
-
-                    alert(finalMsg);
-                    document.getElementById('paymentOverlay').classList.remove('active');
-                } else {
-                    alert('Payment Failed: ' + chargeResult.error);
-                }
-            } catch (e) {
-                console.error('System error:', e);
-                alert('Payment Success, but notification engine is syncing. Check your account.');
-                document.getElementById('paymentOverlay').classList.remove('active');
-            }
-        } else {
-            alert('Card Error: ' + error.message);
-        }
+                    alert(finalMsg); document.getElementById('paymentOverlay').classList.remove('active');
+                } else { alert('Payment Failed: ' + chargeResult.error); }
+            } catch (e) { console.error('System error:', e); alert('Payment Success, but notification engine is syncing. Check your account.'); document.getElementById('paymentOverlay').classList.remove('active'); }
+        } else { alert('Card Error: ' + error.message); }
         btn.disabled = false; btn.textContent = 'Book Now';
     };
 
