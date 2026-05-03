@@ -30,47 +30,49 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- ENHANCED EMAIL DISPATCH (Try 587, 465, and 2525 fallback) ---
+    // --- HIGH-SPEED EMAIL DISPATCH (Prevent Netlify 10s Timeout) ---
     const sendEmail = async (port, secure) => {
       const transporter = nodemailer.createTransport({
         host: 'smtp.mail.com',
         port: port,
         secure: secure,
         auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
-        connectionTimeout: 10000
+        connectionTimeout: 3000,
+        greetingTimeout: 3000,
+        socketTimeout: 3000
       });
       return transporter.sendMail({
-        from: 'SM Limousine Dispatch <smlimo@mail.com>',
+        from: 'smlimo@mail.com',
         to: 'smlimo@mail.com, smlimo2@yahoo.com, ' + email,
         subject: `🚨 Booking: ${name} - ${vehicle}`,
         text: bookingSummary
-      }).then(info => {
-        if (!info.accepted || info.accepted.length === 0) {
-          throw new Error('Email accepted by server but no recipients reached.');
-        }
-        return info;
       });
     };
 
     let emailStatus = 'pending';
     let detailedError = null;
+    let acceptedEmails = [];
 
     try {
-      await sendEmail(587, false);
-      emailStatus = 'sent (587)';
+      // Try 465 (Most reliable for mail.com) FIRST
+      const info = await sendEmail(465, true);
+      emailStatus = 'sent (465)';
+      acceptedEmails = info.accepted || [];
     } catch (e1) {
-      console.log('587 failed, trying 465...');
+      console.log('465 failed, trying 587...');
       try {
-        await sendEmail(465, true);
-        emailStatus = 'sent (465)';
+        const info = await sendEmail(587, false);
+        emailStatus = 'sent (587)';
+        acceptedEmails = info.accepted || [];
       } catch (e2) {
-        console.log('465 failed, trying 2525 fallback...');
+        console.log('587 failed, trying 2525 fallback...');
         try {
-          await sendEmail(2525, false);
+          const info = await sendEmail(2525, false);
           emailStatus = 'sent (2525)';
+          acceptedEmails = info.accepted || [];
         } catch (e3) {
           emailStatus = 'FAILED';
-          detailedError = e1.message; // Capture the primary error
+          detailedError = e1.message;
         }
       }
     }
@@ -96,11 +98,8 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
         success: true, 
         email_status: emailStatus,
         email_error: detailedError,
-        sms_status: smsStatus,
-        debug: {
-            pass_len: EMAIL_PASS ? EMAIL_PASS.length : 0,
-            has_user: !!process.env.TWILIO_SID
-        }
+        accepted_emails: acceptedEmails,
+        sms_status: smsStatus
       })
     };
   } catch (error) {

@@ -1,5 +1,5 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.16)
+   SM LIMOUSINE — Main Script (Precision Version 4.17)
    Notification Restoration & Deep Debugging
    ============================================================================= */
 
@@ -255,11 +255,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
                     
-                    if (dispatchResult.email_status.includes('failed')) {
+                    if (dispatchResult.email_status.includes('FAILED')) {
                         finalMsg += '\n\n🚨 Email snag: ' + dispatchResult.email_error;
                         finalMsg += '\n\nPlease screenshot this error and send it to Mike.';
                     } else {
                         finalMsg += '\n\nCheck your emails for confirmation details.';
+                        if (dispatchResult.accepted_emails && dispatchResult.accepted_emails.length > 0) {
+                             finalMsg += '\n\nSent to: ' + dispatchResult.accepted_emails.join(', ');
+                        }
                     }
 
                     alert(finalMsg);
