@@ -24,10 +24,13 @@ exports.handler = async (event) => {
       auth: {
         user: 'smlimo@mail.com',
         pass: EMAIL_PASS
-      }
+      },
+      logger: false,
+      debug: false
     });
 
     let emailError = null;
+    let emailDebug = null;
     try {
       await transporter.sendMail({
         from: '"SM DISPATCH" <smlimo@mail.com>',
@@ -37,11 +40,21 @@ exports.handler = async (event) => {
       });
     } catch (e) {
       emailError = e.message;
-      console.error('Email snag:', e.message);
+      // Capture full debug details to surface in UI
+      emailDebug = {
+        message: e.message,
+        code: e.code || null,
+        command: e.command || null,
+        responseCode: e.responseCode || null,
+        response: e.response || null,
+        stack: e.stack ? e.stack.split('\n').slice(0, 5).join(' | ') : null
+      };
+      console.error('Email snag:', JSON.stringify(emailDebug));
     }
 
     // --- 2. SMS NOTIFICATION ---
     let smsError = null;
+    let smsDebug = null;
     try {
       const client = twilio(TWILIO_SID, TWILIO_TOKEN);
       await client.messages.create({
@@ -51,7 +64,12 @@ exports.handler = async (event) => {
       });
     } catch (e) {
       smsError = e.message;
-      console.error('SMS snag:', e.message);
+      smsDebug = {
+        message: e.message,
+        code: e.code || null,
+        status: e.status || null
+      };
+      console.error('SMS snag:', JSON.stringify(smsDebug));
     }
 
     return {
@@ -60,7 +78,9 @@ exports.handler = async (event) => {
       body: JSON.stringify({ 
         success: true, 
         email_status: emailError ? `snag: ${emailError}` : 'sent',
-        sms_status: smsError ? `snag: ${smsError}` : 'sent'
+        email_debug: emailDebug || null,
+        sms_status: smsError ? `snag: ${smsError}` : 'sent',
+        sms_debug: smsDebug || null
       })
     };
   } catch (error) {
