@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.22)
-   Turbo Notification Engine + Password Debug
+   SM LIMOUSINE — Main Script (Precision Version 4.23)
+   Gmail Provider Switch Update
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -257,14 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (!emailSent || !smsSent) {
                         finalMsg += '\n\n🚨 Notification Status:';
-                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Auth issue'));
+                        finalMsg += '\n- Email: ' + (emailSent ? 'SENT' : (dispatchResult.email_error || 'Carrier block'));
                         finalMsg += '\n- Text: ' + (smsSent ? 'SENT' : (dispatchResult.sms_error || 'Carrier block'));
-                        
-                        if (dispatchResult.debug) {
-                            finalMsg += '\n\n🛠 Debug Info:';
-                            finalMsg += '\n- Pass Length: ' + dispatchResult.debug.pass_len;
-                            finalMsg += '\n- SMTP Ready: ' + (dispatchResult.debug.pass_len > 10 ? 'YES' : 'NO');
-                        }
                         finalMsg += '\n\nPlease screenshot this if things are missing.';
                     } else {
                         finalMsg += '\n\nCheck your emails for confirmation details.';
