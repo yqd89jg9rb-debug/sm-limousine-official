@@ -25,13 +25,18 @@ exports.handler = async (event) => {
         port: port,
         secure: secure,
         auth: { user: 'smlimo@mail.com', pass: EMAIL_PASS },
-        connectionTimeout: 8000
+        connectionTimeout: 10000
       });
       return transporter.sendMail({
-        from: '"SM DISPATCH" <smlimo@mail.com>',
-        to: 'smlimo@mail.com, smlimo2@yahoo.com',
+        from: 'SM Limousine Dispatch <smlimo@mail.com>',
+        to: 'smlimo@mail.com, smlimo2@yahoo.com, ' + email,
         subject: `🚨 Booking: ${name} - ${vehicle}`,
         text: bookingSummary
+      }).then(info => {
+        if (!info.accepted || info.accepted.length === 0) {
+          throw new Error('Email accepted by server but no recipients reached.');
+        }
+        return info;
       });
     };
 
