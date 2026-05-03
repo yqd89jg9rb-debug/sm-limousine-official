@@ -14,7 +14,7 @@ exports.handler = async (event) => {
     const DISPATCH_TO = process.env.DISPATCH_TO;
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
 
-    const bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
+    const bookingSummary = `\uD83D\uDEA8 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
 
     // --- 1. EMAIL NOTIFICATION (Using Port 465 for SSL) ---
     const transporter = nodemailer.createTransport({
@@ -35,7 +35,7 @@ exports.handler = async (event) => {
       await transporter.sendMail({
         from: '"SM DISPATCH" <smlimo@mail.com>',
         to: 'smlimo@mail.com, smlimo2@yahoo.com',
-        subject: `🚨 Booking: ${name} - ${vehicle}`,
+        subject: `\uD83D\uDEA8 Booking: ${name} - ${vehicle}`,
         text: bookingSummary
       });
     } catch (e) {

@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.setBookingTab = (name) => {
-        const tab = document.querySelector(`[data-tab=\"${name}\"]`);
+        const tab = document.querySelector(`[data-tab="${name}"]`);
         if (tab) tab.click();
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
-        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: \"us\" } };
+        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
         const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
                 const ac = new google.maps.places.Autocomplete(input, options);
-                input.dataset.acBound = \"true\";
+                input.dataset.acBound = "true";
                 ac.addListener('place_changed', () => {
                     const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
                     if (mode) refreshDistances(mode);
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             if (!stripe) {
-                stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlOe6q8qIyz7gp00Tg6GQXrd');
+                stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
                 elements = stripe.elements();
                 const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
                 cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
@@ -247,8 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) {
                 console.error('System error:', e);
                 document.getElementById('paymentOverlay').classList.remove('active');
-                showBookingConfirmation(bookingData.vehicle, { email_status: 'snag: Network error — 
-' + e.message, sms_status: 'unknown', email_debug: { message: e.message } });
+                showBookingConfirmation(bookingData.vehicle, { email_status: 'snag: Network error — ' + e.message, sms_status: 'unknown', email_debug: { message: e.message } });
             }
         } else {
             alert('Card Error: ' + error.message);
@@ -264,20 +263,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = `
             <div id="confirmOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;">
               <div style="background:#111;border:1px solid #333;border-radius:12px;max-width:520px;width:100%;padding:28px 24px;font-family:Inter,sans-serif;color:#fff;max-height:90vh;overflow-y:auto;">
-                <div style="font-size:2rem;text-align:center;margin-bottom:8px;"✅</div>
+                <div style="font-size:2rem;text-align:center;margin-bottom:8px;">&#9989;</div>
                 <h2 style="text-align:center;font-size:1.2rem;margin:0 0 4px;">Payment Confirmed</h2>
                 <p style="text-align:center;color:#aaa;font-size:0.85rem;margin:0 0 20px;">Your <strong style="color:#d4af37">${vehicle}</strong> reservation is confirmed.</p>
 
                 <div style="display:grid;gap:8px;margin-bottom:20px;">
                   <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:${emailOk ? '#0d2b0d' : '#2b0d0d'};border:1px solid ${emailOk ? '#1a5c1a' : '#5c1a1a'};">
-                    <span style="font-size:1.2rem;">${emailOk ? '📧' : '⚠️'}</span>
+                    <span style="font-size:1.2rem;">${emailOk ? '&#128231;' : '&#9888;&#65039;'}</span>
                     <div>
                       <div style="font-size:0.8rem;font-weight:600;color:${emailOk ? '#4caf50' : '#f44336'};">Email Alert — ${emailOk ? 'Sent' : 'FAILED'}</div>
                       ${!emailOk && dbg ? `<div style="font-size:0.72rem;color:#e57373;margin-top:3px;word-break:break-all;">${dbg.message || ''}</div>` : ''}
                     </div>
                   </div>
                   <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:${smsOk ? '#0d2b0d' : '#2b0d0d'};border:1px solid ${smsOk ? '#1a5c1a' : '#5c1a1a'};">
-                    <span style="font-size:1.2rem;">${smsOk ? '📱' : '⚠️'}</span>
+                    <span style="font-size:1.2rem;">${smsOk ? '&#128241;' : '&#9888;&#65039;'}</span>
                     <div style="font-size:0.8rem;font-weight:600;color:${smsOk ? '#4caf50' : '#f44336'};">SMS Alert — ${smsOk ? 'Sent' : 'FAILED'}</div>
                   </div>
                 </div>`;
@@ -294,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fields.length > 0) {
                 html += `
                 <details open style="margin-bottom:16px;">
-                  <summary style="cursor:pointer;font-size:0.8rem;color:#f0c040;font-weight:600;margin-bottom:8px;outline:none;"🔍 Debug Details — Why mail.com blocked the connection</summary>
+                  <summary style="cursor:pointer;font-size:0.8rem;color:#f0c040;font-weight:600;margin-bottom:8px;outline:none;">&#128269; Debug Details — Why mail.com blocked the connection</summary>
                   <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:12px;font-size:0.72rem;">`;
                 fields.forEach(([label, val]) => {
                     html += `<div style="margin-bottom:6px;"><span style="color:#888;text-transform:uppercase;font-size:0.65rem;letter-spacing:0.05em;">${label}</span><div style="color:#e0e0e0;word-break:break-all;margin-top:2px;">${val}</div></div>`;
