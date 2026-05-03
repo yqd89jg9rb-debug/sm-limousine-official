@@ -16,31 +16,35 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Start from top to control spacing */
+            justify-content: flex-start;
             overflow: hidden;
         }
 
         .logo-container {
-            margin-top: 8vh; /* Control logo height from top */
+            margin-top: 10vh;
             width: 100%;
             display: flex;
             justify-content: center;
         }
 
         .logo-img {
-            height: 140px; /* Made logo slightly larger too */
+            height: 140px;
             width: auto;
             border-radius: 8px;
         }
 
         .name-container {
-            width: 95%;
+            width: 90%;
             text-align: center;
-            margin-top: 15vh; /* Pushes the name further down from the logo */
+            margin-top: 12vh;
+            min-height: 20vh; /* Ensure the area is always tappable */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .client-name {
-            font-size: 12vw; /* Increased from 8vw to 12vw for a bigger look */
+            font-size: 14vw; /* Even bigger for visibility */
             font-weight: 900;
             text-transform: uppercase;
             border: none;
@@ -51,21 +55,27 @@
             outline: none;
             word-wrap: break-word;
             line-height: 1.1;
+            border-bottom: 2px solid rgba(255,255,255,0.1); /* Subtle hint line */
+            padding-bottom: 10px;
+        }
+
+        .client-name:empty:before {
+            content: attr(data-placeholder);
+            color: #333;
         }
 
         .instruction {
             position: absolute;
-            bottom: 20px;
-            font-size: 14px;
-            color: #333;
+            bottom: 30px;
+            font-size: 12px;
+            color: #444;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
         @media print {
             .instruction { display: none; }
-            .logo-container { margin-top: 2cm; }
-            .name-container { margin-top: 4cm; }
+            .client-name { border-bottom: none; }
         }
     </style>
 </head>
@@ -78,25 +88,31 @@
     </div>
 
     <div class="name-container">
-        <div class="client-name" contenteditable="true" spellcheck="false">TAP TO TYPE NAME</div>
+        <div class="client-name" 
+             id="nameField"
+             contenteditable="true" 
+             spellcheck="false" 
+             data-placeholder="TAP TO TYPE NAME">TAP TO TYPE NAME</div>
     </div>
 
-    <div class="instruction">Digital Greeting Sign — SM LIMOUSINE</div>
+    <div class="instruction">SM LIMOUSINE GREETING SIGN</div>
 
     <script>
-        // Clear default text on focus
-        const nameField = document.querySelector('.client-name');
-        nameField.addEventListener('focus', function() {
+        const el = document.getElementById('nameField');
+        
+        // Clear placeholder text only when user first clicks
+        el.addEventListener('focus', function() {
             if (this.innerText === 'TAP TO TYPE NAME') {
                 this.innerText = '';
             }
         });
 
-        // Optional: Keep focus for better tablet experience
-        window.onload = () => {
-            // Add a small delay to ensure rendering
-            setTimeout(() => nameField.focus(), 500);
-        };
+        // If they click away and it's empty, put the placeholder back
+        el.addEventListener('blur', function() {
+            if (this.innerText.trim() === '') {
+                this.innerText = 'TAP TO TYPE NAME';
+            }
+        });
     </script>
 </body>
 </html>
