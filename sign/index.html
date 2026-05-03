@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Driver Greeting Sign | SM LIMOUSINE</title>
+    <title>Greeting Sign | SM LIMOUSINE</title>
+    
+    <!-- Mobile Full Screen Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
+
     <style>
         body, html {
             margin: 0;
@@ -18,17 +24,20 @@
             align-items: center;
             justify-content: flex-start;
             overflow: hidden;
+            transition: background-color 0.5s ease;
         }
 
         .logo-container {
-            margin-top: 10vh;
+            margin-top: 8vh;
             width: 100%;
             display: flex;
             justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
         }
 
         .logo-img {
-            height: 140px;
+            height: 90px; /* Reduced from 140px */
             width: auto;
             border-radius: 8px;
         }
@@ -36,11 +45,12 @@
         .name-container {
             width: 95%;
             text-align: center;
-            margin-top: 15vh;
-            min-height: 20vh;
+            margin-top: 12vh;
+            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: margin-top 0.4s ease;
         }
 
         .client-name {
@@ -54,33 +64,44 @@
             width: 100%;
             outline: none;
             line-height: 1.1;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-            
-            /* Force Single Line */
+            padding-bottom: 20px;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: clip; /* Clip instead of ellipsis to keep it looking clean */
         }
 
         .instruction {
             position: absolute;
             bottom: 30px;
-            font-size: 12px;
+            font-size: 11px;
             color: #444;
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hiding state when typing */
+        body.is-typing .logo-container {
+            opacity: 0;
+            margin-top: -50px;
+            pointer-events: none;
+        }
+
+        body.is-typing .instruction {
+            opacity: 0;
+        }
+
+        body.is-typing .name-container {
+            margin-top: 0; /* Center the name better when typing */
         }
 
         @media print {
             .instruction { display: none; }
-            .client-name { border-bottom: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="logo-container">
+    <div class="logo-container" id="logoWrap">
         <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" 
              alt="SM LIMOUSINE" 
              class="logo-img">
@@ -97,20 +118,22 @@
 
     <script>
         const el = document.getElementById('nameField');
+        const body = document.body;
         
         el.addEventListener('focus', function() {
+            body.classList.add('is-typing');
             if (this.innerText === 'TAP TO TYPE NAME') {
                 this.innerText = '';
             }
         });
 
         el.addEventListener('blur', function() {
+            body.classList.remove('is-typing');
             if (this.innerText.trim() === '') {
                 this.innerText = 'TAP TO TYPE NAME';
             }
         });
 
-        // Prevent 'Enter' key to force single line and prevent jumping
         el.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
