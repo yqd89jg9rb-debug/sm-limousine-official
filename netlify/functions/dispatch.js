@@ -11,11 +11,23 @@ exports.handler = async (event) => {
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
     const DISPATCH_TO = process.env.DISPATCH_TO;
 
-    let bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
+    let bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE
+
+Client: ${name}
+Email: ${email}
+Vehicle: ${vehicle}
+Total: $${total}
+
+Trip: ${pickup} TO ${dropoff}
+Date/Time: ${date} @ ${time}
+Load: ${passengers} Pax, ${luggage} Bags`;
 
     const { returnDate, returnTime, returnPickup, returnDropoff } = data;
     if (returnDate && returnDate !== 'N/A') {
-      bookingSummary += `\n\nReturn Trip: ${returnPickup} TO ${returnDropoff}\nReturn Date/Time: ${returnDate} @ ${returnTime}`;
+      bookingSummary += `
+
+Return Trip: ${returnPickup} TO ${returnDropoff}
+Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
     // --- ENHANCED EMAIL DISPATCH (Try 587, 465, and 2525 fallback) ---

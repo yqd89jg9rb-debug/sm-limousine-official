@@ -1,13 +1,13 @@
-/* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.13)
+/* =============================================================================
+   SM LIMOUSINE — Main Script (Precision Version 4.14)
    Notification Restoration & Deep Debugging
-   =================================================================== */
+   ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const VEHICLE_RATES = {
         xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
+        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
         denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
         escalade:   { name: 'Cadillac Escalade',    base: 125, perMile: 6.50, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
         maybach:    { name: 'Mercedes-Maybach',     base: 150, perMile: 7.50, category: 'Ultra Luxury',     passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
                 if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
                     const m = response.rows[0].elements[0].distance.value;
-                    resolve(Math.round((m / 1609.34) * 10) / 10);
+                    resolve(Math.round((m / 1609.34) * 100) / 10);
                 } else resolve(0);
             });
         });
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
-            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
+            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">🧑 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
             card.onclick = () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');
@@ -246,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify(bookingData)
                     });
                     const dispatchResult = await dispatchRes.json();
+                    console.log('Dispatch Result:', dispatchResult);
 
                     let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
                     
