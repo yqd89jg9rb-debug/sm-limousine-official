@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Greeting Sign | SM LIMOUSINE</title>
     
+    <!-- Professional App Meta Tags -->
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,19 +26,19 @@
 
         .logo-container {
             margin-top: 3dvh;
-            padding-left: 20px;
+            padding-left: 10px; /* Moved left from 20px */
             width: 100%;
             display: flex; 
-            justify-content: flex-start; /* Logo to the top left corner */
+            justify-content: flex-start;
             transition: opacity 0.3s ease;
             z-index: 10;
             box-sizing: border-box;
         }
 
         .logo-img {
-            height: 150px; /* Same size as before */
+            height: 135px; /* Reduced by 10% from 150px */
             width: auto;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .name-container {
@@ -46,7 +47,7 @@
             flex-grow: 1;
             display: flex; align-items: center; justify-content: center;
             padding: 0 20px;
-            margin-top: -20px; /* Pull name slightly up since logo is left-aligned */
+            margin-top: -20px;
         }
 
         .client-name {
@@ -79,7 +80,7 @@
         }
 
         @media (orientation: landscape) {
-            .logo-img { height: 100px; }
+            .logo-img { height: 90px; }
             .client-name { font-size: 18vh; }
         }
     </style>
@@ -113,7 +114,6 @@
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
-                    console.log("Wake Lock Active");
                 }
             } catch (err) {}
             try { video.play(); } catch (err) {}
@@ -153,7 +153,9 @@
 
         el.addEventListener('blur', function() {
             body.classList.remove('is-typing');
-            if (this.innerText.trim() === '') this.innerText = 'TAP NAME';
+            if (this.innerText.trim() === '') {
+                this.innerText = 'TAP NAME';
+            }
         });
 
         el.addEventListener('keydown', e => {
