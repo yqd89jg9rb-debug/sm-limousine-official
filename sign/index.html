@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Greeting Sign | SM LIMOUSINE</title>
     
+    <!-- Professional App Meta Tags -->
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
@@ -14,7 +16,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100.1%; /* Tiny bit extra to allow scroll-to-hide bars */
+            height: 100%;
             background-color: #000000;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
@@ -26,30 +28,31 @@
         }
 
         .logo-container {
-            margin-top: 4vh;
+            margin-top: 2dvh; /* Lowered top margin */
             width: 100%;
             display: flex;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
         .logo-img {
-            height: 50px; /* Smallest logo for maximum name space */
+            height: 45px; /* Even smaller logo for more screen space */
             width: auto;
             border-radius: 4px;
         }
 
         .name-container {
-            width: 95%;
+            width: 100%;
             text-align: center;
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0 10px;
         }
 
         .client-name {
-            font-size: 18vw; /* Even larger font */
+            font-size: 20vw; /* Maximum font size */
             font-weight: 900;
             text-transform: uppercase;
             border: none;
@@ -58,25 +61,30 @@
             text-align: center;
             width: 100%;
             outline: none;
-            line-height: 1.0;
+            line-height: 0.9;
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: clip;
         }
 
         .instruction {
             position: absolute;
-            bottom: 15px;
-            font-size: 9px;
-            color: #1a1a1a;
+            bottom: 10px;
+            font-size: 8px;
+            color: #111; /* Nearly invisible to avoid distraction */
             text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: opacity 0.3s ease;
+            letter-spacing: 1px;
         }
 
+        /* Hide all UI when typing */
         body.is-typing .logo-container,
         body.is-typing .instruction {
-            opacity: 0;
-            visibility: hidden;
+            display: none !important;
+        }
+
+        @media (orientation: landscape) {
+            .logo-img { height: 35px; }
+            .client-name { font-size: 22vh; }
         }
     </style>
 </head>
@@ -95,24 +103,19 @@
              spellcheck="false">TAP NAME</div>
     </div>
 
-    <div class="instruction">Full Screen: Share > Add to Home Screen</div>
+    <div class="instruction">Use 'Add to Home Screen' for Full Screen View</div>
 
     <script>
         const el = document.getElementById('nameField');
         const body = document.body;
-
-        // Auto-scroll trick to hide browser bars on load
-        window.onload = () => {
-            setTimeout(() => {
-                window.scrollTo(0, 1);
-            }, 500);
-        };
         
         el.addEventListener('focus', function() {
             body.classList.add('is-typing');
             if (this.innerText === 'TAP NAME') {
                 this.innerText = '';
             }
+            // Force hide address bars if in real Safari
+            window.scrollTo(0, 1);
         });
 
         el.addEventListener('blur', function() {
