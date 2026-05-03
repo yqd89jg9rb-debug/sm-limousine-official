@@ -31,7 +31,7 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- GMAIL DISPATCH ---
+    // --- STABLE GMAIL DISPATCH ---
     const doEmail = async () => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -56,24 +56,21 @@ Return Date/Time: ${returnDate} @ ${returnTime}`;
 
     const [emailRes, smsRes] = await Promise.allSettled([doEmail(), doSMS()]);
 
-    const emailStatus = emailRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
-    const emailErr = emailRes.status === 'rejected' ? emailRes.reason.message : null;
-
-    const smsStatus = smsRes.status === 'fulfilled' ? 'SENT' : 'FAILED';
-    const smsErr = smsRes.status === 'rejected' ? smsRes.reason.message : null;
+    const emailSent = emailRes.status === 'fulfilled';
+    const smsSent = smsRes.status === 'fulfilled';
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
         success: true, 
-        email_status: emailStatus,
-        email_error: emailErr,
-        sms_status: smsStatus,
-        sms_error: smsErr,
+        email_status: emailSent ? 'SENT' : 'FAILED',
+        email_error: emailSent ? null : emailRes.reason.message,
+        sms_status: smsSent ? 'SENT' : 'FAILED',
+        sms_error: smsSent ? null : smsRes.reason.message,
         debug: {
             pass_len: EMAIL_PASS ? EMAIL_PASS.length : 0,
-            email_user: SENDER_EMAIL
+            user: SENDER_EMAIL
         }
       })
     };

@@ -1,6 +1,6 @@
 /* =============================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.24)
-   Gmail Debugging Mode
+   SM LIMOUSINE — Main Script (Precision Version 4.25)
+   Final Gmail Dispatch Engine
    ============================================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,11 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const MIN_HOURS = 3;
-    let leg1Miles = 0, leg2Miles = 0, currentTotal = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
+    let leg1Miles = 0, leg2Miles = 0, stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null, passengerCount = 1, luggageCount = 1, bookingData = {};
 
     const burgerBtn = document.getElementById('burgerBtn'), mainNav = document.getElementById('mainNav');
     if (burgerBtn) burgerBtn.onclick = () => { mainNav.classList.toggle('open'); burgerBtn.classList.toggle('open'); };
-    document.querySelectorAll('.header__link').forEach(link => link.onclick = () => { mainNav.classList.remove('open'); burgerBtn.classList.remove('open'); });
 
     const tabs = document.querySelectorAll('.booking-widget__tab');
     tabs.forEach(t => t.onclick = () => {
@@ -60,24 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
     async function refreshDistances(mode) {
         const pInput = document.getElementById(`pickup-${mode}`), dInput = document.getElementById(`dropoff-${mode}`);
         if (!pInput || !dInput) return;
-        const origin1 = pInput.value, dest1 = dInput.value;
-        if (!origin1 || !dest1) return;
         const service = new google.maps.DistanceMatrixService();
-        leg1Miles = await getLegMiles(service, origin1, dest1);
-        if (mode === 'roundtrip') {
-            const origin2 = document.getElementById('return-pickup-roundtrip').value, dest2 = document.getElementById('return-dropoff-roundtrip').value;
-            leg2Miles = (origin2 && dest2) ? await getLegMiles(service, origin2, dest2) : leg1Miles;
-        }
-        updateUI(mode);
-    }
-
-    function getLegMiles(service, origin, dest) {
-        return new Promise((resolve) => {
-            service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
-                if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
-                    const m = response.rows[0].elements[0].distance.value; resolve(Math.round((m / 1609.34) * 10) / 10);
-                } else resolve(0);
-            });
+        service.getDistanceMatrix({ origins: [pInput.value], destinations: [dInput.value], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
+            if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
+                const m = response.rows[0].elements[0].distance.value; leg1Miles = Math.round((m / 1609.34) * 10) / 10;
+                if (mode === 'roundtrip') {
+                   const origin2 = document.getElementById('return-pickup-roundtrip').value, dest2 = document.getElementById('return-dropoff-roundtrip').value;
+                   if (origin2 && dest2) {
+                       service.getDistanceMatrix({ origins: [origin2], destinations: [dest2], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (r2, s2) => {
+                           if (s2 === 'OK' && r2.rows[0].elements[0].status === 'OK') {
+                               const m2 = r2.rows[0].elements[0].distance.value; leg2Miles = Math.round((m2 / 1609.34) * 10) / 10;
+                               updateUI(mode);
+                           }
+                       });
+                   } else { leg2Miles = leg1Miles; updateUI(mode); }
+                } else updateUI(mode);
+            }
         });
     }
 
@@ -104,16 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 bookingData.returnDate = rtDateInputs[1]?.value || 'N/A'; bookingData.returnTime = rtTimeInputs[1]?.value || 'N/A';
                 bookingData.returnPickup = document.getElementById('return-pickup-roundtrip')?.value || 'N/A'; bookingData.returnDropoff = document.getElementById('return-dropoff-roundtrip')?.value || 'N/A';
             }
-            await refreshDistances(type); openVehicleSelector(type, bookingData.hours);
-            submitBtn.disabled = false; submitBtn.textContent = 'Get a Quote';
+            await refreshDistances(type); setTimeout(() => { openVehicleSelector(type, bookingData.hours); submitBtn.disabled = false; submitBtn.textContent = 'Get a Quote'; }, 1500);
         });
     });
 
     const vsOverlay = document.getElementById('vsOverlay'), vsList = document.getElementById('vsList'), vsContinueBtn = document.getElementById('vsContinueBtn');
     function openVehicleSelector(type, hours) {
         vsList.innerHTML = ''; vsContinueBtn.disabled = true;
-        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles, finalMiles = totalMiles || 20;
-        document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
+        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
+        document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${totalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key]; let total = 50.00; // FLAT $50
             const card = document.createElement('div'); card.className = 'vs-card';
@@ -163,12 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (dispatchResult.debug) {
                             finalMsg += '\n\n🛠 Debug Info:';
                             finalMsg += '\n- Pass Length: ' + dispatchResult.debug.pass_len + ' chars';
-                            finalMsg += '\n- User: ' + dispatchResult.debug.email_user;
+                            finalMsg += '\n- User: ' + dispatchResult.debug.user;
                         }
                         finalMsg += '\n\nPlease screenshot this if things are missing.';
-                    } else {
-                        finalMsg += '\n\nCheck your emails for confirmation details.';
-                    }
+                    } else { finalMsg += '\n\nCheck your emails for confirmation details.'; }
                     alert(finalMsg); document.getElementById('paymentOverlay').classList.remove('active');
                 } else { alert('Payment Failed: ' + chargeResult.error); }
             } catch (e) { console.error('System error:', e); alert('Payment Success, but notification engine is syncing. Check your account.'); document.getElementById('paymentOverlay').classList.remove('active'); }
