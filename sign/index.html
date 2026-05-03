@@ -12,70 +12,55 @@
 
     <style>
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background-color: #000000;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start;
             overflow: hidden;
-            touch-action: none; /* Required for custom pinch gestures */
+            touch-action: none; 
         }
 
         .logo-container {
             margin-top: 5dvh;
             width: 100%;
-            display: flex;
-            justify-content: center;
+            display: flex; justify-content: center;
             transition: opacity 0.3s ease;
             z-index: 10;
         }
 
         .logo-img {
-            height: 160px; /* Increased from 110px */
+            height: 200px; /* Made even bigger as requested */
             width: auto;
-            border-radius: 10px;
+            border-radius: 12px;
         }
 
         .name-container {
             width: 100%;
             text-align: center;
             flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             padding: 0 20px;
         }
 
         .client-name {
-            font-size: 14vw; /* Starting size, now adjustable */
+            font-size: 15vw; 
             font-weight: 900;
             text-transform: uppercase;
-            border: none;
-            background: transparent;
-            color: #ffffff;
-            text-align: center;
-            width: 100%;
-            outline: none;
-            line-height: 1.0;
-            white-space: nowrap;
+            border: none; background: transparent;
+            color: #ffffff; text-align: center;
+            width: 100%; outline: none;
+            line-height: 1.0; white-space: nowrap;
             overflow: visible;
         }
 
         .instruction {
-            position: absolute;
-            bottom: 15px;
-            font-size: 10px;
-            color: #222;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-            width: 100%;
+            position: absolute; bottom: 15px;
+            font-size: 10px; color: #333;
+            text-transform: uppercase; letter-spacing: 1px;
+            text-align: center; width: 100%;
         }
 
         body.is-typing .logo-container, 
@@ -83,74 +68,83 @@
             display: none !important;
         }
 
-        @media (orientation: landscape) {
-            .logo-img { height: 100px; }
+        /* Hidden video for keep-awake fallback */
+        #keepAwakeVideo {
+            position: absolute; width: 1px; height: 1px;
+            opacity: 0; pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="logo-container" id="logoWrap">
+    <!-- Hidden video element to trick mobile browsers into staying awake -->
+    <video id="keepAwakeVideo" loop muted playsinline src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/assets/blank_loop.mp4"></video>
+
+    <div class="logo-container">
         <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" 
-             alt="SM LIMOUSINE" 
-             class="logo-img">
+             alt="SM LIMOUSINE" class="logo-img">
     </div>
 
     <div class="name-container" id="zoomArea">
-        <div class="client-name" 
-             id="nameField"
-             contenteditable="true" 
-             spellcheck="false">TAP NAME</div>
+        <div class="client-name" id="nameField" contenteditable="true" spellcheck="false">TAP NAME</div>
     </div>
 
-    <div class="instruction">Pinch with two fingers to resize name</div>
+    <div class="instruction">Pinch to resize • Screen locked ON</div>
 
     <script>
         const el = document.getElementById('nameField');
         const zoomArea = document.getElementById('zoomArea');
         const body = document.body;
+        const video = document.getElementById('keepAwakeVideo');
         
-        let currentFontSize = 14; // in vw
-        
-        // --- WAKE LOCK ---
+        let currentFontSize = 15;
         let wakeLock = null;
-        const requestWakeLock = async () => {
+
+        // --- HEAVY DUTY WAKE LOCK ---
+        const startKeepAwake = async () => {
+            // 1. Try modern Wake Lock API
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
+                    console.log("Wake Lock Active");
                 }
             } catch (err) {}
-        };
-        document.addEventListener('click', requestWakeLock, { once: true });
 
-        // --- PINCH TO ZOOM LOGIC ---
+            // 2. Play hidden silent video (Fallback for older iOS/Android)
+            try {
+                video.play();
+            } catch (err) {}
+        };
+
+        // Re-engage on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') startKeepAwake();
+        });
+
+        // Engage on ANY interaction
+        ['click', 'touchstart', 'focus'].forEach(evt => {
+            document.addEventListener(evt, startKeepAwake, { once: false });
+        });
+
+        // --- PINCH TO ZOOM ---
         let initialDist = 0;
-        
         zoomArea.addEventListener('touchstart', e => {
             if (e.touches.length === 2) {
-                initialDist = Math.hypot(
-                    e.touches[0].pageX - e.touches[1].pageX,
-                    e.touches[0].pageY - e.touches[1].pageY
-                );
+                initialDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
             }
-        }, {passive: false});
+        });
 
         zoomArea.addEventListener('touchmove', e => {
             if (e.touches.length === 2) {
-                const currentDist = Math.hypot(
-                    e.touches[0].pageX - e.touches[1].pageX,
-                    e.touches[0].pageY - e.touches[1].pageY
-                );
-                
+                const currentDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
                 const diff = currentDist - initialDist;
                 if (Math.abs(diff) > 5) {
-                    const scaleFactor = diff > 0 ? 1.05 : 0.95;
-                    currentFontSize = Math.min(Math.max(5, currentFontSize * scaleFactor), 40);
+                    currentFontSize = Math.min(Math.max(5, currentFontSize * (diff > 0 ? 1.05 : 0.95)), 45);
                     el.style.fontSize = currentFontSize + 'vw';
                     initialDist = currentDist;
                 }
             }
-        }, {passive: false});
+        });
 
         el.addEventListener('focus', function() {
             body.classList.add('is-typing');
@@ -163,10 +157,7 @@
         });
 
         el.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                el.blur();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
         });
     </script>
 </body>
