@@ -102,8 +102,8 @@
     <footer class="elite-footer">
         <div class="elite-footer__top"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32"><a href="mailto:smlimo@mail.com" class="elite-footer__contact-btn">Contact us</a></div>
         <div class="elite-footer__accordion-wrap">
-            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Our services <span class="arrow">&#8964;</span></div><div class="elite-accordion__content"><p onclick="setBookingTab('oneway')">Airport Transfers</p><p onclick="setBookingTab('hourly')">Corporate Events</p><p onclick="setBookingTab('oneway')">Special Occasions</p></div></div>
-            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Company <span class="arrow">&#8964;</span></div><div class="elite-accordion__content"><p onclick="window.location.href='about.html'">About Us</p><p onclick="document.getElementById('fleet').scrollIntoView({behavior: 'smooth'})">Fleet</p></div></div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Our services <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p onclick="setBookingTab('oneway')">Airport Transfers</p><p onclick="setBookingTab('hourly')">Corporate Events</p><p onclick="setBookingTab('oneway')">Special Occasions</p></div></div>
+            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Company <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p onclick="window.location.href='about.html'">About Us</p><p onclick="document.getElementById('fleet').scrollIntoView({behavior: 'smooth'})">Fleet</p></div></div>
         </div>
         <div class="elite-footer__social-row">
             <a href="https://www.facebook.com/profile.php?id=61588791567732" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="24"></a>
@@ -111,11 +111,11 @@
             <a href="https://www.tiktok.com/@smlimo2026" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" width="24"></a>
             <a href="https://x.com/sm_limousine?s=21" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/5969/5969020.png" width="24"></a>
         </div>
-        <div class="elite-footer__bottom"><div class="elite-footer__legal"><a href='/terms'>Terms of service</a><a href='/privacy'>Privacy policy</a></div><p class="elite-footer__copyright">&copy; 2026 SM LIMOUSINE, Inc.</p></div>
+        <div class="elite-footer__bottom"><div class="elite-footer__legal"><a href='/terms'>Terms of service</a><a href='/privacy'>Privacy policy</a></div><p class="elite-footer__copyright">© 2026 SM LIMOUSINE, Inc.</p></div>
     </footer>
 
     <div class="addon-overlay" id="addonOverlay" onclick="if(event.target===this)closeAddonModal()">
-        <div class="addon-modal"><div class="addon-sheet-handle"></div><div class="addon-header"><h3>Passengers &amp; add-ons</h3><button onclick="closeAddonModal()">&#215;</button></div><div class="addon-content">
+        <div class="addon-modal"><div class="addon-sheet-handle"></div><div class="addon-header"><h3>Passengers &amp; add-ons</h3><button onclick="closeAddonModal()">×</button></div><div class="addon-content">
                 <div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div>
                 <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
                 <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button></div></div>
@@ -123,7 +123,7 @@
     <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled="">Continue</button></div></div></div>
     <div class="payment-overlay" id="paymentOverlay">
         <div class="payment-modal">
-            <button class="payment-modal__close" id="paymentClose">&#215;</button>
+            <button class="payment-modal__close" id="paymentClose">×</button>
             <div class="payment-modal__summary">
                 <h3 id="pay-vehicle">Vehicle</h3>
                 <p id="pay-total" class="clear-price">$0.00</p>
@@ -141,6 +141,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=4.9"></script>
+    <script src="script.js?v=4.11"></script>
 </body>
 </html>
