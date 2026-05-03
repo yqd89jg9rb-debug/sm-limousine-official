@@ -37,16 +37,18 @@ exports.handler = async (event) => {
       await sendEmail(587, false);
       emailStatus = 'sent (587)';
     } catch (e1) {
+      console.log('587 failed, trying 465...');
       try {
         await sendEmail(465, true);
         emailStatus = 'sent (465)';
       } catch (e2) {
+        console.log('465 failed, trying 2525 fallback...');
         try {
           await sendEmail(2525, false);
           emailStatus = 'sent (2525)';
         } catch (e3) {
           emailStatus = 'FAILED';
-          detailedError = e1.message; 
+          detailedError = e1.message; // Capture the primary error
         }
       }
     }
@@ -72,7 +74,11 @@ exports.handler = async (event) => {
         success: true, 
         email_status: emailStatus,
         email_error: detailedError,
-        sms_status: smsStatus
+        sms_status: smsStatus,
+        debug: {
+            pass_len: EMAIL_PASS ? EMAIL_PASS.length : 0,
+            has_user: !!process.env.TWILIO_SID
+        }
       })
     };
   } catch (error) {
