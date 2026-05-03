@@ -1,0 +1,9 @@
+{
+  "name": "sm-limousine-official",
+  "version": "4.2.0",
+  "description": "SM LIMOUSINE - Dispatch Engine",
+  "main": "index.html",
+  "dependencies": {
+    "twilio": "^5.0.0"
+  }
+}
