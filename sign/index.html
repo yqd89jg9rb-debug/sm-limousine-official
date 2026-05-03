@@ -34,17 +34,17 @@
         }
 
         .name-container {
-            width: 90%;
+            width: 95%;
             text-align: center;
-            margin-top: 12vh;
-            min-height: 20vh; /* Ensure the area is always tappable */
+            margin-top: 15vh;
+            min-height: 20vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .client-name {
-            font-size: 14vw; /* Even bigger for visibility */
+            font-size: 14vw;
             font-weight: 900;
             text-transform: uppercase;
             border: none;
@@ -53,15 +53,14 @@
             text-align: center;
             width: 100%;
             outline: none;
-            word-wrap: break-word;
             line-height: 1.1;
-            border-bottom: 2px solid rgba(255,255,255,0.1); /* Subtle hint line */
+            border-bottom: 2px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
-        }
-
-        .client-name:empty:before {
-            content: attr(data-placeholder);
-            color: #333;
+            
+            /* Force Single Line */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip; /* Clip instead of ellipsis to keep it looking clean */
         }
 
         .instruction {
@@ -91,8 +90,7 @@
         <div class="client-name" 
              id="nameField"
              contenteditable="true" 
-             spellcheck="false" 
-             data-placeholder="TAP TO TYPE NAME">TAP TO TYPE NAME</div>
+             spellcheck="false">TAP TO TYPE NAME</div>
     </div>
 
     <div class="instruction">SM LIMOUSINE GREETING SIGN</div>
@@ -100,17 +98,23 @@
     <script>
         const el = document.getElementById('nameField');
         
-        // Clear placeholder text only when user first clicks
         el.addEventListener('focus', function() {
             if (this.innerText === 'TAP TO TYPE NAME') {
                 this.innerText = '';
             }
         });
 
-        // If they click away and it's empty, put the placeholder back
         el.addEventListener('blur', function() {
             if (this.innerText.trim() === '') {
                 this.innerText = 'TAP TO TYPE NAME';
+            }
+        });
+
+        // Prevent 'Enter' key to force single line and prevent jumping
+        el.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur();
             }
         });
     </script>
