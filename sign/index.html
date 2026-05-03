@@ -28,7 +28,7 @@
         }
 
         .logo-container {
-            margin-top: 2dvh; /* Lowered top margin */
+            margin-top: 4dvh;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -36,9 +36,9 @@
         }
 
         .logo-img {
-            height: 45px; /* Even smaller logo for more screen space */
+            height: 80px; /* Increased from 45px for better visibility */
             width: auto;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .name-container {
@@ -52,7 +52,7 @@
         }
 
         .client-name {
-            font-size: 20vw; /* Maximum font size */
+            font-size: 20vw;
             font-weight: 900;
             text-transform: uppercase;
             border: none;
@@ -71,7 +71,7 @@
             position: absolute;
             bottom: 10px;
             font-size: 8px;
-            color: #111; /* Nearly invisible to avoid distraction */
+            color: #111;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -83,7 +83,7 @@
         }
 
         @media (orientation: landscape) {
-            .logo-img { height: 35px; }
+            .logo-img { height: 60px; }
             .client-name { font-size: 22vh; }
         }
     </style>
@@ -114,7 +114,6 @@
             if (this.innerText === 'TAP NAME') {
                 this.innerText = '';
             }
-            // Force hide address bars if in real Safari
             window.scrollTo(0, 1);
         });
 
