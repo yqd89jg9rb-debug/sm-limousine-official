@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM LIMOUSINE | Driver Link Generator</title>
+    <style>
+        :root {
+            --primary: #000000;
+            --accent: #c0c0c0;
+            --bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo-img {
+            height: 60px;
+            border-radius: 6px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #output {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f1f1f1;
+            border-radius: 6px;
+            word-break: break-all;
+            display: none;
+        }
+        .copy-btn {
+            background: #444;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo-wrap">
+            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="logo-img">
+        </div>
+        <h1>Driver Link Generator</h1>
+        
+        <div class="field"><label>Reservation ID</label><input id="rid" placeholder="e.g. SM-1234"></div>
+        <div class="field"><label>Passenger Name</label><input id="name" placeholder="e.g. John Doe"></div>
+        <div class="field"><label>Date & Time</label><input id="date" placeholder="e.g. April 22, 2026 @ 10:00 AM"></div>
+        <div class="field"><label>Vehicle</label><input id="vehicle" placeholder="e.g. Cadillac Escalade"></div>
+        <div class="field"><label>Pickup Address</label><input id="pickup" placeholder="Full address or Airport"></div>
+        <div class="field"><label>Dropoff Address</label><input id="dropoff" placeholder="Final destination"></div>
+        <div class="field"><label>Notes / Flight #</label><textarea id="notes" placeholder="Client preferences, flight info, etc."></textarea></div>
+
+        <button onclick="generate()">Generate Driver Link</button>
+
+        <div id="output">
+            <p id="link-text" style="font-size: 0.9rem; color: #333;"></p>
+            <button class="copy-btn" onclick="copy()">Copy Link</button>
+        </div>
+    </div>
+
+    <script>
+        function generate() {
+            const data = {
+                id: document.getElementById('rid').value,
+                n: document.getElementById('name').value,
+                d: document.getElementById('date').value,
+                v: document.getElementById('vehicle').value,
+                p: document.getElementById('pickup').value,
+                do: document.getElementById('dropoff').value,
+                nt: document.getElementById('notes').value
+            };
+            const params = new URLSearchParams(data).toString();
+            const fullUrl = `https://sm-limo.com/status?${params}`;
+            
+            document.getElementById('link-text').innerText = fullUrl;
+            document.getElementById('output').style.display = 'block';
+        }
+
+        function copy() {
+            const text = document.getElementById('link-text').innerText;
+            navigator.clipboard.writeText(text).then(() => alert('Link copied!'));
+        }
+    </script>
+</body>
+</html>

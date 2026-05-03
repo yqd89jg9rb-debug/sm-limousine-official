@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Driver Status Update | SM LIMOUSINE</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: #000; color: white;
+            font-family: 'Inter', sans-serif;
+        }
+        .status-container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .header-box {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+        .logo-img {
+            height: 60px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .info-card {
+            background: #111;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .label { color: #888; font-weight: 600; margin-right: 5px; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .status-btn {
+            padding: 20px 10px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            background: #111;
+            color: white;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+        }
+        .status-btn.active { background: #fff; color: #000; border-color: #fff; }
+        .call-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <div class="header-box">
+            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="logo-img">
+            <div id="resId" style="font-size: 1.2rem; font-weight: 800;">RESERVATION</div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-row"><span class="label">CLIENT:</span> <span id="disp-name">-</span></div>
+            <div class="info-row"><span class="label">TIME:</span> <span id="disp-time">-</span></div>
+            <div class="info-row"><span class="label">VEHICLE:</span> <span id="disp-vehicle">-</span></div>
+            <div class="info-row"><span class="label">PICKUP:</span> <span id="disp-pickup">-</span></div>
+            <div class="info-row"><span class="label">DROPOFF:</span> <span id="disp-dropoff">-</span></div>
+        </div>
+
+        <div class="grid">
+            <div class="status-btn" onclick="update(this)">Enroute</div>
+            <div class="status-btn" onclick="update(this)">On-Site</div>
+            <div class="status-btn" onclick="update(this)">On-Board</div>
+            <div class="status-btn" onclick="update(this)">Complete</div>
+            <div class="status-btn" onclick="update(this)">Waiting</div>
+            <div class="status-btn" onclick="update(this)">No Show</div>
+        </div>
+
+        <a href="tel:+18177234592" class="call-btn">Call Dispatch</a>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('resId').innerText = urlParams.get('id') || 'RESERVATION';
+        document.getElementById('disp-name').innerText = urlParams.get('n') || '-';
+        document.getElementById('disp-time').innerText = urlParams.get('d') || '-';
+        document.getElementById('disp-vehicle').innerText = urlParams.get('v') || '-';
+        document.getElementById('disp-pickup').innerText = urlParams.get('p') || '-';
+        document.getElementById('disp-dropoff').innerText = urlParams.get('do') || '-';
+
+        async function update(el) {
+            document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            
+            // Logic to send status update to dispatch via email/SMS could go here
+            alert('Status Updated: ' + el.innerText);
+        }
+    </script>
+</body>
+</html>
