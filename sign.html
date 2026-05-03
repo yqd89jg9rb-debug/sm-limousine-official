@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Driver Greeting Sign | SM LIMOUSINE</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 5%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo-img {
+            height: 120px;
+            width: auto;
+            border-radius: 8px;
+        }
+
+        .name-container {
+            width: 90%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .client-name {
+            font-size: 8vw;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: none;
+            background: transparent;
+            color: #ffffff;
+            text-align: center;
+            width: 100%;
+            outline: none;
+            word-wrap: break-word;
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media print {
+            .instruction { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" 
+             alt="SM LIMOUSINE" 
+             class="logo-img">
+    </div>
+
+    <div class="name-container">
+        <div class="client-name" contenteditable="true" spellcheck="false">TAP TO TYPE NAME</div>
+    </div>
+
+    <div class="instruction">Digital Greeting Sign — SM LIMOUSINE</div>
+
+    <script>
+        // Auto-focus the name field on load
+        document.querySelector('.client-name').addEventListener('focus', function() {
+            if (this.innerText === 'TAP TO TYPE NAME') {
+                this.innerText = '';
+            }
+        });
+    </script>
+</body>
+</html>
