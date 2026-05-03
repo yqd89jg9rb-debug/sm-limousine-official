@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.12)
+   SM LIMOUSINE — Main Script (Precision Version 4.13)
    Notification Restoration & Deep Debugging
    =================================================================== */
 
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.setBookingTab = (name) => {
-        const tab = document.querySelector(`[data-tab=\"${name}\"]`);
+        const tab = document.querySelector(`[data-tab="${name}"]`);
         if (tab) tab.click();
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
-        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: \"us\" } };
+        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
         const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
                 const ac = new google.maps.places.Autocomplete(input, options);
-                input.dataset.acBound = \"true\";
+                input.dataset.acBound = "true";
                 ac.addListener('place_changed', () => {
                     const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
                     if (mode) refreshDistances(mode);
@@ -137,12 +137,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 type: type,
                 pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A',
                 dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
-                date: form.querySelector('input[type=\"date\"]')?.value || 'N/A',
-                time: form.querySelector('input[type=\"time\"]')?.value || 'N/A',
+                date: form.querySelector('input[type="date"]')?.value || 'N/A',
+                time: form.querySelector('input[type="time"]')?.value || 'N/A',
                 passengers: passengerCount,
                 luggage: luggageCount,
-                hours: parseInt(form.querySelector('[data-field=\"hours\"]')?.value || MIN_HOURS)
+                hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
             };
+
+            if (type === 'roundtrip') {
+                const rtDateInputs = form.querySelectorAll('input[type="date"]');
+                const rtTimeInputs = form.querySelectorAll('input[type="time"]');
+                bookingData.returnDate = rtDateInputs[1]?.value || 'N/A';
+                bookingData.returnTime = rtTimeInputs[1]?.value || 'N/A';
+                bookingData.returnPickup = document.getElementById('return-pickup-roundtrip')?.value || 'N/A';
+                bookingData.returnDropoff = document.getElementById('return-dropoff-roundtrip')?.value || 'N/A';
+            }
 
             await refreshDistances(type);
             openVehicleSelector(type, bookingData.hours);
@@ -167,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
-            card.innerHTML = `<div class=\"vs-card__info\"><div class=\"vs-card__category\">${v.category}</div><div class=\"vs-card__name\">${v.name}</div><div class=\"vs-card__price\">$${total.toFixed(2)} USD</div><div class=\"vs-card__capacity\">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class=\"vs-card__right\"><img src=\"${v.image}\"></div>`;
+            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
             card.onclick = () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');

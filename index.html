@@ -56,29 +56,29 @@
                         <div class="booking-widget__field"><label class="field-label">Date</label><input type="date" required class="st-input"></div>
                         <div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
                     </div>
-                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-oneway">Select number of people</span></div></div>
+                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-oneway">Select number of people</span> <span class="addon-trigger-arrow">⌄</span></div></div>
                     <div class="price-preview" id="preview-oneway" style="display:none;"><span id="dist-val-oneway" class="clear-price">0 mi</span></div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
                 <form class="booking-widget__form" id="form-roundtrip">
                     <div class="leg-label">Departing Trip</div>
-                    <div class="booking-widget__field"><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><input type="text" id="dropoff-roundtrip" placeholder="Destination" required class="st-input address-input"></div>
-                    <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
+                    <div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input address-input"></div>
+                    <div class="booking-widget__field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-roundtrip" placeholder="Destination" required class="st-input address-input"></div>
+                    <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Date</label><input type="date" required class="st-input"></div><div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div></div>
                     <div class="leg-label" style="margin-top:10px;">Return Trip</div>
-                    <div class="booking-widget__field"><input type="text" id="return-pickup-roundtrip" placeholder="Return Pickup" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input address-input"></div>
-                    <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
-                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-roundtrip">Select number of people</span></div></div>
+                    <div class="booking-widget__field"><label class="field-label">Return Pickup</label><input type="text" id="return-pickup-roundtrip" placeholder="Return Pickup" required class="st-input address-input"></div>
+                    <div class="booking-widget__field"><label class="field-label">Return Dropoff</label><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input address-input"></div>
+                    <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Return Date</label><input type="date" required class="st-input"></div><div class="booking-widget__field"><label class="field-label">Return Time</label><input type="time" required class="st-input"></div></div>
+                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-roundtrip">Select number of people</span> <span class="addon-trigger-arrow">⌄</span></div></div>
                     <div class="price-preview" id="preview-roundtrip" style="display:none;"><span id="dist-val-roundtrip" class="clear-price">0 mi</span></div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
                 <form class="booking-widget__form" id="form-hourly">
-                    <div class="booking-widget__field"><input type="text" id="pickup-hourly" placeholder="Pickup Location" required class="st-input address-input"></div>
-                    <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div><div class="booking-widget__field"><select data-field="hours" id="hours-val" class="st-input"><option value="3">3 Hours (Min)</option><option value="4">4 Hours</option><option value="5">5 Hours</option></select></div></div>
-                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-hourly">Select number of people</span></div></div>
+                    <div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-hourly" placeholder="Pickup Location" required class="st-input address-input"></div>
+                    <div class="booking-widget__row"><div class="booking-widget__field"><label class="field-label">Date</label><input type="date" required class="st-input"></div><div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div><div class="booking-widget__field"><label class="field-label">Hours</label><select data-field="hours" id="hours-val" class="st-input"><option value="3">3 Hours (Min)</option><option value="4">4 Hours</option><option value="5">5 Hours</option></select></div></div>
+                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-hourly">Select number of people</span> <span class="addon-trigger-arrow">⌄</span></div></div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
             </div>
@@ -141,6 +141,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=4.12"></script>
+    <script src="script.js?v=4.13"></script>
 </body>
 </html>
