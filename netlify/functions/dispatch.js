@@ -6,7 +6,7 @@ exports.handler = async (event) => {
 
   try {
     const data = JSON.parse(event.body);
-    const { name, email, phone, contactEmail, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
+    const { name, email, phone, contactEmail, notes, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
 
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
     const DISPATCH_TO = process.env.DISPATCH_TO;
@@ -22,7 +22,8 @@ Total: $${total}
 
 Trip: ${pickup} TO ${dropoff}
 Date/Time: ${date} @ ${time}
-Load: ${passengers} Pax, ${luggage} Bags`;
+Load: ${passengers} Pax, ${luggage} Bags
+Notes: ${notes || 'None'}`;
 
     const { returnDate, returnTime, returnPickup, returnDropoff } = data;
     if (returnDate && returnDate !== 'N/A') {
@@ -32,7 +33,7 @@ Return Trip: ${returnPickup} TO ${returnDropoff}
 Return Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- STABLE GMAIL DISPATCH ---
+    // --- GMAIL OPTIMIZED DISPATCH ---
     const doEmail = async () => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
