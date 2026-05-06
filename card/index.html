@@ -78,6 +78,7 @@
             background: linear-gradient(135deg, #e0e0e0, #888);
             color: #000;
             font-weight: 800;
+            cursor: pointer;
         }
         .social-row {
             margin-top: 40px;
@@ -104,9 +105,9 @@
         <div class="title">Owner, SM LIMOUSINE</div>
 
         <div class="btn-stack">
-            <a href="#" onclick="downloadVCard()" class="btn btn-silver">SAVE TO CONTACTS</a>
+            <div onclick="saveContact()" class="btn btn-silver">SAVE TO CONTACTS</div>
             <a href="tel:+18177234592" class="btn btn-primary">CALL +1 (817) 723-4592</a>
-            <a href="mailto:samberiz2025@gmail.com" class="btn btn-outline">EMAIL ME</a>
+            <a href="mailto:smlimo@mail.com" class="btn btn-outline">EMAIL ME</a>
             <a href="https://sm-limo.com" class="btn btn-outline">BOOK ONLINE</a>
         </div>
 
@@ -120,23 +121,25 @@
     </div>
 
     <script>
-        function downloadVCard() {
-            const vcard = "BEGIN:VCARD\n" +
-                          "VERSION:3.0\n" +
-                          "FN:Sam Boulos\n" +
-                          "ORG:SM LIMOUSINE\n" +
-                          "TITLE:Owner\n" +
-                          "TEL;TYPE=CELL,VOICE:+18177234592\n" +
-                          "EMAIL;TYPE=PREF,INTERNET:samberiz2025@gmail.com\n" +
-                          "URL:https://sm-limo.com\n" +
-                          "REV:" + new Date().toISOString() + "\n" +
+        function saveContact() {
+            const vcard = "BEGIN:VCARD\r\n" +
+                          "VERSION:3.0\r\n" +
+                          "FN:Sam Boulos\r\n" +
+                          "ORG:SM LIMOUSINE\r\n" +
+                          "TITLE:Owner\r\n" +
+                          "TEL;TYPE=WORK,VOICE:+18177234592\r\n" +
+                          "EMAIL;TYPE=PREF,INTERNET:smlimo@mail.com\r\n" +
+                          "URL:https://sm-limo.com\r\n" +
                           "END:VCARD";
-            const blob = new Blob([vcard], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
-            const newLink = document.createElement('a');
-            newLink.download = "Sam_Boulos_SM_Limousine.vcf";
-            newLink.href = url;
-            newLink.click();
+            
+            const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Sam_Boulos.vcf');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
