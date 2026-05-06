@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam Boulos | SM LIMOUSINE Digital Card</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+        }
+        .card-container {
+            width: 90%;
+            max-width: 400px;
+            margin-top: 50px;
+            padding-bottom: 50px;
+        }
+        .profile-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #c0c0c0;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .title {
+            font-size: 16px;
+            color: #888;
+            margin-top: 5px;
+            margin-bottom: 30px;
+        }
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #333;
+        }
+        .btn-silver {
+            background: linear-gradient(135deg, #e0e0e0, #888);
+            color: #000;
+            font-weight: 800;
+        }
+        .social-row {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        .social-icon img {
+            width: 30px;
+            height: 30px;
+            filter: invert(1);
+        }
+        .footer-logo {
+            margin-top: 50px;
+            height: 30px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="profile-logo" alt="Sam Boulos">
+        <h1>Sam Boulos</h1>
+        <div class="title">Owner, SM LIMOUSINE</div>
+
+        <div class="btn-stack">
+            <a href="#" onclick="downloadVCard()" class="btn btn-silver">SAVE TO CONTACTS</a>
+            <a href="tel:+18177234592" class="btn btn-primary">CALL +1 (817) 723-4592</a>
+            <a href="mailto:samberiz2025@gmail.com" class="btn btn-outline">EMAIL ME</a>
+            <a href="https://sm-limo.com" class="btn btn-outline">BOOK ONLINE</a>
+        </div>
+
+        <div class="social-row">
+            <a href="https://www.facebook.com/profile.php?id=61588791567732" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png"></a>
+            <a href="https://www.instagram.com/limousinesm" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png"></a>
+            <a href="https://www.tiktok.com/@smlimo2026" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"></a>
+        </div>
+
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="footer-logo">
+    </div>
+
+    <script>
+        function downloadVCard() {
+            const vcard = "BEGIN:VCARD\n" +
+                          "VERSION:3.0\n" +
+                          "FN:Sam Boulos\n" +
+                          "ORG:SM LIMOUSINE\n" +
+                          "TITLE:Owner\n" +
+                          "TEL;TYPE=CELL,VOICE:+18177234592\n" +
+                          "EMAIL;TYPE=PREF,INTERNET:samberiz2025@gmail.com\n" +
+                          "URL:https://sm-limo.com\n" +
+                          "REV:" + new Date().toISOString() + "\n" +
+                          "END:VCARD";
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const newLink = document.createElement('a');
+            newLink.download = "Sam_Boulos_SM_Limousine.vcf";
+            newLink.href = url;
+            newLink.click();
+        }
+    </script>
+</body>
+</html>
