@@ -33,8 +33,8 @@
             margin-bottom: 25px;
         }
         .info-row {
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -69,13 +69,14 @@
             font-weight: 600;
         }
         .pax-call-btn {
-            padding: 5px 12px;
+            padding: 6px 14px;
             background: #28a745;
             color: white;
             border-radius: 6px;
             text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -83,11 +84,12 @@
     <div class="status-container">
         <div class="header-box">
             <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="logo-img">
-            <div id="resId" style="font-size: 1.2rem; font-weight: 800;">RESERVATION</div>
+            <div id="resId" style="font-size: 1.2rem; font-weight: 800; letter-spacing: 1px;">RESERVATION</div>
         </div>
 
         <div class="info-card">
-            <div class="info-row"><span><span class="label">CLIENT:</span> <span id="disp-name">-</span></span> <a id="call-pax" href="#" class="pax-call-btn" style="display:none;">CALL CLIENT</a></div>
+            <div class="info-row"><span><span class="label">PASSENGER:</span> <span id="disp-name">-</span></span></div>
+            <div class="info-row"><span><span class="label">PASSENGER PHONE:</span> <span id="disp-phone">-</span></span> <a id="call-pax" href="#" class="pax-call-btn" style="display:none;">Call Now</a></div>
             <div class="info-row"><span><span class="label">TIME:</span> <span id="disp-time">-</span></span></div>
             <div class="info-row"><span><span class="label">VEHICLE:</span> <span id="disp-vehicle">-</span></span></div>
             <div class="info-row"><span><span class="label">PICKUP:</span> <span id="disp-pickup">-</span></span></div>
@@ -116,9 +118,10 @@
         document.getElementById('disp-dropoff').innerText = urlParams.get('do') || '-';
 
         const paxPhone = urlParams.get('ph');
-        if (paxPhone) {
+        if (paxPhone && paxPhone !== '-') {
+            document.getElementById('disp-phone').innerText = paxPhone;
             const callBtn = document.getElementById('call-pax');
-            callBtn.href = 'tel:' + paxPhone;
+            callBtn.href = 'tel:' + paxPhone.replace(/\D/g,'');
             callBtn.style.display = 'inline-block';
         }
 
