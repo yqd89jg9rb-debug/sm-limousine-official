@@ -35,6 +35,9 @@
         .info-row {
             margin-bottom: 10px;
             font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .label { color: #888; font-weight: 600; margin-right: 5px; }
         .grid {
@@ -65,6 +68,15 @@
             margin-top: 30px;
             font-weight: 600;
         }
+        .pax-call-btn {
+            padding: 5px 12px;
+            background: #28a745;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -75,11 +87,11 @@
         </div>
 
         <div class="info-card">
-            <div class="info-row"><span class="label">CLIENT:</span> <span id="disp-name">-</span></div>
-            <div class="info-row"><span class="label">TIME:</span> <span id="disp-time">-</span></div>
-            <div class="info-row"><span class="label">VEHICLE:</span> <span id="disp-vehicle">-</span></div>
-            <div class="info-row"><span class="label">PICKUP:</span> <span id="disp-pickup">-</span></div>
-            <div class="info-row"><span class="label">DROPOFF:</span> <span id="disp-dropoff">-</span></div>
+            <div class="info-row"><span><span class="label">CLIENT:</span> <span id="disp-name">-</span></span> <a id="call-pax" href="#" class="pax-call-btn" style="display:none;">CALL CLIENT</a></div>
+            <div class="info-row"><span><span class="label">TIME:</span> <span id="disp-time">-</span></span></div>
+            <div class="info-row"><span><span class="label">VEHICLE:</span> <span id="disp-vehicle">-</span></span></div>
+            <div class="info-row"><span><span class="label">PICKUP:</span> <span id="disp-pickup">-</span></span></div>
+            <div class="info-row"><span><span class="label">DROPOFF:</span> <span id="disp-dropoff">-</span></span></div>
         </div>
 
         <div class="grid">
@@ -103,11 +115,16 @@
         document.getElementById('disp-pickup').innerText = urlParams.get('p') || '-';
         document.getElementById('disp-dropoff').innerText = urlParams.get('do') || '-';
 
+        const paxPhone = urlParams.get('ph');
+        if (paxPhone) {
+            const callBtn = document.getElementById('call-pax');
+            callBtn.href = 'tel:' + paxPhone;
+            callBtn.style.display = 'inline-block';
+        }
+
         async function update(el) {
             document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            
-            // Logic to send status update to dispatch via email/SMS could go here
             alert('Status Updated: ' + el.innerText);
         }
     </script>
