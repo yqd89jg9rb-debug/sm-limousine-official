@@ -52,13 +52,18 @@
             font-weight: 600;
             margin-bottom: 5px;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 1rem;
             box-sizing: border-box;
+            background-color: #fff;
+        }
+        select {
+            appearance: auto;
+            cursor: pointer;
         }
         .field-row {
             display: flex;
@@ -112,7 +117,16 @@
             <div class="field"><label>Time</label><input type="time" id="time"></div>
         </div>
 
-        <div class="field"><label>Vehicle</label><input id="vehicle" placeholder="e.g. Cadillac Escalade" value="Cadillac Escalade"></div>
+        <div class="field">
+            <label>Vehicle</label>
+            <select id="vehicle">
+                <option value="Sedan">Sedan</option>
+                <option value="SUV" selected>SUV</option>
+                <option value="Sprinter">Sprinter</option>
+                <option value="Motor Coach">Motor Coach</option>
+            </select>
+        </div>
+
         <div class="field"><label>Pickup Address</label><input id="pickup" placeholder="Full address or Airport" class="address-input"></div>
         <div class="field"><label>Dropoff Address</label><input id="dropoff" placeholder="Final destination" class="address-input"></div>
         <div class="field"><label>Notes / Flight #</label><textarea id="notes" placeholder="Client preferences, flight info, etc."></textarea></div>
@@ -128,6 +142,7 @@
     <script>
         // Initialize Google Autocomplete
         function initAutocomplete() {
+            if (typeof google === 'undefined') return;
             const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
             const inputs = document.querySelectorAll('.address-input');
             inputs.forEach(input => {
