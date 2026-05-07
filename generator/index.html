@@ -56,6 +56,15 @@
             font-size: 1rem;
             box-sizing: border-box;
         }
+        .field-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .field-row .field {
+            flex: 1;
+            margin-bottom: 0;
+        }
         button {
             width: 100%;
             padding: 15px;
@@ -93,7 +102,12 @@
         <div class="field"><label>Reservation ID</label><input id="rid" placeholder="e.g. SM-1234"></div>
         <div class="field"><label>Passenger Name</label><input id="name" placeholder="e.g. John Doe"></div>
         <div class="field"><label>Phone</label><input id="phone" placeholder="e.g. +1 817-000-0000"></div>
-        <div class="field"><label>Date & Time</label><input id="date" placeholder="e.g. April 22, 2026 @ 10:00 AM"></div>
+        
+        <div class="field-row">
+            <div class="field"><label>Date</label><input type="date" id="date"></div>
+            <div class="field"><label>Time</label><input type="time" id="time"></div>
+        </div>
+
         <div class="field"><label>Vehicle</label><input id="vehicle" placeholder="e.g. Cadillac Escalade" value="Cadillac Escalade"></div>
         <div class="field"><label>Pickup Address</label><input id="pickup" placeholder="Full address or Airport"></div>
         <div class="field"><label>Dropoff Address</label><input id="dropoff" placeholder="Final destination"></div>
@@ -109,11 +123,23 @@
 
     <script>
         function generate() {
+            const rawDate = document.getElementById('date').value;
+            const rawTime = document.getElementById('time').value;
+            
+            // Format date for better readability if present
+            let formattedDT = '-';
+            if (rawDate && rawTime) {
+                const dObj = new Date(rawDate + 'T' + rawTime);
+                formattedDT = dObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + ' @ ' + dObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            } else if (rawDate || rawTime) {
+                formattedDT = (rawDate || '') + ' ' + (rawTime || '');
+            }
+
             const data = {
                 id: document.getElementById('rid').value,
                 n: document.getElementById('name').value,
                 ph: document.getElementById('phone').value,
-                d: document.getElementById('date').value,
+                d: formattedDT,
                 v: document.getElementById('vehicle').value,
                 p: document.getElementById('pickup').value,
                 do: document.getElementById('dropoff').value,
