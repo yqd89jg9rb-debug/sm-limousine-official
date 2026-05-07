@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SM LIMOUSINE | Driver Link Generator</title>
+    
+    <!-- Google Maps Places API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
+
     <style>
         :root {
             --primary: #000000;
@@ -109,8 +113,8 @@
         </div>
 
         <div class="field"><label>Vehicle</label><input id="vehicle" placeholder="e.g. Cadillac Escalade" value="Cadillac Escalade"></div>
-        <div class="field"><label>Pickup Address</label><input id="pickup" placeholder="Full address or Airport"></div>
-        <div class="field"><label>Dropoff Address</label><input id="dropoff" placeholder="Final destination"></div>
+        <div class="field"><label>Pickup Address</label><input id="pickup" placeholder="Full address or Airport" class="address-input"></div>
+        <div class="field"><label>Dropoff Address</label><input id="dropoff" placeholder="Final destination" class="address-input"></div>
         <div class="field"><label>Notes / Flight #</label><textarea id="notes" placeholder="Client preferences, flight info, etc."></textarea></div>
 
         <button onclick="generate()">Generate Driver Link</button>
@@ -122,11 +126,20 @@
     </div>
 
     <script>
+        // Initialize Google Autocomplete
+        function initAutocomplete() {
+            const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
+            const inputs = document.querySelectorAll('.address-input');
+            inputs.forEach(input => {
+                new google.maps.places.Autocomplete(input, options);
+            });
+        }
+        window.onload = initAutocomplete;
+
         function generate() {
             const rawDate = document.getElementById('date').value;
             const rawTime = document.getElementById('time').value;
             
-            // Format date for better readability if present
             let formattedDT = '-';
             if (rawDate && rawTime) {
                 const dObj = new Date(rawDate + 'T' + rawTime);
