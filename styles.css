@@ -585,11 +585,10 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
     background: var(--gold);
 }
 .partnership__grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     align-items: center;
-    gap: 40px;
+    gap: 40px 30px;
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -613,6 +612,6 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
     transform: scale(1.05);
 }
 @media (max-width: 768px) {
-    .partnership__grid { gap: 30px; }
+    .partnership__grid { gap: 20px 15px; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
     .partner-logo { max-height: 45px; max-width: 140px; }
 }
