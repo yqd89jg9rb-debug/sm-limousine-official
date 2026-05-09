@@ -1,7 +1,7 @@
 /* ===================================================================
    SM LIMOUSINE — Elite Master Stylesheet (v5.0)
    Complete styles including Vehicle Selection Overlay
-   ================================================================== */
+   =================================================================== */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -25,9 +25,9 @@ html, body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ===================================================================
+/* ============================================================
    HEADER
-   =================================================================== */
+   ============================================================ */
 .header {
     position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
     background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); z-index: 2000;
@@ -71,9 +71,9 @@ html, body {
     text-transform: uppercase; padding: 12px 0; text-decoration: none;
 }
 
-/* ===================================================================
+/* ============================================================
    HERO & BOOKING WIDGET
-   =================================================================== */
+   ============================================================ */
 .hero {
     position: relative;
     min-height: 100vh;
@@ -131,8 +131,6 @@ html, body {
 }
 .st-input:focus { border-color: #555; }
 
-.addon-trigger-arrow { font-size: 1rem; color: #888; margin-left: auto; pointer-events: none; line-height: 1; }
-
 input[type="date"], input[type="time"] { color-scheme: dark; min-height: 44px; }
 select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 
@@ -151,9 +149,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 .booking-widget__submit:hover { opacity: 0.9; }
 .booking-widget__submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ===================================================================
+/* ============================================================
    FLEET & SECTIONS
-   =================================================================== */
+   ============================================================ */
 .fleet-section { padding: 0 0 60px; }
 .section-title { font-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
 .section-subtitle { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 30px; }
@@ -173,9 +171,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 .fleet-card__content h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 5px; }
 .fleet-card__content p { font-size: 0.85rem; color: #888; }
 
-/* ===================================================================
+/* ============================================================
    FOOTER
-   =================================================================== */
+   ============================================================ */
 .elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
 .elite-footer__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .elite-footer__logo img { height: 32px; width: auto; }
@@ -219,9 +217,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 .elite-footer__legal a:hover { color: #fff; }
 .elite-footer__copyright { font-size: 0.8rem; color: #555; }
 
-/* ===================================================================
+/* ============================================================
    MODAL OVERLAYS BASE
-   =================================================================== */
+   ============================================================ */
 .addon-overlay, .vs-overlay, .payment-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000;
     display: none; align-items: flex-end; justify-content: center;
@@ -229,9 +227,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 }
 .addon-overlay.active, .vs-overlay.active, .payment-overlay.active { display: flex; }
 
-/* ===================================================================
+/* ============================================================
    ADDON / PASSENGERS MODAL
-   =================================================================== */
+   ============================================================ */
 .addon-modal {
     background: #fff; color: #000; width: 100%; max-width: 440px;
     border-radius: 20px 20px 0 0; padding: 20px 20px 40px;
@@ -264,9 +262,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
     margin-top: 20px; font-size: 1rem;
 }
 
-/* ===================================================================
+/* ============================================================
    VEHICLE SELECTION OVERLAY (vs-overlay)
-   =================================================================== */
+   ============================================================ */
 .vs-overlay {
     align-items: center;
     padding: 0;
@@ -442,9 +440,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 .btn--primary:hover:not(:disabled) { background: #5b4bc7; }
 .btn--primary:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
-/* ===================================================================
+/* ============================================================
    PAYMENT MODAL
-   =================================================================== */
+   ============================================================ */
 .payment-overlay {
     align-items: center;
 }
@@ -501,9 +499,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 .pm-book-btn:hover { background: #5b4bc7; }
 .pm-book-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ===================================================================
+/* ============================================================
    FLOATING CHAT ICON
-   =================================================================== */
+   ============================================================ */
 .chat-trigger {
     position: fixed; bottom: 25px; left: 20px;
     width: 56px; height: 56px; background: #522d41;
@@ -513,17 +511,17 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 }
 .chat-trigger img { width: 28px; height: auto; filter: invert(1); }
 
-/* ===================================================================
+/* ============================================================
    RESPONSIVE
-   =================================================================== */
+   ============================================================ */
 @media (min-width: 768px) {
     .fleet-grid { grid-template-columns: repeat(3, 1fr); }
     .booking-widget { max-width: 440px; }
 }
 
-/* ===================================================================
+/* ============================================================
    STRIPE ELEMENT STYLES
-   =================================================================== */
+   ============================================================ */
 #card-number-element, #card-expiry-element, #card-cvc-element {
     background: #000;
     padding: 12px;
@@ -538,9 +536,9 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
     border-color: #eb1c26 !important;
 }
 
-/* ===================================================================
+/* ============================================================
    STRIPE ELEMENT STYLES (v3.4 FIX)
-   =================================================================== */
+   ============================================================ */
 #card-number-element, #card-expiry-element, #card-cvc-element {
     background: #000;
     padding: 12px;
@@ -554,4 +552,67 @@ select.st-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http:/
 }
 .StripeElement--invalid {
     border-color: #eb1c26 !important;
+}
+
+/* ============================================================
+   AFFILIATE PARTNERSHIP SECTION
+   ============================================================ */
+.partnership-section {
+    padding: 60px 15px;
+    background: #000;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+.partnership__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--silver);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+}
+.partnership__title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+}
+.partnership__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.partner-logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}
+.partner-logo {
+    max-height: 100%;
+    width: auto;
+    max-width: 180px;
+    opacity: 0.6;
+    filter: grayscale(1) brightness(1.5);
+    transition: all 0.4s ease;
+}
+.partner-logo:hover {
+    opacity: 1;
+    filter: grayscale(0) brightness(1);
+    transform: scale(1.05);
+}
+@media (max-width: 768px) {
+    .partnership__grid { gap: 30px; }
+    .partner-logo { max-height: 45px; max-width: 140px; }
 }
