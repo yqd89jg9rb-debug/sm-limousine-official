@@ -1,11 +1,11 @@
-/* ======================================================================
-   SM LIMOUSINE — Main Script (Precision Version 4.22)
+/* ===================================================================
+   SM LIMOUSINE — Main Script (Precision Version 4.23)
    Notification Restoration & Deep Debugging
-   ====================================================================== */
+   =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const VEH��CLE_RATES = {
+    const VEHICLE_RATES = {
         xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
         suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
         denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ['oneway', 'roundtrip', 'hourly'].forEach(m => { const el = document.getElementById(`people-summary-${m}`); if (el) el.textContent = summary; });
     };
 
-    /* --- GOOGLE AUTOCOMPLETE BOUND --- */
+    /* --- GOOGLE AUTOCOMPLETE --- */
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
@@ -89,10 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof google !== 'undefined') initAutocomplete();
 
     async function refreshDistances(mode) {
-        const pIOT = document.getElementById(`pickup-${mode}`);
+        const pInput = document.getElementById(`pickup-${mode}`);
         const dInput = document.getElementById(`dropoff-${mode}`);
-        if (!pIOT || !dInput) return;
-        const origin1 = pIOT.value;
+        if (!pInput || !dInput) return;
+        const origin1 = pInput.value;
         const dest1 = dInput.value;
         if (!origin1 || !dest1) return;
         const service = new google.maps.DistanceMatrixService();
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getLegMiles(service, origin, dest) {
         return new Promise((resolve) => {
-            service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPEIAIA }, (response, status) => {
+            service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
                 if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
                     const m = response.rows[0].elements[0].distance.value;
                     resolve(Math.round((m / 1609.34) * 10) / 10);
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const distVal = document.getElementById(`dist-val-${mode}`);
         if (!previewBox) return;
         previewBox.style.display = 'block';
-        if (mode === 'roundtrip') distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${leg1Miles + leg2Miles).toFixed(1)} mi</div>`;
+        if (mode === 'roundtrip') distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${(leg1Miles + leg2Miles).toFixed(1)} mi</div>`;
         else distVal.textContent = leg1Miles + ' mi';
     }
 
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
-            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount} 💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
+            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">👥 ${passengerCount}  💼 ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
             card.onclick = () => {
                 document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
                 card.classList.add('vs-card--selected');
