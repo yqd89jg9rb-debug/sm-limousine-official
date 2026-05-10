@@ -35,7 +35,7 @@ html, body {
 }
 .header__logo-centered img { height: 38px; width: auto; }
 .header__actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.header__phone { font-size: 0.85rem; font-weight: 800; color: #fff; text-decoration: none; }
+.header__phone { font-size: 0.85rem; font-weight: 800; color: #fff; text-decoration: none; white-space: nowrap; }
 
 /* HERO */
 .hero {
@@ -128,7 +128,7 @@ html, body {
 }
 
 /* Specific Logo Sizing Fixes */
-.logo-groundlink { height: 160px !important; max-height: 160px !important; transform: scale(1.15); }
+.logo-groundlink { height: 180px !important; max-height: 180px !important; transform: scale(1.2); }
 .logo-bookinglane { height: 160px !important; max-height: 160px !important; transform: scale(1.2); }
 
 /* FOOTER */
