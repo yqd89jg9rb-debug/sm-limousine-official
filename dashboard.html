@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM LIMOUSINE | Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --black-light: #0a0a0a;
+            --black-card: #111111;
+            --gold: #D4AF37;
+            --gold-light: #F9E2AF;
+            --white: #ffffff;
+            --font-sans: 'Inter', sans-serif;
+            --radius: 16px;
+            --transition: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--black);
+            color: var(--gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .logo {
+            height: 100px;
+            margin-bottom: 30px;
+            filter: brightness(1.2);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--white);
+            font-size: 2rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .links-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .hub-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: var(--black-card);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .hub-link:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.1);
+        }
+
+        .hub-link svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--gold);
+        }
+
+        .hub-link span {
+            flex: 1;
+            text-align: left;
+        }
+
+        .hub-link::after {
+            content: '›';
+            font-size: 1.5rem;
+            color: var(--gold);
+            opacity: 0.5;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: var(--silver-dark);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="logo">
+        <h1>Command Center</h1>
+
+        <div class="links-grid">
+            <a href="index.html" class="hub-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Official Website</span>
+            </a>
+
+            <a href="link-generator.html" class="hub-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                <span>Driver Link Generator</span>
+            </a>
+
+            <a href="driver-status.html" class="hub-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                <span>Driver Status Portal</span>
+            </a>
+
+            <a href="mailto:smlimousine2026@gmail.com" class="hub-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>Contact Dispatch</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            © 2026 SM LIMOUSINE | Secure Access
+        </div>
+    </div>
+</body>
+</html>

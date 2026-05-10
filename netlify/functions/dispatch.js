@@ -6,79 +6,66 @@ exports.handler = async (event) => {
 
   try {
     const data = JSON.parse(event.body);
-    const { name, email, phone, contactEmail, notes, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
+    const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
 
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
     const DISPATCH_TO = process.env.DISPATCH_TO;
-    const SENDER_EMAIL = 'samberiz2025@gmail.com';
 
-    let bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE
-
-Client: ${name}
-Contact Email: ${contactEmail || email}
-Phone: ${phone || 'N/A'}
-Vehicle: ${vehicle}
-Total: $${total}
-
-Trip: ${pickup} TO ${dropoff}
-Date/Time: ${date} @ ${time}
-Load: ${passengers} Pax, ${luggage} Bags
-Notes: ${notes || 'None'}`;
+    let bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
 
     const { returnDate, returnTime, returnPickup, returnDropoff } = data;
     if (returnDate && returnDate !== 'N/A') {
-      bookingSummary += `
-
-Return Trip: ${returnPickup} TO ${returnDropoff}
-Return Date/Time: ${returnDate} @ ${returnTime}`;
+      bookingSummary += `\n\nReturn Trip: ${returnPickup} TO ${returnDropoff}\nReturn Date/Time: ${returnDate} @ ${returnTime}`;
     }
 
-    // --- GMAIL OPTIMIZED DISPATCH ---
-    const doEmail = async () => {
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: { user: SENDER_EMAIL, pass: EMAIL_PASS }
-        });
-        return transporter.sendMail({
-            from: `"SM Limousine Dispatch" <${SENDER_EMAIL}>`,
-            to: `smlimo@mail.com, smlimo2@yahoo.com, ${contactEmail || email}`,
-            subject: `🚨 Booking: ${name} - ${vehicle}`,
-            text: bookingSummary
-        });
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: { user: 'smlimousine2026@gmail.com', pass: EMAIL_PASS }
+    });
+
+    const mailOptions = {
+      from: '"SM DISPATCH" <smlimousine2026@gmail.com>',
+      to: 'smlimousine2026@gmail.com',
+      subject: `🚨 Booking: ${name} - ${vehicle}`,
+      text: bookingSummary
     };
 
-    const doSMS = async () => {
-        const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-        return client.messages.create({
-            body: bookingSummary,
-            from: process.env.TWILIO_FROM,
-            to: DISPATCH_TO
-        });
-    };
+    let emailStatus = 'pending';
+    try {
+      await transporter.sendMail(mailOptions);
+      emailStatus = 'sent (Gmail)';
+    } catch (e) {
+      console.log('Gmail send failed:', e.message);
+      emailStatus = 'FAILED';
+    }
 
-    const [emailRes, smsRes] = await Promise.allSettled([doEmail(), doSMS()]);
-
-    const emailSent = emailRes.status === 'fulfilled';
-    const smsSent = smsRes.status === 'fulfilled';
+    let smsStatus = 'pending';
+    try {
+      const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+      await client.messages.create({
+        body: bookingSummary,
+        from: process.env.TWILIO_FROM,
+        to: DISPATCH_TO
+      });
+      smsStatus = 'sent';
+    } catch (e) {
+      smsStatus = `snag: ${e.message}`;
+    }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
         success: true, 
-        email_status: emailSent ? 'SENT' : 'FAILED',
-        email_error: emailSent ? null : emailRes.reason.message,
-        sms_status: smsSent ? 'SENT' : 'FAILED',
-        sms_error: smsSent ? null : smsRes.reason.message,
-        debug: {
-            pass_len: EMAIL_PASS ? EMAIL_PASS.length : 0,
-            user: SENDER_EMAIL
-        }
+        email_status: emailStatus,
+        sms_status: smsStatus
       })
     };
   } catch (error) {
     return {
-      statusCode: 200,
+      statusCode: 500,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ success: false, error: error.message })
     };
