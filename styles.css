@@ -128,8 +128,8 @@ html, body {
 }
 
 /* Specific Logo Sizing Fixes */
-.logo-groundlink { height: 110px !important; max-height: 110px !important; }
-.logo-bookinglane { height: 125px !important; max-height: 125px !important; transform: scale(1.1); }
+.logo-groundlink { height: 130px !important; max-height: 130px !important; transform: scale(1.1); }
+.logo-bookinglane { height: 130px !important; max-height: 130px !important; transform: scale(1.15); }
 
 /* FOOTER */
 .elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
