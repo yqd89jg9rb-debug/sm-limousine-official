@@ -177,93 +177,137 @@ document.addEventListener('DOMContentLoaded', () => {
                     vsOverlay.classList.remove('active'); 
                     bookingData.vehicle = v.name;
                     bookingData.total = total.toFixed(2);
-                    openPayment(v.name, total); 
+                    openPayment(v.name, total);
                 };
             };
             vsList.appendChild(card);
         });
+
         vsOverlay.classList.add('active');
+        document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
     }
 
-    async function openPayment(vehicle, total) {
-        document.getElementById('pay-vehicle').textContent = vehicle;
-        document.getElementById('pay-total').textContent = `$${total.toFixed(2)}`;
+    /* --- PAYMENT --- */
+    function openPayment(vehicleName, total) {
+        currentTotal = total;
+        document.getElementById('pay-vehicle').textContent = vehicleName;
+        document.getElementById('pay-total').textContent = `$${total.toFixed(2)} USD`;
+
+        const STRIPE_KEY = 'pk_live_51RBmFdAKEb3tUfD6AJYgxHYzuAinKIZ5NHsxS3LNQM7tZDLqkFAPf3fZiV5jjY5sUXE5KHrLLAqhFRxPm5uR3US00bU95Vl5M';
+        if (!stripe) {
+            stripe = Stripe(STRIPE_KEY);
+            elements = stripe.elements();
+            const style = { base: { color: '#fff', fontSize: '16px', '::placeholder': { color: '#888' } } };
+            cardNumber = elements.create('cardNumber', { style });
+            cardExpiry = elements.create('cardExpiry', { style });
+            cardCvc    = elements.create('cardCvc',    { style });
+            cardNumber.mount('#card-number-element');
+            cardExpiry.mount('#card-expiry-element');
+            cardCvc.mount('#card-cvc-element');
+        } else {
+            cardNumber.clear(); cardExpiry.clear(); cardCvc.clear();
+        }
+
         document.getElementById('paymentOverlay').classList.add('active');
-        
-        setTimeout(() => {
-            if (!stripe) {
-                stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
-                elements = stripe.elements();
-                const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
-                cardNumber = elements.create('cardNumber', { style }); cardNumber.mount('#card-number-element');
-                cardExpiry = elements.create('cardExpiry', { style }); cardExpiry.mount('#card-expiry-element');
-                cardCvc = elements.create('cardCvc', { style }); cardCvc.mount('#card-cvc-element');
-            }
-        }, 500);
-    }
+        document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
 
-    document.getElementById('payBtn').onclick = async () => {
-        const btn = document.getElementById('payBtn');
-        const name = document.getElementById('pay-name').value;
-        const email = document.getElementById('pay-email').value;
-        if (!name || !email) { alert('Please fill in your name and email.'); return; }
-        
-        btn.disabled = true; btn.textContent = 'Processing Payment...';
-        
-        const {token, error} = await stripe.createToken(cardNumber);
-        if (token) { 
+        document.getElementById('payBtn').onclick = async () => {
+            const name  = document.getElementById('pay-name').value.trim();
+            const email = document.getElementById('pay-email').value.trim();
+            if (!name || !email) { alert('Please fill in your name and email.'); return; }
+
+            const payBtn = document.getElementById('payBtn');
+            payBtn.disabled = true; payBtn.textContent = 'Processing...';
+
             try {
-                const chargeResponse = await fetch('/.netlify/functions/create-charge', {
+                const res = await fetch('/.netlify/functions/dispatch', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        token: token.id,
-                        amount: bookingData.total,
-                        email: email,
-                        description: `SM LIMOUSINE Booking: ${bookingData.vehicle} for ${name}`
-                    })
+                    body: JSON.stringify({ name, email, vehicle: bookingData.vehicle, total: currentTotal, booking: bookingData })
                 });
-                
-                const chargeResult = await chargeResponse.json();
+                const data = await res.json();
 
-                if (chargeResult.success) {
-                    btn.textContent = 'Sending Notifications...';
-                    bookingData.name = name;
-                    bookingData.email = email;
-                    bookingData.chargeId = chargeResult.chargeId;
-
-                    const dispatchRes = await fetch('/.netlify/functions/dispatch', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingData)
+                if (data.clientSecret) {
+                    const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: { card: cardNumber, billing_details: { name, email } }
                     });
-                    const dispatchResult = await dispatchRes.json();
-
-                    let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
-                    
-                    if (dispatchResult.email_status.includes('failed')) {
-                        finalMsg += '\n\n🚨 Email snag: ' + dispatchResult.email_error;
-                        finalMsg += '\n\nPlease screenshot this error and send it to Mike.';
-                    } else {
-                        finalMsg += '\n\nCheck your emails for confirmation details.';
+                    if (error) { alert('Payment failed: ' + error.message); }
+                    else if (paymentIntent.status === 'succeeded') {
+                        document.getElementById('paymentOverlay').classList.remove('active');
+                        alert(`✅ Booking confirmed! A receipt has been sent to ${email}.`);
                     }
-
-                    alert(finalMsg);
-                    document.getElementById('paymentOverlay').classList.remove('active');
                 } else {
-                    alert('Payment Failed: ' + chargeResult.error);
+                    alert('Server error. Please try again.');
                 }
-            } catch (e) {
-                console.error('System error:', e);
-                alert('Payment Success, but notification engine is syncing. Check your account.');
-                document.getElementById('paymentOverlay').classList.remove('active');
+            } catch (err) {
+                alert('Network error: ' + err.message);
+            } finally {
+                payBtn.disabled = false; payBtn.textContent = 'Book Now';
             }
-        } else {
-            alert('Card Error: ' + error.message);
-        }
-        btn.disabled = false; btn.textContent = 'Book Now';
-    };
+        };
+    }
 
-    document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
-    document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
+    /* --- DISPATCH NOTIFICATION --- */
+    async function sendDispatchNotification(bookingDetails) {
+        try {
+            const response = await fetch('/.netlify/functions/dispatch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'notification',
+                    booking: bookingDetails
+                })
+            });
+            const result = await response.json();
+            console.log('[SM Limo] Dispatch notification sent:', result);
+            return result;
+        } catch (err) {
+            console.error('[SM Limo] Dispatch notification failed:', err);
+        }
+    }
+
+    /* --- VEHICLE SELECTOR STYLES --- */
+    const vsStyle = document.createElement('style');
+    vsStyle.textContent = `
+        .vs-panel { background: #111; border-radius: 20px; width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .vs-header { padding: 20px; border-bottom: 1px solid #222; }
+        .vs-header h2 { font-size: 1.2rem; }
+        #vs-distance-summary { font-size: 0.8rem; color: #888; margin-top: 4px; }
+        .vs-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .vs-card { display: flex; justify-content: space-between; background: #1a1a1a; border-radius: 12px; margin-bottom: 10px; padding: 15px; cursor: pointer; border: 2px solid transparent; transition: border 0.2s; }
+        .vs-card--selected { border-color: #fff; }
+        .vs-card__category { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+        .vs-card__name { font-weight: 700; font-size: 1rem; margin: 4px 0; }
+        .vs-card__price { font-size: 1.2rem; font-weight: 800; color: #fff; }
+        .vs-card__capacity { font-size: 0.75rem; color: #888; margin-top: 4px; }
+        .vs-card__right img { width: 100px; height: 70px; object-fit: cover; border-radius: 8px; }
+        .vs-footer { display: flex; gap: 10px; padding: 15px; border-top: 1px solid #222; }
+        .btn--outline { flex: 1; padding: 12px; background: transparent; border: 1px solid #333; border-radius: 8px; color: #fff; cursor: pointer; }
+        .btn--primary { flex: 2; padding: 12px; background: #fff; border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; }
+        .btn--primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .payment-modal { background: #111; border-radius: 20px; width: 90%; max-width: 460px; padding: 30px; position: relative; }
+        .payment-modal__close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .payment-modal__summary { text-align: center; margin-bottom: 20px; }
+        .payment-modal__summary h3 { font-size: 1.1rem; color: #888; }
+        .clear-price { font-size: 1.8rem; font-weight: 800; color: #fff; }
+        .pm-field { margin-bottom: 15px; }
+        .pm-book-btn { width: 100%; padding: 16px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; margin-top: 10px; cursor: pointer; }
+        .addon-modal { background: #111; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 20px; }
+        .addon-sheet-handle { width: 40px; height: 4px; background: #333; border-radius: 2px; margin: 0 auto 15px; }
+        .addon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .addon-header h3 { font-size: 1.1rem; }
+        .addon-header button { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .addon-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; }
+        .addon-counter { display: flex; gap: 15px; align-items: center; }
+        .addon-counter button { width: 36px; height: 36px; border-radius: 50%; background: #222; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+        .addon-counter span { font-size: 1.1rem; font-weight: 600; }
+        .addon-confirm-btn { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 700; margin-top: 20px; cursor: pointer; }
+        .price-preview { background: #1a1a1a; border-radius: 8px; padding: 10px; text-align: center; }
+        .leg-label { font-size: 0.75rem; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .people-addon-trigger { cursor: pointer; display: flex; align-items: center; }
+        .header__burger { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; }
+        .header__burger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 1px; transition: all 0.3s; }
+    `;
+    document.head.appendChild(vsStyle);
+
 });
