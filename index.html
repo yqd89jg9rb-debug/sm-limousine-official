@@ -31,7 +31,6 @@
                 <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
             </div>
             <div class="header__actions">
-                <button class="header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
                 <a href="tel:+18177234592" class="header__phone">+1817-723-4592</a>
             </div>
         </div>
@@ -92,6 +91,14 @@
         </div>
     </section>
 
+    <section class="featured-hq">
+        <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/50ef234deac34a169b5631d0e8343402_D82C2248-07F5-4EBA-A4B2-C23A0081AF99.jpeg" alt="SM LIMOUSINE Fleet at 3500 Oak Lawn Avenue">
+        <div class="hq-info">
+            <h2>The Standard of Excellence</h2>
+            <p>Our brand-new 2026 fleet is headquartered in the heart of Dallas at 3500 Oak Lawn Avenue, ready to provide elite chauffeur service at a moment's notice.</p>
+        </div>
+    </section>
+
     <section id="fleet" class="fleet-section">
         <h2 class="section-title">Our Elite Fleet</h2>
         <p class="section-subtitle">Premium vehicles meticulously maintained for your journey.</p>
@@ -121,10 +128,6 @@
 
     <footer class="elite-footer">
         <div class="elite-footer__top"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32"><a href="mailto:smlimousine2026@gmail.com" class="elite-footer__contact-btn">Contact us</a></div>
-        <div class="elite-footer__accordion-wrap">
-            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Our services <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p onclick="setBookingTab('oneway')">Airport Transfers</p><p onclick="setBookingTab('hourly')">Corporate Events</p><p onclick="setBookingTab('oneway')">Special Occasions</p></div></div>
-            <div class="elite-accordion" onclick="this.classList.toggle('active')"><div class="elite-accordion__header">Company <span class="arrow">⌄</span></div><div class="elite-accordion__content"><p onclick="window.location.href='about.html'">About Us</p><p onclick="document.getElementById('fleet').scrollIntoView({behavior: 'smooth'})">Fleet</p></div></div>
-        </div>
         <div class="elite-footer__social-row">
             <a href="https://www.facebook.com/profile.php?id=61588791567732" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="24"></a>
             <a href="https://www.instagram.com/limousinesm" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="24"></a>
@@ -140,8 +143,7 @@
                 <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
                 <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button></div></div>
     </div>
-    <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer">
-<button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled="">Continue</button></div></div></div>
+    <div class="vs-overlay" id="vsOverlay"><div class="vs-panel"><div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div><div class="vs-list" id="vsList"></div><div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled="">Continue</button></div></div></div>
     <div class="payment-overlay" id="paymentOverlay">
         <div class="payment-modal">
             <button class="payment-modal__close" id="paymentClose">×</button>
