@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v6.6 - Fix Maps Script)
+                                    SM LIMOUSINE — Elite Master Styles (v6.7 - Correct API Key Case)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -101,7 +101,7 @@
             .hero__tagline { font-size: 1.3rem; }
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYD9v60&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
 </head>
 <body>
     
@@ -276,6 +276,7 @@
         }
 
         function initAutocomplete() {
+            if (typeof google === 'undefined') return;
             const ids = [
                 'pickup-oneway', 'dropoff-oneway', 
                 'pickup-roundtrip', 'dropoff-roundtrip', 
