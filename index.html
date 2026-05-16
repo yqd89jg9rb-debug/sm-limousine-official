@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v6.7 - Correct API Key Case)
+                                    SM LIMOUSINE — Elite Master Styles (v6.8 - Restore Fleet Pictures)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -73,7 +73,7 @@
         .fleet-section { padding: 100px 0; background: #000; border-top: 1px solid #111; }
         .section-title { font-size: 2.2rem; color: var(--silver); margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
         .section-subtitle { font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 60px; }
-        .fleet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 0 25px; max-width: 1300px; margin: 0 auto; }
+        .fleet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; padding: 0 25px; max-width: 1300px; margin: 0 auto; }
         .fleet-card { background: #080808; border-radius: 24px; overflow: hidden; border: 1px solid #151515; transition: all 0.4s ease; }
         .fleet-card:hover { transform: translateY(-10px); border-color: #333; }
         .fleet-card img { width: 100%; height: 280px; object-fit: cover; }
@@ -201,38 +201,17 @@
         </div>
     </section>
 
-    <section class="fleet-section">
-        <h2 class="section-title">Our Fleet</h2>
-        <p class="section-subtitle">Experience Unparalleled Luxury and Comfort</p>
+    <section id="fleet" class="fleet-section">
+        <h2 class="section-title">Our Elite Fleet</h2>
+        <p class="section-subtitle">Premium vehicles meticulously maintained for your journey.</p>
         <div class="fleet-grid">
-            <div class="fleet-card">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/31785287269450e8c3296bb66a98737f.png" alt="Mercedes-Benz S-Class">
-                <div class="fleet-card__content">
-                    <h3>Mercedes-Benz S-Class</h3>
-                    <p>Executive Sedan</p>
-                </div>
-            </div>
-            <div class="fleet-card">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/e33695955b6e36a7f0499f96415e6982.png" alt="Cadillac Escalade ESV">
-                <div class="fleet-card__content">
-                    <h3>Cadillac Escalade ESV</h3>
-                    <p>Luxury SUV</p>
-                </div>
-            </div>
-            <div class="fleet-card">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/06287c9e547e58872cd915e82137778d.png" alt="Mercedes-Benz Sprinter">
-                <div class="fleet-card__content">
-                    <h3>Mercedes-Benz Sprinter</h3>
-                    <p>Executive Van</p>
-                </div>
-            </div>
-            <div class="fleet-card">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b1f66d1b7b29f8a1d7f498c44702b197.png" alt="Rolls-Royce Ghost">
-                <div class="fleet-card__content">
-                    <h3>Rolls-Royce Ghost</h3>
-                    <p>Ultra-Luxury Sedan</p>
-                </div>
-            </div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg"><div class="fleet-card__content"><h3>Cadillac XT6</h3><p>Premium Luxury Sedan</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png"><div class="fleet-card__content"><h3>Mercedes-Maybach</h3><p>Ultra Luxury Sedan</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/8ffabb514cb9e913d793c9d2b55efbe5d665ae94cf49eded678f63b42e381ca9.png"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg"><div class="fleet-card__content"><h3>Cadillac Escalade</h3><p>First Class Executive SUV</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg"><div class="fleet-card__content"><h3>Motor Coach</h3><p>Grand Motor Coach</p></div></div>
         </div>
     </section>
 
