@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v8.0 - Temporary Keller Address)
+                                    SM LIMOUSINE — Elite Master Styles (v8.1 - Fix Booking Flow)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -35,26 +35,24 @@
         .header__logo-centered img { height: 38px; width: auto; }
         .header__phone { font-size: 0.9rem; font-weight: 800; color: #fff; text-decoration: none; }
 
-        .hero { position: relative; min-height: 90vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
+        .hero { position: relative; min-height: 100vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
         .hero__bg { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 0; }
-        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 40px 20px; }
+        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 800px; padding: 40px 20px; }
         .hero__logo-img { height: 80px; width: auto; margin-bottom: 20px; }
         .hero__tagline { font-size: 1.5rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .hero__subtitle { font-size: 0.95rem; color: #888; margin-bottom: 30px; }
 
-        .booking-widget { background: rgba(25, 25, 25, 0.98); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .booking-widget__tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #000; padding: 5px; border-radius: 12px; }
-        .booking-widget__tab { flex: 1; padding: 12px; border: none; background: transparent; color: #666; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 10px; transition: all 0.3s ease; }
-        .booking-widget__tab.active { background: #fff; color: #000; }
-
-        .booking-widget__form { display: none; flex-direction: column; gap: 15px; }
-        .booking-widget__form.active { display: flex; }
-        .booking-widget__row { display: flex; gap: 10px; }
-        
-        .field-label { font-size: 0.75rem; color: #999; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; text-align: left; display: block; }
-        .leg-label { font-size: 0.8rem; color: var(--gold); font-weight: 800; margin: 10px 0 5px; text-align: left; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .st-input { width: 100%; padding: 16px; background: #000; border-radius: 12px; border: 1px solid #333; color: #fff; font-size: 1rem; }
-        .booking-widget__submit { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
+        /* Limo Anywhere ORES 4 Widget Styling */
+        .booking-widget-container {
+            background: rgba(25, 25, 25, 0.98);
+            padding: 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+            min-height: 500px;
+            width: 100%;
+            margin-top: 20px;
+        }
 
         section { position: relative; width: 100%; overflow: hidden; }
         .featured-hq { border-top: 1px solid #111; }
@@ -107,7 +105,6 @@
             .hero__tagline { font-size: 1.3rem; }
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
 </head>
 <body>
     
@@ -129,62 +126,15 @@
             <h2 class="hero__tagline">Pinnacle of Luxury Travel</h2>
             <p class="hero__subtitle">Elite chauffeur service for every journey</p>
 
-            <div class="booking-widget">
-                <div class="booking-widget__tabs">
-                    <button class="booking-widget__tab active" onclick="switchForm('oneway', this)">One Way</button>
-                    <button class="booking-widget__tab" onclick="switchForm('roundtrip', this)">Round Trip</button>
-                    <button class="booking-widget__tab" onclick="switchForm('hourly', this)">Hourly</button>
-                </div>
-
-                <!-- ONE WAY FORM -->
-                <form class="booking-widget__form active" id="form-oneway">
-                    <div class="bw-field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input">
-                    </div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><label class="field-label">Date</label><input type="date" required class="st-input"></div>
-                        <div class="bw-field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
-                    </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
-
-                <!-- ROUND TRIP FORM -->
-                <form class="booking-widget__form" id="form-roundtrip">
-                    <div class="leg-label">Departing Trip</div>
-                    <div class="bw-field"><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><input type="text" id="dropoff-roundtrip" placeholder="Destination" required class="st-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><input type="date" required class="st-input"></div>
-                        <div class="bw-field"><input type="time" required class="st-input"></div>
-                    </div>
-                    <div class="leg-label">Return Trip</div>
-                    <div class="bw-field"><input type="text" id="return-pickup-roundtrip" placeholder="Return Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><input type="date" required class="st-input"></div>
-                        <div class="bw-field"><input type="time" required class="st-input"></div>
-                    </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
-
-                <!-- HOURLY FORM -->
-                <form class="booking-widget__form" id="form-hourly">
-                    <div class="bw-field"><label class="field-label">Pickup Location</label><input type="text" id="pickup-hourly" placeholder="Enter Pickup Location" required class="st-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><label class="field-label">Date</label><input type="date" required class="st-input"></div>
-                        <div class="bw-field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
-                        <div class="bw-field">
-                            <label class="field-label">Duration</label>
-                            <select class="st-input">
-                                <option value="3">3 Hours (Min)</option>
-                                <option value="4">4 Hours</option>
-                                <option value="5">5 Hours</option>
-                                <option value="6">6+ Hours</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
+            <!-- Integration with Limo Anywhere ORES 4 -->
+            <div class="booking-widget-container">
+                <iframe 
+                    src="https://book.mylimobiz.com/v4/smlimo" 
+                    width="100%" 
+                    height="600" 
+                    style="border:none; border-radius: 12px;" 
+                    title="Booking Widget"
+                ></iframe>
             </div>
         </div>
     </section>
@@ -266,40 +216,5 @@
         <div class="elite-footer__copyright">© 2026 SM LIMOUSINE. All Rights Reserved.</div>
     </footer>
 
-    <script>
-        function switchForm(formId, element) {
-            // Remove active class from all tabs
-            document.querySelectorAll('.booking-widget__tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // Add active class to the clicked tab
-            element.classList.add('active');
-
-            // Hide all forms
-            document.querySelectorAll('.booking-widget__form').forEach(form => {
-                form.classList.remove('active');
-            });
-            // Show the selected form
-            document.getElementById('form-' + formId).classList.add('active');
-        }
-
-        function initAutocomplete() {
-            if (typeof google === 'undefined') return;
-            const ids = [
-                'pickup-oneway', 'dropoff-oneway', 
-                'pickup-roundtrip', 'dropoff-roundtrip', 
-                'return-pickup-roundtrip', 'return-dropoff-roundtrip', 
-                'pickup-hourly'
-            ];
-            ids.forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    new google.maps.places.Autocomplete(input, { types: ['geocode', 'establishment'] });
-                }
-            });
-        }
-        
-        window.onload = initAutocomplete;
-    </script>
 </body>
 </html>
