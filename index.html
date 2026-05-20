@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v8.5 - Final Visual Fix)
+                                    SM LIMOUSINE — Elite Master Styles (v8.6 - Real-Time Validation)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -35,7 +35,7 @@
         .header__logo-centered img { height: 38px; width: auto; }
         .header__phone { font-size: 0.9rem; font-weight: 800; color: #fff; text-decoration: none; }
 
-        .hero { position: relative; min-height: 90vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efcb279fa5200e71060721.jpeg') center/cover fixed; }
+        .hero { position: relative; min-height: 90vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
         .hero__bg { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 0; }
         .hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 40px 20px; }
         .hero__logo-img { height: 80px; width: auto; margin-bottom: 20px; }
@@ -170,16 +170,18 @@
                 <!-- HOURLY FORM -->
                 <form class="booking-widget__form" id="form-hourly" onsubmit="handleQuoteRequest(event, 'Hourly')">
                     <div class="bw-field"><label class="field-label">Pickup Location</label><input type="text" id="pickup-hourly" placeholder="Enter Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><label class="field-label">Date</label><input type="date" id="date-hourly" required class="st-input"></div>
-                    <div class="bw-field"><label class="field-label">Time</label><input type="time" id="time-hourly" required class="st-input"></div>
-                    <div class="bw-field">
-                        <label class="field-label">Duration</label>
-                        <select class="st-input" id="duration-hourly">
-                            <option value="3">3 Hours (Min)</option>
-                            <option value="4">4 Hours</option>
-                            <option value="5">5 Hours</option>
-                            <option value="6">6+ Hours</option>
-                        </select>
+                    <div class="booking-widget__row">
+                        <div class="bw-field"><label class="field-label">Date</label><input type="date" id="date-hourly" required class="st-input"></div>
+                        <div class="bw-field"><label class="field-label">Time</label><input type="time" id="time-hourly" required class="st-input"></div>
+                        <div class="bw-field">
+                            <label class="field-label">Duration</label>
+                            <select class="st-input" id="duration-hourly">
+                                <option value="3">3 Hours (Min)</option>
+                                <option value="4">4 Hours</option>
+                                <option value="5">5 Hours</option>
+                                <option value="6">6+ Hours</option>
+                            </select>
+                        </div>
                     </div>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
@@ -285,7 +287,10 @@
             
             const subject = encodeURIComponent(`New Quote Request - ${type} - SM LIMOUSINE`);
             const body = encodeURIComponent(`I would like to request a quote for the following journey:\n\n${details}\n\nPlease contact me to finalize the quote and vehicle selection.`);
-            window.location.href = `mailto:sam@sm-limo.com?subject=${subject}&body=${body}`;
+            window.open(`mailto:sam@sm-limo.com?subject=${subject}&body=${body}`, '_blank');
+            
+            // Redirect to a clean landing page after opening email
+            window.location.href = "https://sm-limo.com";
         }
 
         function initAutocomplete() {
