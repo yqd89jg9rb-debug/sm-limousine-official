@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v9.2 - Image Size Optimization)
+                                    SM LIMOUSINE — Elite Master Styles (v9.3 - Final Restoration)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -37,7 +37,7 @@
 
         .hero { position: relative; min-height: 90vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
         .hero__bg { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 0; }
-        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 40px 20px; }
+        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 800px; padding: 40px 20px; }
         .hero__logo-img { height: 80px; width: auto; margin-bottom: 20px; }
         .hero__tagline { font-size: 1.5rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .hero__subtitle { font-size: 0.95rem; color: #888; margin-bottom: 30px; }
@@ -55,7 +55,7 @@
         .st-input { width: 100%; padding: 16px; background: #000; border-radius: 12px; border: 1px solid #333; color: #fff; font-size: 1rem; }
         .booking-widget__row { display: flex; gap: 10px; }
         
-        .booking-widget__btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
+        .booking-widget__submit, .booking-widget__btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
         .btn-back { background: transparent; color: #666; border: 1px solid #333; margin-top: 10px; padding: 10px; font-size: 0.8rem; }
 
         .vehicle-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
@@ -129,7 +129,6 @@
             <p class="hero__subtitle">Elite chauffeur service for every journey</p>
 
             <div class="booking-widget" id="booking-widget">
-                <!-- STEP 1: RIDE INFO -->
                 <div class="booking-step active" id="step-1">
                     <div class="booking-widget__tabs">
                         <button class="booking-widget__tab active" onclick="setServiceType('One Way')">One Way</button>
@@ -145,7 +144,6 @@
                     <button class="booking-widget__submit" onclick="goToStep(2)">Select Vehicle</button>
                 </div>
 
-                <!-- STEP 2: VEHICLE SELECTION -->
                 <div class="booking-step" id="step-2">
                     <h3 class="field-label" style="color:#fff; font-size:1rem;">Choose Your Vehicle</h3>
                     <div class="vehicle-grid" id="vehicle-list">
@@ -153,7 +151,6 @@
                     <button class="booking-widget__btn btn-back" onclick="goToStep(1)">Back to Details</button>
                 </div>
 
-                <!-- STEP 3: FINAL DETAILS -->
                 <div class="booking-step" id="step-3">
                     <h3 class="field-label" style="color:#fff; font-size:1rem;">Booking Request Summary</h3>
                     <div id="booking-summary" style="font-size:0.85rem; color:#888; background:#111; padding:15px; border-radius:12px; margin-bottom:20px;"></div>
@@ -168,7 +165,7 @@
     </section>
 
     <section class="featured-hq">
-        <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/50ef234deac34a169b5631d0e8343402_D82C2248-07F5-4EBA-A4B2-C23A0081AF99.jpeg" alt="SM LIMOUSINE HQ">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/d3832b86102f00409593b4f887e96b99af7e19bb999d76dee2ae6a2552c44838.png" alt="SM LIMOUSINE HQ">
         <div class="hq-info">
             <h2>The Standard of Excellence</h2>
             <p>Our brand-new 2026 fleet is headquartered at 602 Wyndham Circle, Keller, TX 76248, ready to provide elite chauffeur service at a moment's notice.</p>
@@ -178,7 +175,7 @@
     <section class="dispatch-section">
         <h2 class="dispatch-title">24/7 Global Dispatch Center</h2>
         <div class="dispatch-image-wrap">
-            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/6e1d7d4dc9e14512a9c1d4cf9479a481_C3E190F0-16C1-4834-9EC2-4835A7E91D73.jpeg" alt="SM LIMOUSINE Dispatch Center">
+            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/d62a810df72b7e4badb295d7be142e9a1099d729eb17a06507fe153809558ab3.png" alt="SM LIMOUSINE Dispatch Center">
         </div>
     </section>
 
@@ -292,9 +289,11 @@
         }
 
         function initAutocomplete() {
+            if (typeof google === 'undefined') return;
             new google.maps.places.Autocomplete(document.getElementById('pickup'));
             new google.maps.places.Autocomplete(document.getElementById('dropoff'));
         }
+        
         window.onload = initAutocomplete;
     </script>
 </body>
