@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v9.4 - Restoration)
+                                    SM LIMOUSINE — Elite Master Styles (v9.5 - Final Image Fix)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -94,15 +94,16 @@
         .partnership__collage-wrap { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
         .partnership__collage-img { width: 100%; height: auto; border-radius: 24px; border: 1px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
 
-        .compliance-section { padding: 80px 20px; background: #000; border-top: 1px solid #111; text-align: left; max-width: 1000px; margin: 0 auto; }
-        .compliance-title { font-size: 1.5rem; color: var(--silver); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
-        .compliance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
-        .compliance-card h4 { color: var(--gold); font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; }
-        .compliance-card p, .compliance-card li { color: #888; font-size: 0.9rem; line-height: 1.6; }
+        .compliance-section { padding: 80px 20px; background: #000; border-top: 1px solid #111; text-align: center; max-width: 1000px; margin: 0 auto; }
+        .compliance-title { font-size: 1.8rem; color: var(--silver); margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; }
+        .compliance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: left; }
+        .compliance-card h4 { color: var(--gold); font-size: 1.1rem; margin-bottom: 15px; text-transform: uppercase; }
+        .compliance-card p, .compliance-card li { color: #888; font-size: 0.95rem; line-height: 1.7; }
         .compliance-card ul { padding-left: 20px; }
 
         .elite-footer { background: #000; padding: 100px 20px 50px; border-top: 1px solid #111; text-align: center; }
         .footer-logo { height: 45px; width: auto; margin-bottom: 40px; }
+        .elite-footer__copyright { color: #222; font-size: 0.8rem; letter-spacing: 1px; }
 
         @media (max-width: 768px) {
             .hq-info h2 { font-size: 1.8rem; }
@@ -172,7 +173,7 @@
     </section>
 
     <section class="featured-hq">
-        <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/50ef234deac34a169b5631d0e8343402_D82C2248-07F5-4EBA-A4B2-C23A0081AF99.jpeg" alt="SM LIMOUSINE HQ">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/d3832b86102f00409593b4f887e96b99af7e19bb999d76dee2ae6a2552c44838.png" alt="SM LIMOUSINE HQ">
         <div class="hq-info">
             <h2>The Standard of Excellence</h2>
             <p>Our brand-new 2026 fleet is headquartered at 602 Wyndham Circle, Keller, TX 76248, ready to provide elite chauffeur service at a moment's notice.</p>
@@ -182,7 +183,7 @@
     <section class="dispatch-section">
         <h2 class="dispatch-title">24/7 Global Dispatch Center</h2>
         <div class="dispatch-image-wrap">
-            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/6e1d7d4dc9e14512a9c1d4cf9479a481_C3E190F0-16C1-4834-9EC2-4835A7E91D73.jpeg" alt="SM LIMOUSINE Dispatch Center">
+            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/d62a810df72b7e4badb295d7be142e9a1099d729eb17a06507fe153809558ab3.png" alt="SM LIMOUSINE Dispatch Center">
         </div>
     </section>
 
@@ -203,7 +204,7 @@
     <section class="partnership-section">
         <h2 class="partnership__title">Our Partners</h2>
         <div class="partnership__collage-wrap">
-            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/226d970ede964c1183df29e3b0333658_collage_export_1109F3C9-FEE3-4663-A423-44AE112AC473.jpeg" alt="SM LIMOUSINE Partners Collage" class="partnership__collage-img">
+            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/97217596a2824908920531df400037f5_collage_export_300B783E-1649-43C5-97F7-AF528A77180D.jpeg" alt="SM LIMOUSINE Partners Collage" class="partnership__collage-img">
         </div>
     </section>
 
@@ -273,10 +274,11 @@
             service.getDistanceMatrix({
                 origins: [origin], destinations: [destination || origin],
                 travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL
-            }, (status, response) => {
-                // Logic for distance calculation
-                bookingData.distance = 10; // Placeholder for demo
-                renderFleet();
+            }, (response, status) => {
+                if (status === 'OK') {
+                    bookingData.distance = response.rows[0].elements[0].distance.value * 0.000621371;
+                    renderFleet();
+                }
             });
         }
 
@@ -285,6 +287,9 @@
             list.innerHTML = '';
             fleet.forEach(v => {
                 let price = v.base + (v.perMile * bookingData.distance);
+                if (price < 90 && v.name !== 'Motor Coach') price = 90;
+                if (v.name === 'Motor Coach' && price < 800) price = 1200;
+                
                 const item = document.createElement('div');
                 item.className = 'vehicle-item';
                 item.onclick = () => { bookingData.vehicle = v; bookingData.totalPrice = price; goToStep(3); updateSummary(); };
@@ -297,6 +302,7 @@
             document.getElementById('booking-summary').innerHTML = `
                 <strong>${bookingData.serviceType}</strong><br>
                 Pickup: ${document.getElementById('pickup').value}<br>
+                ${bookingData.serviceType !== 'Hourly' ? 'Dropoff: ' + document.getElementById('dropoff').value + '<br>' : ''}
                 Vehicle: ${bookingData.vehicle.name}<br>
                 Estimated Total: $${bookingData.totalPrice.toFixed(2)}
             `;
@@ -306,6 +312,8 @@
             const name = document.getElementById('client-name').value;
             const phone = document.getElementById('client-phone').value;
             const email = document.getElementById('client-email').value;
+            if (!name || !phone || !email) return alert("Please fill in your contact details.");
+
             const body = `New Quote Request\nVehicle: ${bookingData.vehicle.name}\nTotal: $${bookingData.totalPrice.toFixed(2)}\nClient: ${name}\nPhone: ${phone}\nEmail: ${email}`;
             window.location.href = `mailto:sam@sm-limo.com?subject=New Quote Request - ${bookingData.vehicle.name}&body=${encodeURIComponent(body)}`;
         }
@@ -315,6 +323,7 @@
             new google.maps.places.Autocomplete(document.getElementById('pickup'));
             new google.maps.places.Autocomplete(document.getElementById('dropoff'));
         }
+        
         window.onload = initAutocomplete;
     </script>
 </body>
