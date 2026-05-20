@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v8.6 - Real-Time Validation)
+                                    SM LIMOUSINE — Elite Master Styles (v9.0 - Multi-Step Booking)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -35,26 +35,37 @@
         .header__logo-centered img { height: 38px; width: auto; }
         .header__phone { font-size: 0.9rem; font-weight: 800; color: #fff; text-decoration: none; }
 
-        .hero { position: relative; min-height: 90vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
+        .hero { position: relative; min-height: 100vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
         .hero__bg { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 0; }
-        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 40px 20px; }
+        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 800px; padding: 40px 20px; }
         .hero__logo-img { height: 80px; width: auto; margin-bottom: 20px; }
         .hero__tagline { font-size: 1.5rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .hero__subtitle { font-size: 0.95rem; color: #888; margin-bottom: 30px; }
 
-        .booking-widget { background: rgba(25, 25, 25, 0.98); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        /* Multi-Step Booking Widget */
+        .booking-widget { background: rgba(25, 25, 25, 0.98); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); text-align: left; }
+        .booking-step { display: none; }
+        .booking-step.active { display: block; }
+        
         .booking-widget__tabs { display: flex; gap: 5px; margin-bottom: 20px; background: #000; padding: 5px; border-radius: 12px; }
         .booking-widget__tab { flex: 1; padding: 12px; border: none; background: transparent; color: #666; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 10px; transition: all 0.3s ease; }
         .booking-widget__tab.active { background: #fff; color: #000; }
 
-        .booking-widget__form { display: none; flex-direction: column; gap: 15px; }
-        .booking-widget__form.active { display: flex; }
+        .bw-field { margin-bottom: 15px; }
+        .field-label { font-size: 0.75rem; color: #999; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; display: block; }
+        .st-input { width: 100%; padding: 16px; background: #000; border-radius: 12px; border: 1px solid #333; color: #fff; font-size: 1rem; }
         .booking-widget__row { display: flex; gap: 10px; }
         
-        .field-label { font-size: 0.75rem; color: #999; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; text-align: left; display: block; }
-        .leg-label { font-size: 0.8rem; color: var(--gold); font-weight: 800; margin: 10px 0 5px; text-align: left; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .st-input { width: 100%; padding: 16px; background: #000; border-radius: 12px; border: 1px solid #333; color: #fff; font-size: 1rem; }
-        .booking-widget__submit { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
+        .booking-widget__btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
+        .btn-back { background: transparent; color: #666; border: 1px solid #333; margin-top: 10px; padding: 10px; font-size: 0.8rem; }
+
+        /* Vehicle Selection Grid */
+        .vehicle-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
+        .vehicle-item { background: #111; border: 1px solid #222; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.3s; }
+        .vehicle-item:hover, .vehicle-item.selected { border-color: var(--gold); background: #1a1a1a; }
+        .vehicle-item img { width: 80px; height: 50px; object-fit: cover; border-radius: 8px; }
+        .vehicle-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
+        .vehicle-info p { font-size: 0.8rem; color: var(--gold); font-weight: 700; }
 
         section { position: relative; width: 100%; overflow: hidden; }
         .featured-hq { border-top: 1px solid #111; }
@@ -67,43 +78,15 @@
         .dispatch-title { font-size: 1.8rem; color: var(--silver); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 40px; padding: 0 20px; }
         .dispatch-image-wrap { width: 90%; max-width: 1000px; margin: 0 auto 50px; border-radius: 20px; overflow: hidden; border: 1px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         .dispatch-image-wrap img { width: 100%; height: auto; display: block; }
-        .dispatch-info { max-width: 850px; margin: 0 auto; padding: 0 25px; }
-        .dispatch-info p { color: #888; font-size: 1.15rem; line-height: 1.8; }
-
-        .fleet-section { padding: 100px 0; background: #000; border-top: 1px solid #111; }
-        .section-title { font-size: 2.2rem; color: var(--silver); margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
-        .section-subtitle { font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 60px; }
-        .fleet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; padding: 0 25px; max-width: 1300px; margin: 0 auto; }
-        .fleet-card { background: #080808; border-radius: 24px; overflow: hidden; border: 1px solid #151515; transition: all 0.4s ease; }
-        .fleet-card:hover { transform: translateY(-10px); border-color: #333; }
-        .fleet-card img { width: 100%; height: 280px; object-fit: cover; }
-        .fleet-card__content { padding: 30px; border-top: 1px solid #151515; }
-        .fleet-card__content h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; color: var(--white); }
-        .fleet-card__content p { color: var(--gold); font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-
-        .partnership-section { padding: 120px 20px; background: #050505; text-align: center; border-top: 1px solid #111; }
-        .partnership__title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: var(--silver); text-transform: uppercase; letter-spacing: 6px; margin-bottom: 80px; position: relative; display: inline-block; }
-        .partnership__title:after { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 1px; background: var(--gold); }
-        .partnership__collage-wrap { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
-        .partnership__collage-img { width: 100%; height: auto; border-radius: 24px; border: 1px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
 
         .compliance-section { padding: 80px 20px; background: #000; border-top: 1px solid #111; text-align: left; max-width: 1000px; margin: 0 auto; }
         .compliance-title { font-size: 1.5rem; color: var(--silver); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
-        .compliance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
-        .compliance-card h4 { color: var(--gold); font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; }
-        .compliance-card p, .compliance-card li { color: #888; font-size: 0.9rem; line-height: 1.6; }
-        .compliance-card ul { padding-left: 20px; }
 
         .elite-footer { background: #000; padding: 100px 20px 50px; border-top: 1px solid #111; text-align: center; }
         .footer-logo { height: 45px; width: auto; margin-bottom: 40px; }
-        .elite-footer__contact-btn { display: inline-block; background: #fff; color: #000; padding: 16px 40px; border-radius: 100px; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 40px; }
-        .footer__legal { display: flex; gap: 30px; justify-content: center; margin-bottom: 30px; }
-        .footer__legal a { color: #444; text-decoration: none; font-size: 0.85rem; }
-        .elite-footer__copyright { color: #222; font-size: 0.8rem; letter-spacing: 1px; }
 
         @media (max-width: 768px) {
-            .hq-info h2, .section-title { font-size: 1.8rem; }
-            .fleet-grid { grid-template-columns: 1fr; }
+            .hq-info h2 { font-size: 1.8rem; }
             .hero__tagline { font-size: 1.3rem; }
         }
     </style>
@@ -122,69 +105,49 @@
         </div>
     </header>
 
-    <section class="hero" id="hero">
+    <section class="hero">
         <div class="hero__bg"><div class="hero__overlay"></div></div>
         <div class="hero__content">
             <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="hero__logo-img">
             <h2 class="hero__tagline">Pinnacle of Luxury Travel</h2>
             <p class="hero__subtitle">Elite chauffeur service for every journey</p>
 
-            <div class="booking-widget">
-                <div class="booking-widget__tabs">
-                    <button class="booking-widget__tab active" id="tab-oneway" onclick="switchForm('oneway', this)">One Way</button>
-                    <button class="booking-widget__tab" id="tab-roundtrip" onclick="switchForm('roundtrip', this)">Round Trip</button>
-                    <button class="booking-widget__tab" id="tab-hourly" onclick="switchForm('hourly', this)">Hourly</button>
+            <div class="booking-widget" id="booking-widget">
+                <!-- STEP 1: RIDE INFO -->
+                <div class="booking-step active" id="step-1">
+                    <div class="booking-widget__tabs">
+                        <button class="booking-widget__tab active" onclick="setServiceType('One Way')">One Way</button>
+                        <button class="booking-widget__tab" onclick="setServiceType('Round Trip')">Round Trip</button>
+                        <button class="booking-widget__tab" onclick="setServiceType('Hourly')">Hourly</button>
+                    </div>
+                    <div class="bw-field"><label class="field-label">Pickup</label><input type="text" id="pickup" placeholder="Enter Pickup Location" class="st-input"></div>
+                    <div class="bw-field" id="dropoff-wrap"><label class="field-label">Dropoff</label><input type="text" id="dropoff" placeholder="Enter Destination" class="st-input"></div>
+                    <div class="booking-widget__row">
+                        <div class="bw-field"><label class="field-label">Date</label><input type="date" id="date" class="st-input"></div>
+                        <div class="bw-field"><label class="field-label">Time</label><input type="time" id="time" class="st-input"></div>
+                    </div>
+                    <button class="booking-widget__submit" onclick="goToStep(2)">Select Vehicle</button>
                 </div>
 
-                <!-- ONE WAY FORM -->
-                <form class="booking-widget__form active" id="form-oneway" onsubmit="handleQuoteRequest(event, 'One Way')">
-                    <div class="bw-field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input">
+                <!-- STEP 2: VEHICLE SELECTION -->
+                <div class="booking-step" id="step-2">
+                    <h3 class="field-label" style="color:#fff; font-size:1rem;">Choose Your Vehicle</h3>
+                    <div class="vehicle-grid" id="vehicle-list">
+                        <!-- Dynamic vehicle list -->
                     </div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><label class="field-label">Date</label><input type="date" id="date-oneway" required class="st-input"></div>
-                        <div class="bw-field"><label class="field-label">Time</label><input type="time" id="time-oneway" required class="st-input"></div>
-                    </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
+                    <button class="booking-widget__btn btn-back" onclick="goToStep(1)">Back to Details</button>
+                </div>
 
-                <!-- ROUND TRIP FORM -->
-                <form class="booking-widget__form" id="form-roundtrip" onsubmit="handleQuoteRequest(event, 'Round Trip')">
-                    <div class="leg-label">Departing Trip</div>
-                    <div class="bw-field"><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><input type="text" id="dropoff-roundtrip" placeholder="Destination" required class="st-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><input type="date" id="date-roundtrip" required class="st-input"></div>
-                        <div class="bw-field"><input type="time" id="time-roundtrip" required class="st-input"></div>
-                    </div>
-                    <div class="leg-label">Return Trip</div>
-                    <div class="bw-field"><input type="text" id="return-pickup-roundtrip" placeholder="Return Pickup Location" required class="st-input"></div>
-                    <div class="bw-field"><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><input type="date" id="return-date-roundtrip" required class="st-input"></div>
-                        <div class="bw-field"><input type="time" id="return-time-roundtrip" required class="st-input"></div>
-                    </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
-
-                <!-- HOURLY FORM -->
-                <form class="booking-widget__form" id="form-hourly" onsubmit="handleQuoteRequest(event, 'Hourly')">
-                    <div class="bw-field"><label class="field-label">Pickup Location</label><input type="text" id="pickup-hourly" placeholder="Enter Pickup Location" required class="st-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="bw-field"><label class="field-label">Date</label><input type="date" id="date-hourly" required class="st-input"></div>
-                        <div class="bw-field"><label class="field-label">Time</label><input type="time" id="time-hourly" required class="st-input"></div>
-                        <div class="bw-field">
-                            <label class="field-label">Duration</label>
-                            <select class="st-input" id="duration-hourly">
-                                <option value="3">3 Hours (Min)</option>
-                                <option value="4">4 Hours</option>
-                                <option value="5">5 Hours</option>
-                                <option value="6">6+ Hours</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
+                <!-- STEP 3: FINAL DETAILS -->
+                <div class="booking-step" id="step-3">
+                    <h3 class="field-label" style="color:#fff; font-size:1rem;">Booking Request Summary</h3>
+                    <div id="booking-summary" style="font-size:0.85rem; color:#888; background:#111; padding:15px; border-radius:12px; margin-bottom:20px;"></div>
+                    <div class="bw-field"><label class="field-label">Full Name</label><input type="text" id="client-name" placeholder="Your Name" class="st-input"></div>
+                    <div class="bw-field"><label class="field-label">Phone Number</label><input type="tel" id="client-phone" placeholder="(000) 000-0000" class="st-input"></div>
+                    <div class="bw-field"><label class="field-label">Email Address</label><input type="email" id="client-email" placeholder="email@example.com" class="st-input"></div>
+                    <button class="booking-widget__submit" onclick="finalizeBooking()">Confirm Quote Request</button>
+                    <button class="booking-widget__btn btn-back" onclick="goToStep(2)">Back to Vehicles</button>
+                </div>
             </div>
         </div>
     </section>
@@ -202,113 +165,100 @@
         <div class="dispatch-image-wrap">
             <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/6e1d7d4dc9e14512a9c1d4cf9479a481_C3E190F0-16C1-4834-9EC2-4835A7E91D73.jpeg" alt="SM LIMOUSINE Dispatch Center">
         </div>
-        <div class="dispatch-info">
-            <p>Our commitment to excellence extends to our 24/7 global dispatch center, ensuring seamless coordination and immediate response for all your transportation needs. Whether it's an airport transfer, a corporate event, or a special occasion, our dedicated team is always ready to serve.</p>
-        </div>
-    </section>
-
-    <section id="fleet" class="fleet-section">
-        <h2 class="section-title">Our Elite Fleet</h2>
-        <p class="section-subtitle">Premium vehicles meticulously maintained for your journey.</p>
-        <div class="fleet-grid">
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg"><div class="fleet-card__content"><h3>Cadillac XT6</h3><p>Premium Luxury Sedan</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png"><div class="fleet-card__content"><h3>Mercedes-Maybach</h3><p>Ultra Luxury Sedan</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/fd71bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/8ffabb514cb9e913d793c9d2b55efbe5d665ae94cf49eded678f63b42e381ca9.png"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efcb279fa5200e71060721.jpeg"><div class="fleet-card__content"><h3>Cadillac Escalade</h3><p>First Class Executive SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg"><div class="fleet-card__content"><h3>Motor Coach</h3><p>Grand Motor Coach</p></div></div>
-        </div>
-    </section>
-
-    <section class="partnership-section">
-        <h2 class="partnership__title">Our Partners</h2>
-        <div class="partnership__collage-wrap">
-            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/705a80ce5d0140dc993ac9e6a55d697d_collage_export_1109F3C9-FEE3-4663-A423-44AE112AC473.jpeg" alt="SM LIMOUSINE Partners Collage" class="partnership__collage-img">
-        </div>
     </section>
 
     <section class="compliance-section">
         <h2 class="compliance-title">City of Dallas Permit Compliance</h2>
-        <div class="compliance-grid">
-            <div class="compliance-card">
-                <h4>Zero-Tolerance Policy</h4>
-                <p>SM LIMOUSINE maintains a zero-tolerance policy regarding the use of intoxicating substances by our chauffeurs. If you suspect your driver is under the influence, please request to end the trip safely and immediately. Report incidents to <strong>(817) 723-4592</strong> and to the City of Dallas by calling <strong>3-1-1</strong> (Ord. 29696).</p>
-            </div>
-            <div class="compliance-card">
-                <h4>Accessibility & Rights</h4>
-                <p>Wheelchair accessible vehicles are available upon request to ensure elite transportation for all clients. To report complaints or feedback regarding transportation-for-hire services, please contact the City of Dallas via <strong>3-1-1</strong>.</p>
-            </div>
-            <div class="compliance-card">
-                <h4>Operating Authority</h4>
-                <p><strong>SM LIMO LLC</strong><br>602 Wyndham Circle<br>Keller, TX 76248<br>Phone: (817) 723-4592<br>Email: sam@sm-limo.com</p>
-            </div>
-            <div class="compliance-card">
-                <h4>Rate Information</h4>
-                <ul>
-                    <li>Sedan: $95 Base / $4.50 per mile</li>
-                    <li>SUV: $125 Base / $6.50 per mile</li>
-                    <li>Sprinter: $225 Base / $12.50 per mile</li>
-                    <li>Hourly: 3-Hour Minimum (Fleet standard)</li>
-                </ul>
-            </div>
-        </div>
+        <p style="text-align:center; color:#555; margin-bottom:30px;">SM LIMO LLC | 602 Wyndham Circle, Keller, TX 76248</p>
     </section>
 
     <footer class="elite-footer">
         <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="footer-logo">
-        <a href="#hero" class="elite-footer__contact-btn">Book Your Ride</a>
-        <div class="footer__legal">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Legal</a>
-        </div>
         <div class="elite-footer__copyright">© 2026 SM LIMOUSINE. All Rights Reserved.</div>
     </footer>
 
     <script>
-        function switchForm(formId, element) {
-            document.querySelectorAll('.booking-widget__tab').forEach(tab => tab.classList.remove('active'));
-            element.classList.add('active');
-            document.querySelectorAll('.booking-widget__form').forEach(form => form.classList.remove('active'));
-            document.getElementById('form-' + formId).classList.add('active');
+        let bookingData = { serviceType: 'One Way', distance: 0, vehicle: null };
+        const fleet = [
+            { name: 'Cadillac XT6', base: 65, perMile: 4.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/1cfb54d818326a08b2a961593bdc06c49283788c8a40d68a0fba772691162b0a.png' },
+            { name: 'Chevrolet Suburban', base: 85, perMile: 5.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/392364fe6b6005cfbef0b24b4a11c8e3a349f3f40b6b7aa7274477cb4f28797e.png' },
+            { name: 'GMC Denali', base: 95, perMile: 5.50, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c208fdcf5e2c755d7b1a7440179b49ca9f46cea0791bcd778548e55ceb64274a.png' },
+            { name: 'Cadillac Escalade', base: 125, perMile: 6.50, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c36cecc22dd9c64dacecc5df8f12da1e1a83f0e36ca2c241edd8ef159b17ee68.png' },
+            { name: 'Mercedes-Maybach', base: 150, perMile: 7.50, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/64998fe1bbead8f556c69e0c2576324aa8c78a432b586bbd81535b2ccda09744.png' },
+            { name: 'Mercedes Sprinter', base: 185, perMile: 9.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f7a75b09167e7cfad63a712a36aa3a32b81a45167bebbb5c2701e3709bffede8.png' },
+            { name: 'Motor Coach', base: 250, perMile: 15.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2ac6e09fc72e6f6d242c4bfcbb76157f2e5d69555204f525f464e93af69f1d01.png' }
+        ];
+
+        function setServiceType(type) {
+            bookingData.serviceType = type;
+            document.querySelectorAll('.booking-widget__tab').forEach(t => t.classList.toggle('active', t.innerText === type));
+            document.getElementById('dropoff-wrap').style.display = type === 'Hourly' ? 'none' : 'block';
         }
 
-        function handleQuoteRequest(e, type) {
-            e.preventDefault();
-            let details = "";
-            if (type === 'One Way') {
-                details = `Pickup: ${document.getElementById('pickup-oneway').value}\nDropoff: ${document.getElementById('dropoff-oneway').value}\nDate: ${document.getElementById('date-oneway').value}\nTime: ${document.getElementById('time-oneway').value}`;
-            } else if (type === 'Round Trip') {
-                details = `Departing Pickup: ${document.getElementById('pickup-roundtrip').value}\nDeparting Dropoff: ${document.getElementById('dropoff-roundtrip').value}\nDeparting Date: ${document.getElementById('date-roundtrip').value}\nDeparting Time: ${document.getElementById('time-roundtrip').value}\nReturn Pickup: ${document.getElementById('return-pickup-roundtrip').value}\nReturn Dropoff: ${document.getElementById('return-dropoff-roundtrip').value}\nReturn Date: ${document.getElementById('return-date-roundtrip').value}\nReturn Time: ${document.getElementById('return-time-roundtrip').value}`;
-            } else if (type === 'Hourly') {
-                details = `Pickup: ${document.getElementById('pickup-hourly').value}\nDate: ${document.getElementById('date-hourly').value}\nTime: ${document.getElementById('time-hourly').value}\nDuration: ${document.getElementById('duration-hourly').value} Hours`;
+        function goToStep(step) {
+            if (step === 2) {
+                if (!document.getElementById('pickup').value) return alert("Please enter a pickup location.");
+                calculateDistanceAndShowFleet();
             }
-            
-            const subject = encodeURIComponent(`New Quote Request - ${type} - SM LIMOUSINE`);
-            const body = encodeURIComponent(`I would like to request a quote for the following journey:\n\n${details}\n\nPlease contact me to finalize the quote and vehicle selection.`);
-            window.open(`mailto:sam@sm-limo.com?subject=${subject}&body=${body}`, '_blank');
-            
-            // Redirect to a clean landing page after opening email
-            window.location.href = "https://sm-limo.com";
+            document.querySelectorAll('.booking-step').forEach((s, i) => s.classList.toggle('active', i === step - 1));
         }
 
-        function initAutocomplete() {
-            if (typeof google === 'undefined') return;
-            const ids = [
-                'pickup-oneway', 'dropoff-oneway', 
-                'pickup-roundtrip', 'dropoff-roundtrip', 
-                'return-pickup-roundtrip', 'return-dropoff-roundtrip', 
-                'pickup-hourly'
-            ];
-            ids.forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    new google.maps.places.Autocomplete(input, { types: ['geocode', 'establishment'] });
+        function calculateDistanceAndShowFleet() {
+            const origin = document.getElementById('pickup').value;
+            const destination = document.getElementById('dropoff').value;
+            const service = new google.maps.DistanceMatrixService();
+            
+            service.getDistanceMatrix({
+                origins: [origin], destinations: [destination || origin],
+                travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL
+            }, (response, status) => {
+                if (status === 'OK') {
+                    bookingData.distance = response.rows[0].elements[0].distance.value * 0.000621371;
+                    renderFleet();
                 }
             });
         }
-        
+
+        function renderFleet() {
+            const list = document.getElementById('vehicle-list');
+            list.innerHTML = '';
+            fleet.forEach(v => {
+                let price = v.base + (v.perMile * bookingData.distance);
+                if (price < 90 && v.name !== 'Motor Coach') price = 90;
+                if (v.name === 'Motor Coach' && price < 800) price = 1200;
+                
+                const item = document.createElement('div');
+                item.className = 'vehicle-item';
+                item.onclick = () => { bookingData.vehicle = v; bookingData.totalPrice = price; goToStep(3); updateSummary(); };
+                item.innerHTML = `<img src="${v.img}"><div class="vehicle-info"><h4>${v.name}</h4><p>Est. Price: $${price.toFixed(2)}</p></div>`;
+                list.appendChild(item);
+            });
+        }
+
+        function updateSummary() {
+            document.getElementById('booking-summary').innerHTML = `
+                <strong>${bookingData.serviceType}</strong><br>
+                Pickup: ${document.getElementById('pickup').value}<br>
+                ${bookingData.serviceType !== 'Hourly' ? 'Dropoff: ' + document.getElementById('dropoff').value + '<br>' : ''}
+                Vehicle: ${bookingData.vehicle.name}<br>
+                Estimated Total: $${bookingData.totalPrice.toFixed(2)}
+            `;
+        }
+
+        function finalizeBooking() {
+            const name = document.getElementById('client-name').value;
+            const phone = document.getElementById('client-phone').value;
+            const email = document.getElementById('client-email').value;
+            if (!name || !phone || !email) return alert("Please fill in your contact details.");
+
+            const body = `New Quote Request\nVehicle: ${bookingData.vehicle.name}\nTotal: $${bookingData.totalPrice.toFixed(2)}\nClient: ${name}\nPhone: ${phone}\nEmail: ${email}`;
+            window.location.href = `mailto:sam@sm-limo.com?subject=New Quote Request - ${bookingData.vehicle.name}&body=${encodeURIComponent(body)}`;
+        }
+
+        function initAutocomplete() {
+            new google.maps.places.Autocomplete(document.getElementById('pickup'));
+            new google.maps.places.Autocomplete(document.getElementById('dropoff'));
+        }
         window.onload = initAutocomplete;
     </script>
 </body>
