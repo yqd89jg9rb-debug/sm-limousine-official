@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ==========================================================================
-                                    SM LIMOUSINE — Elite Master Styles (v9.1 - Multi-Step Booking + Stable Assets)
+                                    SM LIMOUSINE — Elite Master Styles (v9.2 - Image Size Optimization)
                                    ========================================================================== */
         *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -35,14 +35,13 @@
         .header__logo-centered img { height: 38px; width: auto; }
         .header__phone { font-size: 0.9rem; font-weight: 800; color: #fff; text-decoration: none; }
 
-        .hero { position: relative; min-height: 100vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
+        .hero { position: relative; min-height: 90vh; padding-top: var(--header-h); display: flex; flex-direction: column; align-items: center; text-align: center; background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/3972f07cba5d60066c4c3c19402474f699c48f12558b491c06dcb9541786b1d1.png') center/cover fixed; }
         .hero__bg { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 0; }
-        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 800px; padding: 40px 20px; }
+        .hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 40px 20px; }
         .hero__logo-img { height: 80px; width: auto; margin-bottom: 20px; }
         .hero__tagline { font-size: 1.5rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .hero__subtitle { font-size: 0.95rem; color: #888; margin-bottom: 30px; }
 
-        /* Multi-Step Booking Widget */
         .booking-widget { background: rgba(25, 25, 25, 0.98); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); text-align: left; }
         .booking-step { display: none; }
         .booking-step.active { display: block; }
@@ -59,7 +58,6 @@
         .booking-widget__btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 20px; cursor: pointer; letter-spacing: 1px; }
         .btn-back { background: transparent; color: #666; border: 1px solid #333; margin-top: 10px; padding: 10px; font-size: 0.8rem; }
 
-        /* Vehicle Selection Grid */
         .vehicle-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
         .vehicle-item { background: #111; border: 1px solid #222; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.3s; }
         .vehicle-item:hover, .vehicle-item.selected { border-color: var(--gold); background: #1a1a1a; }
@@ -69,15 +67,32 @@
 
         section { position: relative; width: 100%; overflow: hidden; }
         .featured-hq { border-top: 1px solid #111; }
-        .featured-hq img { width: 100%; height: auto; display: block; filter: brightness(0.7); }
+        .featured-hq img { width: 100%; max-width: 1000px; margin: 0 auto; height: auto; display: block; filter: brightness(0.7); }
         .hq-info { background: #000; padding: 80px 20px; text-align: center; }
         .hq-info h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--silver); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; }
         .hq-info p { color: #777; font-size: 1.15rem; max-width: 800px; margin: 0 auto; }
 
         .dispatch-section { background: #050505; padding: 80px 0; border-top: 1px solid #111; text-align: center; }
         .dispatch-title { font-size: 1.8rem; color: var(--silver); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 40px; padding: 0 20px; }
-        .dispatch-image-wrap { width: 90%; max-width: 1000px; margin: 0 auto 50px; border-radius: 20px; overflow: hidden; border: 1px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        .dispatch-image-wrap { width: 90%; max-width: 900px; margin: 0 auto 50px; border-radius: 20px; overflow: hidden; border: 1px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         .dispatch-image-wrap img { width: 100%; height: auto; display: block; }
+
+        .fleet-section { padding: 100px 0; background: #000; border-top: 1px solid #111; }
+        .section-title { font-size: 2.2rem; color: var(--silver); margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        .section-subtitle { font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 60px; }
+        .fleet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 0 25px; max-width: 1200px; margin: 0 auto; }
+        .fleet-card { background: #080808; border-radius: 24px; overflow: hidden; border: 1px solid #151515; transition: all 0.4s ease; }
+        .fleet-card:hover { transform: translateY(-10px); border-color: #333; }
+        .fleet-card img { width: 100%; height: 180px; object-fit: cover; }
+        .fleet-card__content { padding: 25px; border-top: 1px solid #151515; }
+        .fleet-card__content h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; color: var(--white); }
+        .fleet-card__content p { color: var(--gold); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        .partnership-section { padding: 120px 20px; background: #050505; text-align: center; border-top: 1px solid #111; }
+        .partnership__title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: var(--silver); text-transform: uppercase; letter-spacing: 6px; margin-bottom: 80px; position: relative; display: inline-block; }
+        .partnership__title:after { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 1px; background: var(--gold); }
+        .partnership__collage-wrap { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+        .partnership__collage-img { width: 100%; height: auto; border-radius: 24px; border: 1px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
 
         .compliance-section { padding: 80px 20px; background: #000; border-top: 1px solid #111; text-align: left; max-width: 1000px; margin: 0 auto; }
         .compliance-title { font-size: 1.5rem; color: var(--silver); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
@@ -88,6 +103,7 @@
         @media (max-width: 768px) {
             .hq-info h2 { font-size: 1.8rem; }
             .hero__tagline { font-size: 1.3rem; }
+            .fleet-card img { height: 160px; }
         }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
@@ -116,9 +132,9 @@
                 <!-- STEP 1: RIDE INFO -->
                 <div class="booking-step active" id="step-1">
                     <div class="booking-widget__tabs">
-                        <button class="booking-widget__tab active" id="tab-oneway" onclick="setServiceType('One Way')">One Way</button>
-                        <button class="booking-widget__tab" id="tab-roundtrip" onclick="setServiceType('Round Trip')">Round Trip</button>
-                        <button class="booking-widget__tab" id="tab-hourly" onclick="setServiceType('Hourly')">Hourly</button>
+                        <button class="booking-widget__tab active" onclick="setServiceType('One Way')">One Way</button>
+                        <button class="booking-widget__tab" onclick="setServiceType('Round Trip')">Round Trip</button>
+                        <button class="booking-widget__tab" onclick="setServiceType('Hourly')">Hourly</button>
                     </div>
                     <div class="bw-field"><label class="field-label">Pickup</label><input type="text" id="pickup" placeholder="Enter Pickup Location" class="st-input"></div>
                     <div class="bw-field" id="dropoff-wrap"><label class="field-label">Dropoff</label><input type="text" id="dropoff" placeholder="Enter Destination" class="st-input"></div>
@@ -133,7 +149,6 @@
                 <div class="booking-step" id="step-2">
                     <h3 class="field-label" style="color:#fff; font-size:1rem;">Choose Your Vehicle</h3>
                     <div class="vehicle-grid" id="vehicle-list">
-                        <!-- Dynamic vehicle list -->
                     </div>
                     <button class="booking-widget__btn btn-back" onclick="goToStep(1)">Back to Details</button>
                 </div>
@@ -153,7 +168,7 @@
     </section>
 
     <section class="featured-hq">
-        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/d3832b86102f00409593b4f887e96b99af7e19bb999d76dee2ae6a2552c44838.png" alt="SM LIMOUSINE HQ">
+        <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/50ef234deac34a169b5631d0e8343402_D82C2248-07F5-4EBA-A4B2-C23A0081AF99.jpeg" alt="SM LIMOUSINE HQ">
         <div class="hq-info">
             <h2>The Standard of Excellence</h2>
             <p>Our brand-new 2026 fleet is headquartered at 602 Wyndham Circle, Keller, TX 76248, ready to provide elite chauffeur service at a moment's notice.</p>
@@ -163,7 +178,7 @@
     <section class="dispatch-section">
         <h2 class="dispatch-title">24/7 Global Dispatch Center</h2>
         <div class="dispatch-image-wrap">
-            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/d62a810df72b7e4badb295d7be142e9a1099d729eb17a06507fe153809558ab3.png" alt="SM LIMOUSINE Dispatch Center">
+            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/6e1d7d4dc9e14512a9c1d4cf9479a481_C3E190F0-16C1-4834-9EC2-4835A7E91D73.jpeg" alt="SM LIMOUSINE Dispatch Center">
         </div>
     </section>
 
@@ -176,7 +191,7 @@
             <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/392364fe6b6005cfbef0b24b4a11c8e3a349f3f40b6b7aa7274477cb4f28797e.png"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
             <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c208fdcf5e2c755d7b1a7440179b49ca9f46cea0791bcd778548e55ceb64274a.png"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
             <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c36cecc22dd9c64dacecc5df8f12da1e1a83f0e36ca2c241edd8ef159b17ee68.png"><div class="fleet-card__content"><h3>Cadillac Escalade</h3><p>First Class Executive SUV</p></div></div>
-            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f7a75b09167e7cfad63a712a36aa3a32b81a45167bebbb5c2701e3709bffede8.png"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
+            <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
             <div class="fleet-card"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2ac6e09fc72e6f6d242c4bfcbb76157f2e5d69555204f525f464e93af69f1d01.png"><div class="fleet-card__content"><h3>Motor Coach</h3><p>Grand Motor Coach</p></div></div>
         </div>
     </section>
@@ -206,15 +221,13 @@
             { name: 'GMC Denali', base: 95, perMile: 5.50, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c208fdcf5e2c755d7b1a7440179b49ca9f46cea0791bcd778548e55ceb64274a.png' },
             { name: 'Cadillac Escalade', base: 125, perMile: 6.50, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c36cecc22dd9c64dacecc5df8f12da1e1a83f0e36ca2c241edd8ef159b17ee68.png' },
             { name: 'Mercedes-Maybach', base: 150, perMile: 7.50, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/64998fe1bbead8f556c69e0c2576324aa8c78a432b586bbd81535b2ccda09744.png' },
-            { name: 'Mercedes Sprinter', base: 185, perMile: 9.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f7a75b09167e7cfad63a712a36aa3a32b81a45167bebbb5c2701e3709bffede8.png' },
+            { name: 'Mercedes Sprinter', base: 185, perMile: 9.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' },
             { name: 'Motor Coach', base: 250, perMile: 15.00, img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2ac6e09fc72e6f6d242c4bfcbb76157f2e5d69555204f525f464e93af69f1d01.png' }
         ];
 
         function setServiceType(type) {
             bookingData.serviceType = type;
-            document.querySelectorAll('.booking-widget__tab').forEach(t => {
-                t.classList.toggle('active', t.innerText === type);
-            });
+            document.querySelectorAll('.booking-widget__tab').forEach(t => t.classList.toggle('active', t.innerText === type));
             document.getElementById('dropoff-wrap').style.display = type === 'Hourly' ? 'none' : 'block';
         }
 
