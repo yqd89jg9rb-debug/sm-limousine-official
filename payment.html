@@ -3,86 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SM LIMOUSINE | Secure Checkout</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>SM LIMOUSINE | Secure Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; margin: 0; }
-        .payment-container { width: 100%; max-width: 500px; background: rgba(25, 25, 25, 0.98); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .logo { height: 60px; margin-bottom: 30px; display: block; margin-left: auto; margin-right: auto; }
-        h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; text-align: center; margin-bottom: 10px; color: #C0C0C0; letter-spacing: 2px; text-transform: uppercase; }
-        .summary-box { background: #111; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #222; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: #888; }
-        .summary-total { border-top: 1px solid #333; margin-top: 15px; padding-top: 15px; font-weight: 800; font-size: 1.2rem; color: #fff; }
-        
-        #payment-form { margin-top: 20px; }
-        .form-group { margin-bottom: 20px; }
-        label { font-size: 0.75rem; color: #999; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block; }
-        .stripe-input { background: #000; padding: 16px; border-radius: 12px; border: 1px solid #333; }
-        
-        .pay-btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; margin-top: 20px; transition: all 0.3s; }
-        .pay-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        #card-errors { color: #ff4444; font-size: 0.85rem; margin-top: 10px; text-align: center; }
-        .success-msg { text-align: center; display: none; }
-        .success-msg h2 { color: #D4AF37; margin-bottom: 15px; }
+        /* SM LIMOUSINE - Elite Payment Design (v10.0) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: #1a1a1a; 
+            color: #ffffff; 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+
+        .header-logo { height: 50px; margin: 30px 0 20px; filter: brightness(1.2); }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            text-align: center;
+            color: #c0c0c0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            line-height: 1.2;
+        }
+
+        .payment-card { width: 100%; max-width: 420px; }
+
+        /* Summary Box Styling */
+        .summary-box {
+            background-color: #2b2b2b;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        .summary-label { color: #a0a0a0; }
+        .summary-value { color: #ffffff; font-weight: 400; text-align: right; flex: 1; margin-left: 20px; }
+        .summary-divider { border-top: 1px solid #444; margin: 20px 0; }
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* Form Sections */
+        .section-title {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            background: #2b2b2b;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid transparent;
+            transition: border 0.3s;
+        }
+        .input-group:focus-within { border-color: #444; }
+
+        .st-input { width: 100%; background: transparent; border: none; color: #fff; font-size: 1.1rem; outline: none; }
+        .st-input::placeholder { color: #666; }
+
+        /* Confirm Button */
+        .confirm-btn {
+            width: 100%;
+            padding: 22px;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, opacity 0.3s;
+        }
+        .confirm-btn:active { transform: scale(0.98); }
+        .confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        #card-errors { color: #ff5f5f; font-size: 0.9rem; margin-top: 10px; text-align: center; }
+
+        /* Success UI */
+        #success-ui { text-align: center; display: none; padding: 40px 20px; }
+        #success-ui svg { margin-bottom: 20px; }
+        #success-ui h2 { color: #D4AF37; margin-bottom: 15px; font-family: 'Playfair Display', serif; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .summary-box { padding: 20px; }
+        }
     </style>
 </head>
 <body>
-    <div class="payment-container">
-        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="logo">
-        
-        <div id="payment-ui">
-            <h1>Secure Payment</h1>
-            <div class="summary-box" id="summary"></div>
+    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="header-logo">
+    
+    <div id="payment-ui" class="payment-card">
+        <h1>Secure<br>Payment</h1>
 
-            <form id="payment-form">
-                <div class="form-group">
-                    <label>Card Details</label>
-                    <div id="card-element" class="stripe-input"></div>
-                    <div id="card-errors" role="alert"></div>
-                </div>
-                <button id="submit" class="pay-btn">Confirm & Pay</button>
-            </form>
+        <div class="summary-box">
+            <div class="summary-row"><span class="summary-label">Service:</span><span class="summary-value" id="val-service">-</span></div>
+            <div class="summary-row"><span class="summary-label">Vehicle:</span><span class="summary-value" id="val-vehicle">-</span></div>
+            <div class="summary-row"><span class="summary-label">Pickup:</span><span class="summary-value" id="val-pickup">-</span></div>
+            <div class="summary-divider"></div>
+            <div class="summary-total"><span class="summary-label">Total:</span><span class="summary-value" id="val-total">$0.00</span></div>
         </div>
 
-        <div id="success-ui" class="success-msg">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" style="margin-bottom:20px;">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-            <h2>Booking Confirmed!</h2>
-            <p>Your payment was successful. Our dispatch team has been notified and a receipt was sent to your email.</p>
-            <button class="pay-btn" onclick="window.location.href='index.html'">Return to Home</button>
+        <div class="section-title">Card Details</div>
+        <div class="input-group">
+            <div id="card-element"></div>
         </div>
+
+        <div class="section-title">Discount Code</div>
+        <div class="input-group">
+            <input type="text" id="discount-code" placeholder="Enter code" class="st-input">
+        </div>
+
+        <div id="card-errors" role="alert"></div>
+
+        <button id="submit-btn" class="confirm-btn">Confirm & Pay</button>
+    </div>
+
+    <div id="success-ui">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <h2>Booking Confirmed</h2>
+        <p style="color:#888; margin-bottom:30px;">Your elite chauffeur has been requested. Check your email for receipt.</p>
+        <button class="confirm-btn" onclick="window.location.href='index.html'">Return Home</button>
     </div>
 
     <script>
         const stripe = Stripe('pk_live_51RBmFdAKEb3tUfD6AJYgxHYzuAinKIZ5NHsxS3LNQM7tZDLqkFAPf3fZiV5jjY5sUXE5KHrLLAqfRPxPm5uR3US00bU95Vl5M');
         const elements = stripe.elements();
-        const card = elements.create('card', { style: { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } } });
+        
+        const style = {
+            base: {
+                color: '#ffffff',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '18px',
+                '::placeholder': { color: '#666666' },
+            }
+        };
+        
+        const card = elements.create('card', { style: style, hidePostalCode: true });
         card.mount('#card-element');
 
+        // Get Data from URL
         const urlParams = new URLSearchParams(window.location.search);
         let bookingData = {};
         try {
-            bookingData = JSON.parse(decodeURIComponent(urlParams.get('data')));
-        } catch(e) { console.error('Data error', e); }
+            const rawData = urlParams.get('data');
+            if (rawData) {
+                bookingData = JSON.parse(decodeURIComponent(rawData));
+                document.getElementById('val-service').textContent = bookingData.type || '-';
+                document.getElementById('val-vehicle').textContent = bookingData.vehicle || '-';
+                document.getElementById('val-pickup').textContent = bookingData.pickup || '-';
+                document.getElementById('val-total').textContent = `$${bookingData.total || '0.00'}`;
+            }
+        } catch(e) { console.error('Parse error', e); }
 
-        document.getElementById('summary').innerHTML = `
-            <div class="summary-row"><span>Service:</span><span>${bookingData.type || 'Ride'}</span></div>
-            <div class="summary-row"><span>Vehicle:</span><span>${bookingData.vehicle || 'Luxury Car'}</span></div>
-            <div class="summary-row"><span>Pickup:</span><span>${bookingData.pickup || 'Address'}</span></div>
-            <div class="summary-total"><div class="summary-row"><span>Total:</span><span>$${bookingData.total || '0.00'}</span></div></div>
-        `;
-
-        const form = document.getElementById('payment-form');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const submitBtn = document.getElementById('submit');
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.addEventListener('click', async () => {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing...';
-
+            
             const {token, error} = await stripe.createToken(card);
 
             if (error) {
@@ -91,31 +196,37 @@
                 submitBtn.textContent = 'Confirm & Pay';
             } else {
                 try {
+                    // 1. Charge Card
                     const res = await fetch('/.netlify/functions/create-charge', {
                         method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             token: token.id,
                             amount: bookingData.total,
                             email: bookingData.email,
-                            description: `SM LIMO: ${bookingData.vehicle} for ${bookingData.name}`
+                            description: `SM LIMO: ${bookingData.vehicle} for ${bookingData.name}`,
+                            discount: document.getElementById('discount-code').value
                         })
                     });
                     const charge = await res.json();
-                    
+
                     if (charge.success) {
+                        // 2. Notify Dispatch
                         await fetch('/.netlify/functions/dispatch', {
                             method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(bookingData)
                         });
                         
                         document.getElementById('payment-ui').style.display = 'none';
                         document.getElementById('success-ui').style.display = 'block';
+                        window.scrollTo(0,0);
                     } else {
                         alert('Payment Error: ' + charge.error);
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Confirm & Pay';
                     }
-                } catch (e) {
+                } catch(e) {
                     alert('Network error. Please try again.');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Confirm & Pay';
