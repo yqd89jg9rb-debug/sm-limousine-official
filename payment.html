@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SM LIMOUSINE | Secure Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; margin: 0; }
+        .payment-container { width: 100%; max-width: 500px; background: rgba(25, 25, 25, 0.98); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .logo { height: 60px; margin-bottom: 30px; display: block; margin-left: auto; margin-right: auto; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; text-align: center; margin-bottom: 10px; color: #C0C0C0; letter-spacing: 2px; text-transform: uppercase; }
+        .summary-box { background: #111; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #222; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: #888; }
+        .summary-total { border-top: 1px solid #333; margin-top: 15px; padding-top: 15px; font-weight: 800; font-size: 1.2rem; color: #fff; }
+        
+        #payment-form { margin-top: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { font-size: 0.75rem; color: #999; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block; }
+        .stripe-input { background: #000; padding: 16px; border-radius: 12px; border: 1px solid #333; }
+        
+        .pay-btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; margin-top: 20px; transition: all 0.3s; }
+        .pay-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        #card-errors { color: #ff4444; font-size: 0.85rem; margin-top: 10px; text-align: center; }
+        .success-msg { text-align: center; display: none; }
+        .success-msg h2 { color: #D4AF37; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" class="logo">
+        
+        <div id="payment-ui">
+            <h1>Secure Payment</h1>
+            <div class="summary-box" id="summary"></div>
+
+            <form id="payment-form">
+                <div class="form-group">
+                    <label>Card Details</label>
+                    <div id="card-element" class="stripe-input"></div>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+                <button id="submit" class="pay-btn">Confirm & Pay</button>
+            </form>
+        </div>
+
+        <div id="success-ui" class="success-msg">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" style="margin-bottom:20px;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h2>Booking Confirmed!</h2>
+            <p>Your payment was successful. Our dispatch team has been notified and a receipt was sent to your email.</p>
+            <button class="pay-btn" onclick="window.location.href='index.html'">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        const stripe = Stripe('pk_live_51RBmFdAKEb3tUfD6AJYgxHYzuAinKIZ5NHsxS3LNQM7tZDLqkFAPf3fZiV5jjY5sUXE5KHrLLAqfRPxPm5uR3US00bU95Vl5M');
+        const elements = stripe.elements();
+        const card = elements.create('card', { style: { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } } });
+        card.mount('#card-element');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let bookingData = {};
+        try {
+            bookingData = JSON.parse(decodeURIComponent(urlParams.get('data')));
+        } catch(e) { console.error('Data error', e); }
+
+        document.getElementById('summary').innerHTML = `
+            <div class="summary-row"><span>Service:</span><span>${bookingData.type || 'Ride'}</span></div>
+            <div class="summary-row"><span>Vehicle:</span><span>${bookingData.vehicle || 'Luxury Car'}</span></div>
+            <div class="summary-row"><span>Pickup:</span><span>${bookingData.pickup || 'Address'}</span></div>
+            <div class="summary-total"><div class="summary-row"><span>Total:</span><span>$${bookingData.total || '0.00'}</span></div></div>
+        `;
+
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const submitBtn = document.getElementById('submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+
+            const {token, error} = await stripe.createToken(card);
+
+            if (error) {
+                document.getElementById('card-errors').textContent = error.message;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirm & Pay';
+            } else {
+                try {
+                    const res = await fetch('/.netlify/functions/create-charge', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            token: token.id,
+                            amount: bookingData.total,
+                            email: bookingData.email,
+                            description: `SM LIMO: ${bookingData.vehicle} for ${bookingData.name}`
+                        })
+                    });
+                    const charge = await res.json();
+                    
+                    if (charge.success) {
+                        await fetch('/.netlify/functions/dispatch', {
+                            method: 'POST',
+                            body: JSON.stringify(bookingData)
+                        });
+                        
+                        document.getElementById('payment-ui').style.display = 'none';
+                        document.getElementById('success-ui').style.display = 'block';
+                    } else {
+                        alert('Payment Error: ' + charge.error);
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Confirm & Pay';
+                    }
+                } catch (e) {
+                    alert('Network error. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Confirm & Pay';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
