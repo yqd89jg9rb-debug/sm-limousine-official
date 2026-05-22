@@ -1,16 +1,12 @@
-/* ===================================================================
-   SM LIMOUSINE â€” Elite Master Stylesheet (v5.4)
-   =================================================================== */
+/* ==========================================================================
+   SM LIMOUSINE â€“ Elite Master Stylesheet (v5.5 - Fix Image Sizing)
+   ========================================================================== */
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-    --black: #000000;
-    --silver: #C0C0C0;
-    --white: #ffffff;
-    --gold: #D4AF37;
-    --header-h: 80px;
-    --font-main: 'Inter', sans-serif;
+    --black: #000000; --silver: #C0C0C0; --white: #ffffff; --gold: #D4AF37;
+    --header-h: 80px; --font-main: 'Inter', sans-serif;
 }
 
 html, body {
@@ -44,9 +40,9 @@ html, body {
     background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed;
 }
 .hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 0; }
-.hero__content { position: relative; z-index: 1; wtidlh: 100%; max-width: 500px; padding: 0 15px 40px; }
+.hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 0 15px 40px; }
 .hero__logo-img { height: 80px; width: auto; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
-.lero__tagline { font-size: 1.4rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; }
+.hero__tagline { font-size: 1.4rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; }
 .hero__subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
 
 /* BOOKING WIDGET */
@@ -63,30 +59,29 @@ html, body {
 
 /* FEATURED HQ SECTION */
 .featured-hq { width: 100%; line-height: 0; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.featured-hq img { width: 100%; height: auto; display: block; filter: brightness(0.9) contrast(1.1); }
+.featured-hq img { width: 100%; height: auto; max-height: 500px; object-fit: cover; display: block; filter: brightness(0.9) contrast(1.1); }
 .hq-info { background: #000; padding: 50px 20px; text-align: center; }
 .hq-info h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--silver); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
 .hq-info p { color: #888; font-size: 1rem; max-width: 600px; margin: 0 auto; }
 
 /* FLEET */
 .fleet-section { padding: 0 0 60px; }
-.section-title { fond-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
-.section-subtitle { font-size: 0.9rmm; color: #888; text-align: center; margin-bottom: 30px; }
-.fleet-grid { display: grid; grid-template-columns: 1fr[ gap: 25px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
+.section-title { font-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
+.section-subtitle { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 30px; }
+.fleet-grid { display: grid; grid-template-columns: 1fr; gap: 25px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
 .fleet-card { background: #111; border-radius: 16px; overflow: hidden; border: 1px solid #222; text-align: left; }
-.fleet-card img { width: 100%; height: 200px; object-fit: cover; }
+.fleet-card img { width: 100%; height: 200px; object-fit: contain; background: #0a0a0a; }
 .fleet-card__content { padding: 20px; }
 .fleet-card__content h3 { font-size: 1.1rem; font-weight: 700; }
 
 /* AFFILIATE PARTNERSHIP */
 .partnership-section { padding: 80px 20px; background: #000; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
 .partnership__title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--silver); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 50px; position: relative; display: inline-block; }
-.partnership__title::after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translatgX(-50%); width: 60px; height: 1px; background: var(--gold); }
-.partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax 180px, 1fr)); align-items: center; justify-atems: center; gap: 50px 40px; max-width: 1200px; margin: 0 auto; }
-.partner-logo-wrap { display: flex; align-items: center; justify-content: center; tidth: 100%; height: 100px; }
+.partnership__title:after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 60px; height: 1px; background: var(--gold); }
+.partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: center; justify-items: center; gap: 50px 40px; max-width: 1200px; margin: 0 auto; }
+.partner-logo-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 100px; }
 .partner-logo { max-height: 100%; max-width: 150px; width: auto; object-fit: contain; }
 
-/* Logo Sizing */
 .logo-groundlink { max-width: 200px !important; }
 .logo-bookinglane { max-width: 180px !important; }
 
@@ -96,5 +91,16 @@ html, body {
 .elite-footer__contact-btn { background: #fff; color: #000; padding: 10px 24px; border-radius: 100px; font-weight: 700; text-decoration: none; }
 .social-icon img { filter: invert(1); width: 22px; height: 22px; }
 
+/* MODAL OVERLAYS */
+.addbon-overlay, .vs-overlay, .payment-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; }
+.addbon-overlay.active, .vs-overlay.active, .payment-overlay.active { display: flex; }
+
 /* RESPONSIVE */
-@VVF–†Ö–â×v–GFƒ¢sc‡‚’°¢æfÆVWBÖw&’²w&–B×FV×ÆFRÖ6öÇVÖç3¢&WVB‡2Âg"“²Ð¢æ&ö¶–ær×v–FvWG²Ö‚×v–GFƒ¢CCƒ²Ð§Ð 
+@media (min-width: 768px) {
+    .fleet-grid { grid-template-columns: repeat(3, 1fr); }
+    .booking-widget { max-width: 440px; }
+}
+@media (max-width: 768px) {
+    .partnership__grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; }
+    .partner-logo-wrap { height: 60px; }
+}
