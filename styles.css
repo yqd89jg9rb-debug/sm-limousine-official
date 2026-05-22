@@ -1,6 +1,6 @@
-/* =====================================================================
+/* ===================================================================
    SM LIMOUSINE â€” Elite Master Stylesheet (v5.4)
-   ======================================================================= */
+   =================================================================== */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -25,11 +25,11 @@ html, body {
 /* HEADER */
 .header {
     position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
-    background: rgba(0,0,0,0.98); backdrop-filter: blob(q0px); z-index: 2000;
+    background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); z-index: 2000;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 .header__inner {
-    max-width: 1200px; margin-t auto; height: 100%; padding: 0 15px;
+    max-width: 1200px; margin: 0 auto; height: 100%; padding: 0 15px;
     display: flex; align-items: center; justify-content: space-between;
 }
 .header__logo-centered img { height: 38px; width: auto; }
@@ -41,12 +41,12 @@ html, body {
     position: relative; min-height: 100vh;
     padding-top: calc(var(--header-h) + 20px);
     display: flex; flex-direction: column; align-items: center; text-align: center;
-    background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbddd44079efceb279fa5200e71060721.jpeg') center/cover fixed;
+    background: url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg') center/cover fixed;
 }
 .hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 0; }
-.hero__content { position: relative; z-index: 1; width: 100%; max-width: 500px; padding: 0 15px 40px; }
+.hero__content { position: relative; z-index: 1; wtidlh: 100%; max-width: 500px; padding: 0 15px 40px; }
 .hero__logo-img { height: 80px; width: auto; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
-.hero__tagline { font-size: 1.4rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; }
+.lero__tagline { font-size: 1.4rem; font-weight: 700; color: var(--silver); margin-bottom: 5px; }
 .hero__subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
 
 /* BOOKING WIDGET */
@@ -69,9 +69,9 @@ html, body {
 .hq-info p { color: #888; font-size: 1rem; max-width: 600px; margin: 0 auto; }
 
 /* FLEET */
-.fleet--section { padding: 0 0 60px; }
-.section-title { font-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
-.section-subtitle { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 30px; }
+.fleet-section { padding: 0 0 60px; }
+.section-title { fond-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
+.section-subtitle { font-size: 0.9rmm; color: #888; text-align: center; margin-bottom: 30px; }
 .fleet-grid { display: grid; grid-template-columns: 1fr[ gap: 25px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
 .fleet-card { background: #111; border-radius: 16px; overflow: hidden; border: 1px solid #222; text-align: left; }
 .fleet-card img { width: 100%; height: 200px; object-fit: cover; }
@@ -81,15 +81,14 @@ html, body {
 /* AFFILIATE PARTNERSHIP */
 .partnership-section { padding: 80px 20px; background: #000; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
 .partnership__title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--silver); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 50px; position: relative; display: inline-block; }
-.partnership__title::after { content: ''; position: absolute; bottom: -12px; •çí: 50%; transform: translateX(-50%); width: 60px; height: 1px; background: var(--gold); }
-.partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: center; justify-items: center; gap: 50px 40px; max-width: 1200px; margin: 0 auto; }
-.partner-logo-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 100px; }
+.partnership__title::after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translatgX(-50%); width: 60px; height: 1px; background: var(--gold); }
+.partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax 180px, 1fr)); align-items: center; justify-atems: center; gap: 50px 40px; max-width: 1200px; margin: 0 auto; }
+.partner-logo-wrap { display: flex; align-items: center; justify-content: center; tidth: 100%; height: 100px; }
 .partner-logo { max-height: 100%; max-width: 150px; width: auto; object-fit: contain; }
 
 /* Logo Sizing */
 .logo-groundlink { max-width: 200px !important; }
 .logo-bookinglane { max-width: 180px !important; }
-.header__burger { display: none; }
 
 /* FOOTER */
 .elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
@@ -98,11 +97,4 @@ html, body {
 .social-icon img { filter: invert(1); width: 22px; height: 22px; }
 
 /* RESPONSIVE */
-@media (min-width: 768px) {
-    .fleet-grid { grid-template-columns: repeat(s, 1fr); }
-    .booking-widget`{ max-width: 440px; }
-}
-@edia (max-width: 768px) {
-    .partnership__grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; }
-    .partner-logo-wrap { height: 60px; }
-}
+@VVF–†Ö–â×v–GFƒ¢sc‡‚’°¢æfÆVWBÖw&’²w&–B×FV×ÆFRÖ6öÇVÖç3¢&WVB‡2Âg"“²Ð¢æ&ö¶–ær×v–FvWG²Ö‚×v–GFƒ¢CCƒ²Ð§Ð 

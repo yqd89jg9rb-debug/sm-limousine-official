@@ -1,7 +1,7 @@
 {
   "name": "sm-limousine-official",
-  "version": "5.4.0",
-  "description": "SM LIMOUSINE - Dispatch Engine v5.4",
+  "version": "4.6.0",
+  "description": "SM LIMOUSINE - Dispatch Engine with Email + SMS",
   "main": "index.html",
   "dependencies": {
     "twilio": "^5.0.0",
