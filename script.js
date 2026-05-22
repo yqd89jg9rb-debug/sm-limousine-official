@@ -1,18 +1,17 @@
-/* =====================================================================
-   SM LIMOUSINE â€” Main Script (Precision Version 4.24)
-   Notification Restoration & Deep Debugging
-   ======================================================================= */
+/* ==========================================================================
+   SM LIMOUSINE â€“ Main Script (Precision Version 5.4 - Clean Restoration)
+   ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const VEHICLE_RATES = {
-        xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86_e153638daf2271c.jpeg' },
+        xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
         suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
-        denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
+        denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
         escalade:   { name: '2026 Cadillac Escalade',    base: 125, perMile: 6.50, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
-        maybach:    { name: 'Mercedes-Maybach',     base: 150, perMile: 7.50, category: 'Ultra Luxury',     passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
-        sprinter:   { name: 'Mercedes Sprinter',     base: 225, perMile: 10.00, category: 'Sprinter van',     passengers: '6-14', suitcases: '6-10', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' },
-        motorcoacd: { name: 'Motor Coach',           base: 500, perMile: 25.00, category: 'Motor coach',      passengers: '20-56', suitcases: '20-56', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg' }
+        maybach:    { name: 'Mercedes-Maybach',      base: 150, perMile: 7.50, category: 'Ultra Luxury',     passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
+        sprinter:   { name: 'Mercedes Sprinter',     base: 225, perMile: 10.00, category: 'Sprinter van',    passengers: '6-14', suitcases: '6-10', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' },
+        motorcoach: { name: 'Motor Coach',           base: 500, perMile: 25.00, category: 'Motor coach',      passengers: '20-56', suitcases: '20-56', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg' }
     };
 
     const MIN_HOURS = 3;
@@ -33,13 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    document.querySelectorAll('.header__link').forEach(link => {
-        link.onclick = () => {
-            mainNav.classList.remove('open');
-            burgerBtn.classList.remove('open');
-        };
-    });
-
     /* --- TAB CONTROL --- */
     const tabs = document.querySelectorAll('.booking-widget__tab');
     tabs.forEach(t => t.onclick = () => {
@@ -57,8 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* --- MODAL LOGIC --- */
-    window.openAddonModal = () => document.getElementById('addonOverlay').classList.add('active');
-    window.closeAddonModal = () => document.getElementById('addonOverlay').classList.remove('active');
+    window.openAddonModal = () => document.getElementById('addon-Overlay').classList.add('active');
+    window.closeAddonModal = () => document.getElementById('addon-Overlay').classList.remove('active');
     window.updateCounter = (type, change) => {
         if (type === 'passengers') { passengerCount = Math.max(1, passengerCount + change); document.getElementById('count-passengers').textContent = passengerCount; }
         else { luggageCount = Math.max(0, luggageCount + change); document.getElementById('count-luggage').textContent = luggageCount; }
@@ -66,7 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     window.syncAddons = () => {
         const summary = `${passengerCount} People, ${luggageCount} Luggage`;
-        ['oneway', 'roundtrip', 'hourly'].forEach(m => { const el = document.getElementById(`people-summary-${m}`); if (el) el.textContent = summary; });
+        ['oneway', 'roundtrip', 'hourly'].forEach(m => {
+            const el = document.getElementById(`people-summary-${m}`);
+            if (el) el.textContent = summary;
+        });
     };
 
     /* --- GOOGLE AUTOCOMPLETE --- */
@@ -76,10 +71,176 @@ document.addEventListener('DOMContentLoaded', () => {
         const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
         ids.forEach(id => {
             const input = document.getElementById(id);
-            if•¹ÁÕÐ€˜˜€…¥¹ÁÕÐ¹‘…Ñ…Í•Ð¹…	½Õ¹¤ì(€€€€€€€€€€€€€€€½¹ÍÐ…Œ€ô¹•Ü½½±”¹µ…ÁÌ¹Á±…•Ì¹ÕÑ½½µÁ±•Ñ”¡¥¹ÁÕÐ°½ÁÑ¥½¹Ì¤ì(€€€€€€€€€€€€€€€¥¹ÁÕÐ¹‘…Ñ…Í•Ð¹…	½Õ¹€ô€‰ÑÉÕ”ˆì(€€€€€€€€€€€€€€€…Œ¹…‘‘1¥ÍÑ•¹•È Á±…•}¡…¹•œ°€ ¤€ôøì(€€€€€€€€€€€€€€€€€€€½¹ÍÐµ½‘”€ô¥¹¥¹±Õ‘•Ì ½¹•Ý…äœ¤€ü€½¹•Ý…äœ€è€¡¥¹¥¹±Õ‘•Ì É½Õ¹‘ÑÉ¥Àœ¤€ü€É½Õ¹‘ÑÉ¥Àœ€è¹Õ±°¤ì(€€€€€€€€€€€€€€€€€€€¥˜€¡µ½‘”¤É•™É•Í¡¥ÍÑ…¹•Ì¡µ½‘”¤ì(€€€€€€€€€€€€€€€ô¤ì(€€€€€€€€€€€ô(€€€€€€€ô¤ì(€€€ô(€€€¥˜€¡ÑåÁ•½˜½½±”€„ôô€Õ¹‘•™¥¹•œ¤¥¹¥ÑÕÑ½½µÁ±•Ñ” ¤ì((€€€…Íå¹Œ™Õ¹Ñ¥½¸É•™É•Í¡¥ÍÑ…¹•Ì¡µ½‘”¤ì(€€€€€€€½¹ÍÐÁ%¹ÁÕÐ€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å%¡Á¥­ÕÀ´‘íµ½‘•õ€¤ì(€€€€€€€½¹ÍÐ‘%¹ÁÕÐ€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å%¡‘É½Á½™˜´‘íµ½‘•õ€¤ì(€€€€€€€¥˜€ …Á%¹ÁÕÐñð€…‘%¹ÁÕÐ¤É•ÑÕÉ¸ì(€€€€€€€½¹ÍÐ½É¥¥¸Ä€ôÁ%¹ÁÕÐ¹Ù…±Õ”ì(€€€€€€€½¹ÍÐ‘•ÍÐÄ€ô‘%¹ÁÕÐ¹Ù…±Õ”ì(€€€€€€€¥˜€ …½É¥¥¸Äñð€…‘•ÍÐÄ¤É•ÑÕÉ¸ì(€€€€€€€½¹ÍÐÍ•ÉÙ¥”€ô¹•Ü½½±”¹µ…ÁÌ¹¥ÍÑ…¹•5…ÑÉ¥áM•ÉÙ¥” ¤ì(€€€€€€€±•œÅ5¥±•Ì€ô…Ý…¥Ð•Ñ1•5¥±•Ì¡Í•ÉÙ¥”°½É¥¥¸Ä°‘•ÍÐÄ¤ì(€€€€€€€¥˜€¡µ½‘”€ôôô€É½Õ¹‘ÑÉ¥Àœ¤ì(€€€€€€€€€€€½¹ÍÐ½É¥¥¸È€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% É•ÑÕÉ¸µÁ¥­ÕÀµÉ½Õ¹‘ÑÉ¥Àœ¤¹Ù…±Õ”ì(€€€€€€€€€€€½¹ÍÐ‘•ÍÐÈ€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% É•ÑÕÉ¸µ‘É½Á½™˜µÉ½Õ¹‘ÑÉ¥Àœ¤¹Ù…±Õ”ì(€€€€€€€€€€€±•œÉ5¥±•Ì€ô€¡½É¥¥¸È€˜˜‘•ÍÐÈ¤€ü…Ý…¥Ð•Ñ1•5¥±•Ì¡Í•ÉÙ¥”°½É¥¥¸È°‘•ÍÐÈ¤€è±•œÅ5¥±•Ìì(€€€€€€€ô(€€€€€€€ÕÁ‘…Ñ•U$¡µ½‘”¤ì(€€€ô((€€€™Õ¹Ñ¥½¸•Ñ1•5¥±•Ì¡Í•ÉÙ¥”°½É¥¥¸°‘•ÍÐ¤ì(€€€€€€€É•ÑÕÉ¸¹•ÜAÉ½µ¥Í” ¡É•Í½±Ù”¤€ôøì(€€€€€€€€€€€Í•ÉÙ¥”¹•Ñ¥ÍÑ…¹•5…ÑÉ¥à¡ì½É¥¥¹Ìèm½É¥¥¹t°‘•ÍÑ¥¹…Ñ¥½¹Ìèm‘•ÍÑt°ÑÉ…Ù•±5½‘”è€I%Y%9œ°Õ¹¥ÑMåÍÑ•´è½½±”¹µ…ÁÌ¹U¹¥ÑMåÍÑ•´¹%5AI%0ô°€¡É•ÍÁ½¹Í”°ÍÑ…ÑÕÌ¤€ôøì(€€€€€€€€€€€€€€€¥˜€¡ÍÑ…ÑÕÌ€ôôô€=,œ€˜˜É•ÍÁ½¹Í”¹É½ÝÍlÁt¹•±•µ•¹ÑÍlÁt¹ÍÑ…ÑÕÌ€ôôô€=,œ¤ì(€€€€€€€€€€€€€€€€€€€½¹ÍÐ´€ôÉ•ÍÁ½¹Í”¹É½ÝÍlÁt¹•±•µ•¹ÑÍlÁt¹‘¥ÍÑ…¹”¹™…±Õ”ì(€€€€€€€€€€€€€€€€€€€É•Í½±Ù”¡5…Ñ ¹É½Õ¹ ¡´€¼€ÄØÀä¸ÌÐ¤€¨€ÄÀ¤€¼€ÄÀ¤ì(€€€€€€€€€€€€€€€ô•±Í”É•Í½±Ù” À¤ì(€€€€€€€€€€€ô¤ì(€€€€€€€ô¤ì(€€€ô((€€€™Õ¹Ñ¥½¸ÕÁ‘…Ñ•U$¡µ½‘”¤ì(€€€€€€€½¹ÍÐÁÉ•Ù¥•Ý	½à€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å%¡ÁÉ•Ù¥•Ü´‘íµ½‘•õ€¤ì(€€€€€€€½¹ÍÐ‘¥ÍÑY…°€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å%¡‘¥ÍÐµÙ…°´‘íµ½‘•õ€¤ì(€€€€€€€¥˜€ …ÁÉ•Ù¥•Ý	½à¤É•ÑÕÉ¸ì(€€€€€€€ÁÉ•Ù¥•Ý	½à¹ÍÑå±”¹‘¥ÍÁ±…ä€ô€‰±½¬œì(€€€€€€€¥˜€¡µ½‘”€ôôô€É½Õ¹‘ÑÉ¥Àœ¤‘¥ÍÑY…°¹¥¹¹•É!Q50€ô€ñ‘¥ØÍÑå±”ô™½¹ÐµÍ¥é”èÀ¸áÉ•´œù=ÕÑ‰½Õ¹è€‘í±•œÅ5¥±•Íôµ¤ðI•ÑÕÉ¸è€‘í±•œÉ5¥±•Íôµ¤ð½‘¥Øøñ‘¥ØùQ½Ñ…°è€‘ì¡±•œÅ5¥±•Ì€¬±•œÉ5¥±•Ì¤¹Ñ½¥á• Ä¥ôµ¤ð½‘¥Øù€ì(€€€€€€€•±Í”‘¥ÍÑY…°¹Ñ•áÑ½¹Ñ•¹Ð€ô±•œÅ5¥±•Ì€¬€œµ¤œì(€€€ô((€€€€¼¨€´´´=I4MU	5%MM%=8€´´´€¨¼(€€€‘½Õµ•¹Ð¹ÅÕ•ÉåM•±•Ñ½É±° œ¹‰½½­¥¹œµÝ¥‘•Ñ}}™½É´œ¤¹™½É… ¡™½É´€ôøì(€€€€€€€™½É´¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ÍÕ‰µ¥Ðœ°…Íå¹Œ€¡”¤€ôøì(€€€€€€€€€€€”¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€€€€€€€½¹ÍÐÍÕ‰µ¥Ñ	Ñ¸€ô™½É´¹ÅÕ•ÉåM•±•Ñ½È œ¹‰½½­¥¹œµÝ¥‘•Ñ}}ÍÕ‰µ¥Ðœ¤ì(€€€€€€€€€€€ÍÕ‰µ¥Ñ	Ñ¸¹‘¥Í…‰±•€ôÑÉÕ”ìÍÕ‰µ¥Ñ	Ñ¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€…±Õ±…Ñ¥¹œ¸¸¸œì(€€€€€€€€€€€½¹ÍÐÑåÁ”€ô™½É´¹¥¹É•Á±…” ™½É´´œ°€œœ¤ì(€€€€€€€€€€€€(€€€€€€€€€€€‰½½­¥¹…Ñ„€ôì(€€€€€€€€€€€€€€€ÑåÁ”èÑåÁ”°(€€€€€€€€€€€€€€€Á¥­ÕÀè‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å%¡Á¥­ÕÀ´‘íÑåÁ•õ€¤ü¹Ù…±Õ”ñð€8½œ°(€€€€€€€€€€€€€€€‘É½Á½™˜è‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å%¡‘É½Á½™˜´‘íÑåÁ•õ€¤ü¹Ù…±Õ”ñð€8½œ°(€€€€€€€€€€€€€€€‘…Ñ”è™½É´¹ÅÕ•ÉåM•±•Ñ½È ¥¹ÁÕÑmÑåÁ”ô‰‘…Ñ”‰tœ¤ü¹Ù…±Õ”ñð€8½œ°(€€€€€€€€€€€€€€€Ñ¥µ”è™½É´¹ÅÕ•ÉåM•±•Ñ½È ¥¹ÁÕÑmÑåÁ”ô‰Ñ¥µ”‰tœ¤ü¹Ù…±Õ”ñð€8½œ°(€€€€€€€€€€€€€€€Á…ÍÍ•¹•ÉÌèÁ…ÍÍ•¹•É½Õ¹Ð°(€€€€€€€€€€€€€€€±Õ…”è±Õ…•½Õ¹Ð°(€€€€€€€€€€€€€€€¡½ÕÉÌèÁ…ÉÍ•%¹Ð¡™½É´¹ÅÕ•ÉåM•±•Ñ½È m‘…Ñ„µ™¥•±ô‰¡½ÕÉÌ‰tœ¤ü¹Ù…±Õ”ñð5%9}!=UIL¤(€€€€€€€€€€€ôì((€€€€€€€€€€€…Ý…¥ÐÉ•™É•Í¡¥ÍÑ…¹•Ì¡ÑåÁ”¤ì(€€€€€€€€€€€½Á•¹Y•¡¥±•M•±•Ñ½È¡ÑåÁ”°‰½½­¥¹…Ñ„¹¡½ÕÉÌ¤ì(€€€€€€€€€€€ÍÕ‰µ¥Ñ	Ñ¸¹‘¥Í…‰±•€ô™…±Í”ìÍÕ‰µ¥Ñ	Ñ¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€•Ð„EÕ½Ñ”œì(€€€€€€€ô¤ì(€€€ô¤ì((€€€½¹ÍÐÙÍ=Ù•É±…ä€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% ÙÍ=Ù•É±…äœ¤ì(€€€½¹ÍÐÙÍ1¥ÍÐ€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% ÙÍ1¥ÍÐœ¤ì(€€€½¹ÍÐÙÍ½¹Ñ¥¹Õ•	Ñ¸€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% ÙÍ½¹Ñ¥¹Õ•	Ñ¸œ¤ì((€€€™Õ¹Ñ¥½¸½Á•¹Y•¡¥±•M•±•Ñ½È¡ÑåÁ”°¡½ÕÉÌ¤ì(€€€€€€€ÙÍ1¥ÍÐ¹¥¹¹•É!Q50€ô€œœìÙÍ½¹Ñ¥¹Õ•	Ñ¸¹‘¥Í…‰±•€ôÑÉÕ”ì(€€€€€€€½¹ÍÐÑ½Ñ…±5¥±•Ì€ôÑåÁ”€ôôô€É½Õ¹‘ÑÉ¥Àœ€ü€¡±•œÅ5¥±•Ì€¬±•œÉ5¥±•Ì¤€è¶VsÖ–ÆW3°¢6öç7Bf–æÄÖ–ÆW2ÒF÷FÄÖ–ÆW2ÇÂ#°¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚wg2ÖF—7Fæ6R×7VÖÖ'’r’çFW‡D6öçFVçBÒ‡G—RÓÒv†÷W&Ç’r’òF÷FÂ¦÷W&æW“¢G¶f–æÄÖ–ÆW2çFôf—†VBƒ—ÒÖ–ÆW6¢GW&F–öã¢G¶†÷W'7Ò†÷W'6° ¢ö&¦V7Bæ¶W—2…dT„”4ÄUõ$DU2’æf÷$V6‚†¶W’Óâ°¢6öç7BbÒdT„”4ÄUõ$DU5¶¶W•Ó°¢ÆWBF÷FÂÒG—RÓhourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
+            if (input && !input.dataset.acBound) {
+                const ac = new google.maps.places.Autocomplete(input, options);
+                input.dataset.acBound = "true";
+                ac.addListener('place_changed', () => {
+                    const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
+                    if (mode) refreshDistances(mode);
+                });
+            }
+        });
+    }
+    if (typeof google !== 'undefined') initAutocomplete();
+
+    async function refreshDistances(mode) {
+        const pInput = document.getElementById(`pickup-${mode}`);
+        const dInput = document.getElementById(`dropoff-${mode}`);
+        if (!pInput || !dInput) return;
+        const origin1 = pInput.value;
+        const dest1 = dInput.value;
+        if (!origin1 || !dest1) return;
+        const service = new google.maps.DistanceMatrixService();
+        leg1Miles = await getLegMiles(service, origin1, dest1);
+        if (mode === 'roundtrip') {
+            const origin2 = document.getElementById('return-pickup-roundtrip').value;
+            const dest2 = document.getElementById('return-dropoff-roundtrip').value;
+            leg2Miles = (origin2 && dest2) ? await getLegMiles(service, origin2, dest2) : leg1Miles;
+        }
+        updateUI(mode);
+    }
+
+    function getLegMiles(service, origin, dest) {
+        return new Promise((resolve) => {
+            service.getDistanceMatrix({ origins: [origin], destinations: [dest], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (response, status) => {
+                if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
+                    const m = response.rows[0].elements[0].distance.value;
+                    resolve(Math.round((m / 1609.34) * 10) / 10);
+                } else resolve(0);
+            });
+        });
+    }
+
+    function updateUI(mode) {
+        const previewBox = document.getElementById(`preview-${mode}`);
+        const distVal = document.getElementById(`dist-val-${mode}`);
+        if (!previewBox) return;
+        previewBox.style.display = 'block';
+        if (mode === 'roundtrip') distVal.innerHTML = `<div style='font-size:0.8rem'>Outbound: ${leg1Miles} mi | Return: ${leg2Miles} mi</div><div>Total: ${(leg1Miles + leg2Miles).toFixed(1)} mi</div>`;
+        else distVal.textContent = leg1Miles + ' mi';
+    }
+
+    /* --- FORM SUBMISSION --- */
+    document.querySelectorAll('.booking-widget__form').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = form.querySelector('.booking-widget__submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Calculating...';
+            const type = form.id.replace('form-', '');
+            
+            bookingData = {
+                type: type,
+                pickup: document.getElementById(`pickup-${type}`)?.value || 'N/A',
+                dropoff: document.getElementById(`dropoff-${type}`)?.value || 'N/A',
+                date: form.querySelector('input[type="date"]')?.value || 'N/A',
+                time: form.querySelector('input[type="time"]')?.value || 'N/A',
+                passengers: passengerCount,
+                luggage: luggageCount,
+                hours: parseInt(form.querySelector('[data-field="hours"]')?.value || MIN_HOURS)
+            };
+
+            await refreshDistances(type);
+            openVehicleSelector(type, bookingData.hours);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Get a Quote';
+        });
+    });
+
+    const vsOverlay = document.getElementById('vsOverlay');
+    const vsList = document.getElementById('vsList');
+    const vsContinueBtn = document.getElementById('vsContinueBtn');
+
+    function openVehicleSelector(type, hours) {
+        vsList.innerHTML = ''; vsContinueBtn.disabled = true;
+        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
+        const finalMiles = totalMiles || 20;
+        document.getElementById('vs-distance-summary').textContent = (type !== 'hourly') ? `Total Journey: ${finalMiles.toFixed(1)} miles` : `Duration: ${hours} hours`;
+
+        Object.keys(VEHICLE_RATES).forEach(key => {
+            const v = VEHICLE_RATES[key];
+            let total = type === 'hourly' ? v.base * hours : (type === 'roundtrip' ? (v.base * 2) + (v.perMile * totalMiles) : v.base + (v.perMile * totalMiles));
             const minBase = 90;
             if (v.name === "Motor Coach" && total < 1200) total = 1200;
             if (total < minBase) total = minBase;
             const card = document.createElement('div');
             card.className = 'vs-card';
-            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">Â~F”€‘íÁ…ÍÍ•¹•É½Õ¹Ñô€ƒÂ~Jð€‘í±Õ…•½Õ¹Ñôð½‘¥Øøð½‘¥Øøñ‘¥Ø±…ÍÌô‰ÙÌµ…É‘}}É¥¡Ðˆøñ¥µœÍÉŒôˆ‘íØ¹¥µ…•ôˆøð½‘¥Øù€ì(€€€€€€€€€€€…É¹½¹±¥¬€ô€ ¤€ôøì(€€€€€€€€€€€€€€€‘½Õµ•¹Ð¹ÅÕ•ÉåM•±•Ñ½É±° œ¹ÙÌµ…Éœ¤¹™½É… ¡Œ€ôøŒ¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” ÙÌµ…É´µÍ•±•Ñ•œ¤¤ì(€€€€€€€€€€€€€€€…É¹±…ÍÍ1¥ÍÐ¹…‘ ÙÌµ…É´µÍ•±•Ñ•œ¤ì(€€€€€€€€€€€€€€€ÙÍ½¹Ñ¥¹Õ•	Ñ¸¹‘¥Í…‰±•€ô™…±Í”ì(€€€€€€€€€€€€€€€ÙÍ½¹Ñ¥¹Õ•	Ñ¸¹½¹±¥¬€ô€ ¤€ôøì€(€€€€€€€€€€€€€€€€€€€ÙÍ=Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” …Ñ¥Ù”œ¤ì€(€€€€€€€€€€€€€€€€€€€‰½½­¥¹…Ñ„¹Ù•¡¥±”€ôØ¹¹…µ”ì(€€€€€€€€€€€€€€€€€€€‰½½­¥¹…Ñ„¹Ñ½Ñ…°€ôÑ½Ñ…°¹Ñ½¥á• È¤ì(€€€€€€€€€€€€€€€€€€€½Á•¹A…åµ•¹Ð¡Ø¹¹…µ”°Ñ½Ñ…°¤ì(€€€€€€€€€€€€€€€ôì(€€€€€€€€€€€ôì(€€€€€€€€€€€ÙÍ1¥ÍÐ¹…ÁÁ•¹‘¡¥±¡…É¤ì(€€€€€€€ô¤ì((€€€€€€€ÙÍ=Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹…‘ …Ñ¥Ù”œ¤ì(€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% ÙÍ	…­	Ñ¸œ¤¹½¹±¥¬€ô€ ¤€ôøÙÍ=Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” …Ñ¥Ù”œ¤ì(€€€ô((€€€€¼¨€´´´Ae59P€´´´€¨¼(€€€™Õ¹Ñ¥½¸½Á•¹A…åµ•¹Ð¡Ù•¡¥±•9…µ”°Ñ½Ñ…°¤ì(€€€€€€€ÕÉÉ•¹ÑQ½Ñ…°€ôÑ½Ñ…°ì(€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…äµÙ•¡¥±”œ¤¹Ñ•áÑ½¹Ñ•¹Ð€ôÙ•¡¥±•9…µ”ì(€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…äµÑ½Ñ…°œ¤¹Ñ•áÑ½¹Ñ•¹Ð€ô€‘íÑ½Ñ…°¹Ñ½¥á• È¥ôUM€ì((€€€€€€€½¹ÍÐMQI%A}-d€ô€Á­}±¥Ù•|ÔÅI	µ‘-ˆÍÑU™Ù)eá!eéÕ¥¹-%hÕ9!ÍáLÍ19E4ÝÑi1Å­A˜Í™i¥XÕ©©dÕÍUaÕ-!É11Å¡IáA´ÕÕHÍULÀÁ‰TäÕY°Õ4œì(€€€€€€€¥˜€ …ÍÑÉ¥Á”¤ì(€€€€€€€€€€€ÍÑÉ¥Á”€ôMÑÉ¥Á”¡MQI%A}-d¤ì(€€€€€€€€€€€•±•µ•¹ÑÌ€ôÍÑÉ¥Á”¹•±•µ•¹ÑÌ ¤ì(€€€€€€€€€€€½¹ÍÐÍÑå±”€ôì‰…Í”èì½±½Èè€œ™™˜œ°™½¹ÑM¥é”è€œÄÙÁàœ°€œèéÁ±…•¡½±‘•Èœèì½±½Èè€œŒàààœôôôì(€€€€€€€€€€€…É‘9Õµ‰•È€ô•±•µ•¹ÑÌ¹É•…Ñ” …É‘9Õµ‰•Èœ°ìÍÑå±”ô¤ì(€€€€€€€€€€€…É‘áÁ¥Éä€ô•±•µ•¹ÑÌ¹É•…Ñ” …É‘áÁ¥Éäœ°ìÍÑå±”ô¤ì(€€€€€€€€€€€…É‘ÙŒ€€€€ô•±•µ•¹ÑÌ¹É•…Ñ” …É‘ÙŒœ°€€€ìÍÑå±”ô¤ì(€€€€€€€€€€€…É‘9Õµ‰•È¹µ½Õ¹Ð œ…Éµ¹Õµ‰•Èµ•±•µ•¹Ðœ¤ì(€€€€€€€€€€€…É‘áÁ¥Éä¹µ½Õ¹Ð œ…Éµ•áÁ¥Éäµ•±•µ•¹Ðœ¤ì(€€€€€€€€€€€…É‘ÙŒ¹µ½Õ¹Ð œ…ÉµÙŒµ•±•µ•¹Ðœ¤ì(€€€€€€€ô•±Í”ì(€€€€€€€€€€€…É‘9Õµ‰•È¹±•…È ¤ì…É‘áÁ¥Éä¹±•…È ¤ì…É‘ÙŒ¹±•…È ¤ì(€€€€€€€ô((€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…åµ•¹Ñ=Ù•É±…äœ¤¹±…ÍÍ1¥ÍÐ¹…‘ …Ñ¥Ù”œ¤ì(€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…åµ•¹Ñ±½Í”œ¤¹½¹±¥¬€ô€ ¤€ôø‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…åµ•¹Ñ=Ù•É±…äœ¤¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” …Ñ¥Ù”œ¤ì((€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…å	Ñ¸œ¤¹½¹±¥¬€ô…Íå¹Œ€ ¤€ôøì(€€€€€€€€€€€½¹ÍÐ¹…µ”€€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…äµ¹…µ”œ¤¹Ù…±Õ”¹ÑÉ¥´ ¤ì(€€€€€€€€€€€½¹ÍÐ•µ…¥°€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…äµ•µ…¥°œ¤¹Ù…±Õ”¹ÑÉ¥´ ¤ì(€€€€€€€€€€€¥˜€ …¹…µ”ñð€…•µ…¥°¤ì…±•ÉÐ A±•…Í”™¥±°¥¸å½ÕÈ¹…µ”…¹•µ…¥°¸œ¤ìÉ•ÑÕÉ¸ìô((€€€€€€€€€€€½¹ÍÐÁ…å	Ñ¸€ô‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…å	Ñ¸œ¤ì(€€€€€€€€€€€Á…å	Ñ¸¹‘¥Í…‰±•€ôÑÉÕ”ìÁ…å	Ñ¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€AÉ½•ÍÍ¥¹œ¸¸¸œì((€€€€€€€€€€€ÑÉäì(€€€€€€€€€€€€€€€½¹ÍÐÉ•Ì€ô…Ý…¥Ð™•Ñ  œ¼¹¹•Ñ±¥™ä½™Õ¹Ñ¥½¹Ì½‘¥ÍÁ…Ñ œ°ì(€€€€€€€€€€€€€€€€€€€µ•Ñ¡½è€A=MPœ°(€€€€€€€€€€€€€€€€€€€¡•…‘•ÉÌèì€½¹Ñ•¹ÐµQåÁ”œè€…ÁÁ±¥…Ñ¥½¸½©Í½¸œô°(€€€€€€€€€€€€€€€€€€€‰½‘äè)M=8¹ÍÑÉ¥¹¥™ä¡ì¹…µ”°•µ…¥°°Ù•¡¥±”è‰½½­¥¹…Ñ„¹Ù•¡¥±”°Ñ½Ñ…°èÕÉÉ•¹ÑQ½Ñ…°°‰½½­¥¹œè‰½½­¥¹…Ñ„ô¤(€€€€€€€€€€€€€€€ô¤ì(€€€€€€€€€€€€€€€½¹ÍÐ‘…Ñ„€ô…Ý…¥ÐÉ•Ì¹©Í½¸ ¤ì((€€€€€€€€€€€€€€€¥˜€¡‘…Ñ„¹±¥•¹ÑM•É•Ð¤ì(€€€€€€€€€€€€€€€€€€€½¹ÍÐì•ÉÉ½È°Á…åµ•¹Ñ%¹Ñ•¹Ðô€ô…Ý…¥ÐÍÑÉ¥Á”¹½¹™¥Éµ…É‘A…åµ•¹Ð¡‘…Ñ„¹±¥•¹ÑM•É•Ð°ì(€€€€€€€€€€€€€€€€€€€€€€€Á…åµ•¹Ñ}µ•Ñ¡½èì…Éè…É‘9Õµ‰•È°‰¥±±¥¹}‘•Ñ…¥±Ìèì¹…µ”°•µ…¥°ôô(€€€€€€€€€€€€€€€€€€€ô¤ì(€€€€€€€€€€€€€€€€€€€¥˜€¡•ÉÉ½È¤ì…±•ÉÐ A…åµ•¹Ð™…¥±•è€œ€¬•ÉÉ½È¹µ•ÍÍ…”¤ìô(€€€€€€€€€€€€€€€€€€€•±Í”¥˜€¡Á…åµ•¹Ñ%¹Ñ•¹Ð¹ÍÑ…ÑÕÌ€ôôô€ÍÕ••‘•œ¤ì(€€€€€€€€€€€€€€€€€€€€€€€‘½Õµ•¹Ð¹•Ñ±•µ•¹Ñ	å% Á…å•µ•¹Ñ=Ù•É±…äœ¤¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” …Ñ¥Ù”œ¤ì(€€€€€€€€€€€€€€€€€€€€€€€…±•ÉÐ 	œ	½½­¥¹œ½¹™¥Éµ•„É••¥ÁÐ¡…Ì‰••¸Í•¹ÐÑ¼€‘í•µ…¥±ô¹€¤ì(€€€€€€€€€€€€€€€€€€€ô(€€€€€€€€€€€€€€€ô•±Í”ì(€€€€€€€€€€€€€€€€€€€…±•ÉÐ M•ÉÙ•È•ÉÉ½È¸A±•…Í”ÑÉä……¥¸¸œ¤ì(€€€€€€€€€€€€€€€ô(€€€€€€€€€€€ô…Ñ €¡•ÉÈ¤ì(€€€€€€€€€€€€€€€…±•ÉÐ 9•ÑÝ½É¬•ÉÉ½Èè€œ€¬•ÉÈ¹µ•ÍÍ…”¤ì(€€€€€€€€€€€ô™¥¹…±±äì(€€€€€€€€€€€€€€€Á…å	Ñ¸¹‘¥Í…‰±•€ô™…±Í”ìÁ…å	Ñ¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€	½½¬9½Üœì(€€€€€€€€€€€ô(€€€€€€€ôì(€€€ô((€€€€¼¨€´´´%MAQ 9=Q%%Q%=8€´´´€¨¼(€€€…Íå¹Œ™Õ¹Ñ¥½¸Í•¹‘¥ÍÁ…Ñ¡9½Ñ¥™¥…Ñ¥½¸¡‰½½­¥¹•Ñ…¥±Ì¤ì(€€€€€€€ÑÉäì(€€€€€€€€€€€½¹ÍÐÉ•ÍÁ½¹Í”€ô…Ý…¥Ð™•Ñ  œ¼¹¹•Ñ±¥™ä½™Õ¹Ñ¥½¹Ì½‘¥ÍÁ…Ñ œ°ì(€€€€€€€€€€€€€€€µ•Ñ¡½è€A=MPœ°(€€€€€€€€€€€€€€€¡•…‘•ÉÌèì€½¹Ñ•¹ÐµQåÁ”œè€…ÁÁ±¥…Ñ¥½¸½©Í½¸œô°(€€€€€€€€€€€€€€€‰½‘äè)M=8¹ÍÑÉ¥¹¥™ä¡ì(€€€€€€€€€€€€€€€€€€€ÑåÁ”è€¹½Ñ¥™¥…Ñ¥½¸œ°(€€€€€€€€€€€€€€€€€€€‰½½­¥¹œè‰½½­¥¹•Ñ…¥±Ì(€€€€€€€€€€€€€€€ô¤(€€€€€€€€€€€ô¤ì(€€€€€€€€€€€½¹ÍÐÉ•ÍÕ±Ð€ô…Ý…¥ÐÉ•ÍÁ½¹Í”¹©Í½¸ ¤ì(€€€€€€€€€€€½¹Í½±”¹±½œ mM41¥µ½t¥ÍÁ…Ñ ¹½Ñ¥™¥…Ñ¥½¸Í•¹Ðèœ°É•ÍÕ±Ð¤ì(€€€€€€€€€€€É•ÑÕÉ¸É•ÍÕ±Ðì(€€€€€€€ô…Ñ €¡•ÉÈ¤ì(€€€€€€€€€€€½¹Í½±”¹•ÉÉ½È mM41¥µ½t¥ÍÁ…Ñ ¹½Ñ¥™¥…Ñ¥½¸™…¥±•èœ°•ÉÈ¤ì(€€€€€€€ô(€€€ô((€€€€¼¨€´´´Y!%1M1Q=HMQe1L€´´´€¨¼(€€€½¹ÍÐÙÍMÑå±”€ô‘½Õµ•¹Ð¹É•…Ñ•±•µ•¹Ð ÍÑå±”œ¤ì(€€€ÙÍMÑå±”¹Ñ•áÑ½¹Ñ•¹Ð€ô€(€€€€€€€€¹ÙÌµÁ…¹•°ì‰…­É½Õ¹è€ŒÄÄÄì‰½É‘•ÈµÉ…‘¥ÕÌè€ÈÁÁàìÝ¥‘Ñ è€äÀ”ìµ…àµÝ¥‘Ñ è€ÔÀÁÁàìµ…àµ¡•¥¡Ðè€àÕÙ ì½Ù•É™±½Üµäè…ÕÑ¼ì‘¥ÍÁ±…äè™±•àì™±•àµ‘¥É•Ñ¥½¸è½±Õµ¸ìô(€€€€€€€€¹ÙÌµ¡•…‘•ÈìÁ…‘‘¥¹œè€ÈÁÁàì‰½É‘•Èµ‰½ÑÑ½´è€ÅÁàÍ½±¥€ŒÈÈÈìô(€€€€€€€€¹ÙÌµ¡•…‘•È Èì™½¹ÐµÍ¥é”è€Ä¸ÉÉ•´ìô(€€€€€€€€ÙÌµ‘¥ÍÑ…¹”µÍÕµµ…Éäì™½¹ÐµÍ¥é”è€À¸áÉ•´ì½±½Èè€Œàààìµ…É¥¸µÑ½Àè€ÑÁàìô(€€€€€€€€¹ÙÌµ±¥ÍÐì™±•àè€Äì½Ù•É™±½Üµäè…ÕÑ¼ìÁ…‘‘¥¹œè€ÄÁÁàìô(€€€€€€€€¹ÙÌµ…Éì‘¥ÍÁ±…äè™±•àì©ÕÍÑ¥™äµ½¹Ñ•¹ÐèÍÁ…”µ‰•ÑÝ••¸ì‰…­É½Õ¹è€ŒÅ„Å„Å„ì‰½É‘•ÈµÉ…‘¥ÕÌè€ÄÉÁàìµ…É¥¸µ‰½ÑÑ½´è€ÄÁÁàìÁ…‘‘¥¹œè€ÄÕÁàìÕÉÍ½ÈèÁ½¥¹Ñ•Èì‰½É‘•Èè€ÉÁàÍ½±¥ÑÉ…¹ÍÁ…É•¹ÐìÑÉ…¹Í¥Ñ¥½¸è‰½É‘•È€À¸ÉÌìô(€€€€€€€€¹ÙÌµ…É´µÍ•±•Ñ•ì‰½É‘•Èµ½±½Èè€™™˜ìô(€€€€€€€€¹ÙÌµ…É‘}}…Ñ•½Éäì™½¹ÐµÍ¥é”è€À¸ÝÉ•´ì½±½Èè€ŒàààìÑ•áÐµÑÉ…¹Í™½É´èÕÁÁ•É…Í”ìô(€€€€€€€€¹ÙÌµ…É‘}}¹…µ”ì™½¹ÐµÝ•¥¡Ðè€ÜÀÀì™½¹ÐµÍ¥é”è€ÅÉ•´ìµ…É¥¸è€ÑÁà€Àìô(€€€€€€€€¹ÙÌµ…É‘}}ÁÉ¥”ì™½¹ÐµÍ¥é”è€Ä¸ÉÉ•´ì™½¹ÐµÝ•¥¡Ðè€àÀÀì½±½Èè€™™˜ìô(€€€€€€€€¹ÙÌµ…É‘}}…Á…¥Ñäì™½¹ÐµÍ¥é”è€À¸ÜÕÉ•´ì½±½Èè€Œàààìµ…É¥¸µÑ½Àè€ÑÁàìô(€€€€€€€€¹ÙÌµ…É‘}}É¥¡Ð¥µœìÝ¥‘Ñ è€ÄÀÁÁàì¡•¥¡Ðè€ÜÁÁàì½‰©•Ðµ™¥Ðè½Ù•Èì‰½É‘•ÈµÉ…‘¥ÕÌè€áÁàìô(€€€€€€€€¹ÙÌµ™½½Ñ•Èì‘¥ÍÁ±…äè™±•àì…Àè€ÄÁÁàìÁ…‘‘¥¹œè€ÄÕÁàì‰½É‘•ÈµÑ½Àè€ÅÁàÍ½±¥€ŒÈÈÈìô(€€€€€€€€¹‰Ñ¸´µ½ÕÑ±¥¹”ì™±•àè€ÄìÁ…‘‘¥¹œè€ÄÉÁàì‰…­É½Õ¹èÑÉ…¹ÍÁ…É•¹Ðì‰½É‘•Èè€ÅÁàÍ½±¥€ŒÌÌÌì‰½É‘•ÈµÉ…‘¥ÕÌè€áÁàì½±½Èè€™™˜ìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹‰Ñ¸´µÁÉ¥µ…Éäì™±•àè€ÈìÁ…‘‘¥¹œè€ÄÉÁàì‰…­É½Õ¹è€™™˜ì‰½É‘•Èè¹½¹”ì‰½É‘•ÈµÉ…‘¥ÕÌè€áÁàì½±½Èè€ŒÀÀÀì™½¹ÐµÝ•¥¡Ðè€ÜÀÀìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹‰Ñ¸´µÁÉ¥µ…Éäé‘¥Í…‰±•ì½Á…¥Ñäè€À¸ÐìÕÉÍ½Èè¹½Ðµ…±±½Ý•ìô(€€€€€€€€¹Á…åµ•¹Ðµµ½‘…°ì‰…­É½Õ¹è€ŒÄÄÄì‰½É‘•ÈµÉ…‘¥ÕÌè€ÈÁÁàìÝ¥‘Ñ è€äÀ”ìµ…àµÝ¥‘Ñ è€ÐØÁÁàìÁ…‘‘¥¹œè€ÌÁÁàìÁ½Í¥Ñ¥½¸èÉ•±…Ñ¥Ù”ìô(€€€€€€€€¹Á…åµ•¹Ðµµ½‘…±}}±½Í”ìÁ½Í¥Ñ¥½¸è…‰Í½±ÕÑ”ìÑ½Àè€ÄÕÁàìÉ¥¡Ðè€ÄÕÁàì‰…­É½Õ¹è¹½¹”ì‰½É‘•Èè¹½¹”ì½±½Èè€™™˜ì™½¹ÐµÍ¥é”è€Ä¸ÕÉ•´ìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹Á…åµ•¹Ðµµ½‘…±}}ÍÕµµ…ÉäìÑ•áÐµ…±¥¸è•¹Ñ•Èìµ…É¥¸µ‰½ÑÑ½´è€ÈÁÁàìô(€€€€€€€€¹Á…åµ•¹Ðµµ½‘…±}}ÍÕµµ…Éä Ìì™½¹ÐµÍ¥é”è€Ä¸ÅÉ•´ì½±½Èè€Œàààìô(€€€€€€€€¹±•…ÈµÁÉ¥”ì™½¹ÐµÍ¥é”è€Ä¸áÉ•´ì™½¹ÐµÝ•¥¡Ðè€àÀÀì½±½Èè€™™˜ìô(€€€€€€€€¹Á´µ™¥•±ìµ…É¥¸µ‰½ÑÑ½´è€ÄÕÁàìô(€€€€€€€€¹Á´µ‰½½¬µ‰Ñ¸ìÝ¥‘Ñ è€ÄÀÀ”ìÁ…‘‘¥¹œè€ÄÙÁàì‰…­É½Õ¹è€™™˜ì½±½Èè€ŒÀÀÀì‰½É‘•Èè¹½¹”ì‰½É‘•ÈµÉ…‘¥ÕÌè€áÁàì™½¹ÐµÝ•¥¡Ðè€àÀÀì™½¹ÐµÍ¥é”è€ÅÉ•´ìµ…É¥¸µÑ½Àè€ÄÁÁàìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹…‘‘½¸µµ½‘…°ì‰…­É½Õ¹è€ŒÄÄÄì‰½É‘•ÈµÉ…‘¥ÕÌè€ÈÁÁà€ÈÁÁà€À€ÀìÝ¥‘Ñ è€ÄÀÀ”ìµ…àµÝ¥‘Ñ è€ÔÀÁÁàìÁ…‘‘¥¹œè€ÈÁÁàìô(€€€€€€€€¹…‘‘½¸µÍ¡••Ðµ¡…¹‘±”ìÝ¥‘Ñ è€ÐÁÁàì¡•¥¡Ðè€ÑÁàì‰…­É½Õ¹è€ŒÌÌÌì‰½É‘•ÈµÉ…‘¥ÕÌè€ÉÁàìµ…É¥¸è€À…ÕÑ¼€ÄÕÁàìô(€€€€€€€€¹…‘‘½¸µ¡•…‘•Èì‘¥ÍÁ±…äè™±•àì©ÕÍÑ¥™äµ½¹Ñ•¹ÐèÍÁ…”µ‰•ÑÝ••¸ì…±¥¸µ¥Ñ•µÌè•¹Ñ•Èìµ…É¥¸µ‰½ÑÑ½´è€ÈÁÁàìô(€€€€€€€€¹…‘‘½¸µ¡•…‘•È Ìì™½¹ÐµÍ¥é”è€Ä¸ÅÉ•´ìô(€€€€€€€€¹…‘‘½¸µ¡•…‘•È‰ÕÑÑ½¸ì‰…­É½Õ¹è¹½¹”ì‰½É‘•Èè¹½¹”ì½±½Èè€™™˜ì™½¹ÐµÍ¥é”è€Ä¸ÕÉ•´ìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹…‘‘½¸µÉ½Üì‘¥ÍÁ±…äè™±•àì©ÕÍÑ¥™äµ½¹Ñ•¹ÐèÍÁ…”µ‰•ÑÝ••¸ì…±¥¸µ¥Ñ•µÌè•¹Ñ•ÈìÁ…‘‘¥¹œè€ÄÕÁà€Àì‰½É‘•Èµ‰½ÑÑ½´è€ÅÁàÍ½±¥€ŒÈÈÈìô(€€€€€€€€¹…‘‘½¸µ½Õ¹Ñ•Èì‘¥ÍÁ±…äè™±•àì…Àè€ÄÕÁàì…±¥¸µ¥Ñ•µÌè•¹Ñ•Èìô(€€€€€€€€¹…‘‘½¸µ½Õ¹Ñ•È‰ÕÑÑ½¸ìÝ¥‘Ñ è€ÌÙÁàì¡•¥¡Ðè€ÌÙÁàì‰½É‘•ÈµÉ…‘¥ÕÌè€ÔÀ”ì‰…­É½Õ¹è€ŒÈÈÈì‰½É‘•Èè¹½¹”ì½±½Èè€™™˜ì™½¹ÐµÍ¥é”è€Ä¸ÉÉ•´ìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹…‘‘½¸µ½Õ¹Ñ•ÈÍÁ…¸ì™½¹ÐµÍ¥é”è€Ä¸ÅÉ•´ì™½¹ÐµÝ•¥¡Ðè€ØÀÀìô(€€€€€€€€¹…‘‘½¸µ½¹™¥É´µ‰Ñ¸ìÝ¥‘Ñ è€ÄÀÀ”ìÁ…‘‘¥¹œè€ÄÕÁàì‰…­É½Õ¹è€™™˜ì½±½Èè€ŒÀÀÀì‰½É‘•Èè¹½¹”ì‰½É‘•ÈµÉ…‘¥ÕÌè€áÁàì™½¹ÐµÝ•¥¡Ðè€ÜÀÀìµ…É¥¸µÑ½Àè€ÈÁÁàìÕÉÍ½ÈèÁ½¥¹Ñ•Èìô(€€€€€€€€¹ÁÉ¥”µÁÉ•Ù¥•Üì‰…­É½Õ¹è€ŒÅ„Å„Å„ì‰½É‘•ÈµÉ…‘¥ÕÌè€áÁàìÁ…‘‘¥¹œè€ÄÁÁàìÑ•áÐµ…±¥¸è•¹Ñ•Èìô(€€€€€€€€¹±•œµ±…‰•°ì™½¹ÐµÍ¥é”è€À¸ÜÕÉ•´ì½±½Èè€Œàààì™½¹ÐµÝ•¥¡Ðè€ÜÀÀìÑ•áÐµÑÉ…¹Í™½É´èÕÁÁ•É…Í”ìµ…É¥¸µ‰½ÑÑ½´è€ÕÁàìô(€€€€€€€€¹Á•½Á±”µ…‘‘½¸µÑÉ¥•ÈìÕÉÍ½ÈèÁ½¥¹Ñ•Èì‘¥ÍÁ±…äè™±•àì…±¥¸µ¥Ñ•µÌè•¹Ñ•Èìô(€€€€€€€€¹¡•…‘•É}}‰ÕÉ•Èì‰…­É½Õ¹è¹½¹”ì‰½É‘•Èè¹½¹”ìÕÉÍ½ÈèÁ½¥¹Ñ•Èì‘¥ÍÁ±…äè™±•àì™±•àµ‘¥É•Ñ¥½¸è½±Õµ¸ì…Àè€ÕÁàìÁ…‘‘¥¹œè€ÕÁàìô(€€€€€€€€¹¡•…‘•É}}‰ÕÉ•ÈÍÁ…¸ì‘¥ÍÁ±…äè‰±½¬ìÝ¥‘Ñ è€ÈÉÁàì¡•¥¡Ðè€ÉÁàì‰…­É½Õ¹è€™™˜ì‰½É‘•ÈµÉ…‘¥ÕÌè€ÅÁàìÑÉ…¹Í¥Ñ¥½¸è…±°€À¸ÍÌìô(€€€€ì(€€€‘½Õµ•¹Ð¹¡•…¹…ÁÁ•¹‘¡¥±¡ÙÍMÑå±”¤ì()ô¤ì
+            card.innerHTML = `<div class="vs-card__info"><div class="vs-card__category">${v.category}</div><div class="vs-card__name">${v.name}</div><div class="vs-card__price">$${total.toFixed(2)} USD</div><div class="vs-card__capacity">ðŸ‘¤ ${passengerCount}  ðŸ’¼ ${luggageCount}</div></div><div class="vs-card__right"><img src="${v.image}"></div>`;
+            card.onclick = () => {
+                document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
+                card.classList.add('vs-card--selected');
+                vsContinueBtn.disabled = false;
+                vsContinueBtn.onclick = () => { 
+                    vsOverlay.classList.remove('active'); 
+                    bookingData.vehicle = v.name;
+                    bookingData.total = total.toFixed(2);
+                    openPayment(v.name, total);
+                };
+            };
+            vsList.appendChild(card);
+        });
+
+        vsOverlay.classList.add('active');
+        document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
+    }
+
+    /* --- PAYMENT --- */
+    function openPayment(vehicleName, total) {
+        currentTotal = total;
+        document.getElementById('pay-vehicle').textContent = vehicleName;
+        document.getElementById('pay-total').textContent = `$${total.toFixed(2)} USD`;
+
+        const STRIPE_KEY = 'pk_live_51RBmFdAKEb3tUfD6AJYgxHYzuAinKIZ5NHsxS3LNQM7tZDLqkFAPf3fZiV5jjY5sUXE5KHrLLAqfRPxPm5uR3US00bU95Vl5M';
+        if (!stripe) {
+            stripe = Stripe(STRIPE_KEY);
+            elements = stripe.elements();
+            const style = { base: { color: '#fff', fontSize: '16px', '::placeholder': { color: '#888' } } };
+            cardNumber = elements.create('cardNumber', { style });
+            cardExpiry = elements.create('cardExpiry', { style });
+            cardCvc    = elements.create('cardCvc',    { style });
+            cardNumber.mount('#card-number-element');
+            cardExpiry.mount('#card-expiry-element');
+            cardCvc.mount('#card-cvc-element');
+        } else {
+            cardNumber.clear(); cardExpiry.clear(); cardCvc.clear();
+        }
+
+        document.getElementById('paymentOverlay').classList.add('active');
+        document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
+
+        document.getElementById('payBtn').onclick = async () => {
+            const name  = document.getElementById('pay-name').value.trim();
+            const email = document.getElementById('pay-email').value.trim();
+            if (!name || !email) { alert('Please fill in your name and email.'); return; }
+
+            const payBtn = document.getElementById('payBtn');
+            payBtn.disabled = true; payBtn.textContent = 'Processing...';
+
+            try {
+                const res = await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, vehicle: bookingData.vehicle, total: currentTotal, booking: bookingData })
+                });
+                const data = await res.json();
+
+                if (data.clientSecret) {
+                    const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: { card: cardNumber, billing_details: { name, email } }
+                    });
+                    if (error) { alert('Payment failed: ' + error.message); }
+                    else if (paymentIntent.status === 'succeeded') {
+                        document.getElementById('paymentOverlay').classList.remove('active');
+                        alert(`Booking confirmed! A receipt has been sent to ${email}.`);
+                    }
+                } else {
+                    alert('Server error. Please try again.');
+                }
+            } catch (err) {
+                alert('Network error: ' + err.message);
+            } finally {
+                payBtn.disabled = false; payBtn.textContent = 'Book Now';
+            }
+        };
+    }
+});
