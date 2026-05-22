@@ -1,6 +1,11 @@
-ewogICJuYW1lIjogInNtLWxpbW91c2luZS1vZmZpY2lhbCIsCiAgInZlcnNp
-b24iOiAiMTAuMC4wIiwKICAiZGVzY3JpcHRpb24iOiAiU00gTElNT1VTSU5F
-IC0gRWxpdGUgRGlzcGF0Y2ggRW5naW5lIHYxMCIsCiAgIm1haW4iOiAiaW5k
-ZXguaHRtbCIsCiAgImRlcGVuZGVuY2llcyI6IHsKICAgICJ0d2lsaW8iOiAi
-XjUuMC4wIiwKICAgICJzdHJpcGUiOiAiXjE0LjAuMCIsCiAgICAibm9kZW1h
-aWxlciI6ICJeNi45LjAiCiAgfQp9Cg==
+{
+  "name": "sm-limousine-official",
+  "version": "5.4.0",
+  "description": "SM LIMOUSINE - Dispatch Engine v5.4",
+  "main": "index.html",
+  "dependencies": {
+    "twilio": "^5.0.0",
+    "stripe": "^14.0.0",
+    "nodemailer": "^6.9.0"
+  }
+}
