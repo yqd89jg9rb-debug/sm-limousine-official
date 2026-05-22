@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SM LIMOUSINE – Elite Master Stylesheet (v5.5 - Fix Image Sizing)
+   SM LIMOUSINE – Elite Master Stylesheet (v5.6 - Fix Image Sizing & Layout)
    ========================================================================== */
 
 *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,6 +30,8 @@ html, body {
 }
 .header__logo-centered img { height: 38px; width: auto; }
 .header__actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.header__burger { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; }
+.header__burger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 1px; transition: all 0.3s; }
 .header__phone { font-size: 0.85rem; font-weight: 800; color: #fff; text-decoration: none; white-space: nowrap; }
 
 /* HERO */
@@ -52,8 +54,10 @@ html, body {
 .booking-widget__tab.active { background: #fff; color: #000; }
 .booking-widget__form { display: none; flex-direction: column; gap: 10px; }
 .booking-widget__form.active { display: flex; }
+.booking-widget__field { margin-bottom: 5px; }
 .booking-widget__row { display: flex; gap: 10px; }
-.field-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; text-align: left; }
+.field-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; text-align: left; display: block; }
+.leg-label { font-size: 0.75rem; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; margin-top: 10px; text-align: left; }
 .st-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.95rem; }
 .booking-widget__submit { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
 
@@ -69,7 +73,7 @@ html, body {
 .section-title { font-size: 1.6rem; color: var(--silver); margin-top: 60px; margin-bottom: 10px; text-align: center; }
 .section-subtitle { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 30px; }
 .fleet-grid { display: grid; grid-template-columns: 1fr; gap: 25px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
-.fleet-card { background: #111; border-radius: 16px; overflow: hidden; border: 1px solid #222; text-align: left; }
+.fleet-card { background: #111; border-radius: 16px; overflow: hidden; border: 1px solid #222; text-align: left; cursor: pointer; }
 .fleet-card img { width: 100%; height: 200px; object-fit: contain; background: #0a0a0a; }
 .fleet-card__content { padding: 20px; }
 .fleet-card__content h3 { font-size: 1.1rem; font-weight: 700; }
@@ -81,9 +85,6 @@ html, body {
 .partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: center; justify-items: center; gap: 50px 40px; max-width: 1200px; margin: 0 auto; }
 .partner-logo-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 100px; }
 .partner-logo { max-height: 100%; max-width: 150px; width: auto; object-fit: contain; }
-
-.logo-groundlink { max-width: 200px !important; }
-.logo-bookinglane { max-width: 180px !important; }
 
 /* FOOTER */
 .elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
