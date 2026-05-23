@@ -1,38 +1,452 @@
 /* ===================================================================
-   SM LIMOUSINE â€” Main Script (Precision Version 4.24)
-   Notification Restoration & Deep Debugging
+   SM LIMOUSINE â€” Main Script (v5.0 â€” Bulletproof Booking Architecture)
+   Critical Fix: Form submission resilience, Google Maps failure handling,
+   mobile compatibility, +20% rate markup applied.
    =================================================================== */
-document.addEventListener('DOMContentLoaded', () => {
+
+(function() {
+    'use strict';
+
+    /* --- VEHICLE RATES (Base rates + 20% markup applied at calculation) --- */
     const VEHICLE_RATES = {
         xt6:        { name: 'Cadillac XT6',          base: 78,  perMile: 4.80, category: 'Premium sedan',    passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        suburban:   { name: 'ChevroletÝX\˜˜[‰Ë˜\ÙNˆL‹\“Z[Nˆ‹ŒØ]YÛÜžNˆ	Ô™[Z][HÕU‰Ë\ÜÙ[™Ù\œÎˆ	ÍM‰ËÝZ]Ø\Ù\Îˆ	ÌËMIË[XYÙNˆ	ÚÎ‹ËÜÝ]XËœ›ÙZ[XYÙ\Ë™[Y\™Ù[YÙ[˜ÛÛKÚ›ØœËÙŒMØ™™YKXØÌŽKMÍ‹NMÙ‹MY˜NMMLXKÚ[XYÙ\ËÙŒÌX™˜MYŒLM˜LÍØXÌÍLXÌŒÙ™L˜ŒXLLNÍŒXLXNŽM™™ŽLMÙ‹šœYÈ‰ÈKˆ[˜[Nˆ²æÖS¢ttÔ2FVæÆ’rÂ&6S¢BÂW$Ö–ÆS¢bãcÂ6FVv÷'“¢u&VÖ—VÒ5UbrÂ76VævW'3¢sBÓrrÂ7V—F66W3¢s2ÓRrÂ–ÖvS¢v‡GG3¢ò÷7FF–2ç&öBÖ–ÖvW2æVÖW&vVçFvVçBæ6öÒö¦ö'2öcv#ffVRÖ63#’ÓCF3bÓ“F6bÓCVf“cSCSö–ÖvW2ó&#†3cfVVSs3FFV3VSs3C6Cc†cC†c6#c#V3#ƒs“c3ƒC–fcræ§VrrÒÀ¢W66ÆFS¢²æÖS¢s##b6F–ÆÆ2W66ÆFRrÂ&6S¢SÂW$Ö–ÆS¢rãƒÂ6FVv÷'“¢tf—'7B6Æ72rÂ76VævW'3¢sBÓrrÂ7V—F66W3¢s2ÓRrÂ–ÖvS¢v‡GG3¢ò÷7FF–2ç&öBÖ–ÖvW2æVÖW&vVçFvVçBæ6öÒö¦ö'2öcv#ffVRÖ63#’ÓCF3bÓ“F6bÓCVf“cSCSö–ÖvW2öVcS6c†F&c–3“3CvcScFC“†#VVFSV&F&FCCCs–Vf6V##s–fS#Sscs#æ§VrrÒÀ¢Ö–&6ƒ¢²æÖS¢tÖW&6VFW2ÔÖ–&6‚rÂ&6S¢ƒÂW$Ö–ÆS¢’ãÂ6FVv÷'“¢uVÇG&ÇW‡W'’rÂ76VævW'3¢s"ÓBrÂ7V—F66W3¢s"Ó2rÂ–ÖvS¢v‡GG3¢ò÷7FF–2ç&öBÖ–ÖvW2æVÖW&vVçFvVçBæ6öÒö¦ö'2öcv#ffVRÖ63#’ÓCF3bÓ“F6bÓCVf“cSCSö–ÖvW2öFcC3c†Cs6CCCS“3#3#vS““3&3ƒ###CCss#scCCCc#fC“ƒVV6CvBçærrÒÀ¢7&–çFW#¢²æÖS¢tÖW&6VFW27&–çFW"rÂ&6S¢#sÂW$Ö–ÆS¢"ãÂ6FVv÷'“¢u7&–çFW"fârÂ76VævW'3¢sbÓBrÂ7V—F66W3¢sbÓrÂ–ÖvS¢v‡GG3¢ò÷7FF–2ç&öBÖ–ÖvW2æVÖW&vVçFvVçBæ6öÒö¦ö'2öcv#ffVRÖ63#’ÓCF3bÓ“F6bÓCVf“cSCSö–ÖvW2ósVc“3S–S#&V&c#6Sf&ƒƒ#“6&V633sSFVV#cVfc““&cV6ccSfBæ§VrrÒÀ¢Ö÷F÷&6ö6ƒ¢²æÖS¢tÖ÷F÷"6ö6‚rÂ&6S¢cÂW$Ö–ÆS¢3ãÂ6FVv÷'“¢tÖ÷F÷"6ö6‚rÂ76VævW'3¢s#ÓSbrÂ7V—F66W3¢s#ÓSbrÂ–ÖvS¢v‡GG3¢ò÷7FF–2ç&öBÖ–ÖvW2æVÖW&vVçFvVçBæ6öÒö¦ö'2öcv#ffVRÖ63#’ÓCF3bÓ“F6bÓCVf“cSCSö–ÖvW2ó#C#“#fCccVSVVf6CV3S&3sF&C†csv#ƒ3C“SFFfF#s3FV3ffcƒVsC‚æ§VrrÐ¢Ó° ¢6öç7BÔ”åô„õU%2Ò3° ¢ò¢ÒÒÒ5DDRÒÒÒ¢ð¢ÆWBÆVsÖ–ÆW2ÒÂÆVs$Ö–ÆW2ÒÂ7W'&VçEF÷FÂÒ°¢ÆWB7G&—RÒçVÆÂÂVÆVÖVçG2ÒçVÆÂÂ6&DçVÖ&W"ÒçVÆÂÂ6&DW‡—'’ÒçVÆÂÂ6&D7f2ÒçVÆÃ°¢ÆWB76VævW$6÷VçBÒÂÇVvvvT6÷VçBÒ°¢ÆWB&öö¶–ætFFÒ·Ó° ¢ò¢ÒÒÒÔô$”ÄRÔTåR4ôåE$ôÂÒÒÒ¢ð¢6öç7B'W&vW$'FâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚v'W&vW$'Fâr“°¢6öç7BÖ–äæbÒFö7VÖVçBævWDVÆVÖVçD'”–B‚vÖ–äæbr“°¢–b†'W&vW$'Fâ’°¢'W&vW$'Fâæöæ6Æ–6²Ò‚’Óâ°¢Ö–äæbæ6Æ74Æ—7BçFövvÆR‚v÷Vâr“°¢'W&vW$'Fâæ6Æ74Æ—7BçFövvÆR‚v÷Vâr“°¢Ó°¢Ð ¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚ræ†VFW%õöÆ–æ²r’æf÷$V6‚†Æ–æ²Óâ°¢Æ–æ²æöæ6Æ–6²Ò‚’Óâ°¢Ö–äæbæ6Æ74Æ—7Bç&VÖ÷fR‚v÷Vâr“°¢'W&vW$'Fâæ6Æ74Æ—7Bç&VÖ÷fR‚v÷Vâr“°¢Ó°¢Ò“° ¢ò¢ÒÒÒD"4ôåE$ôÂÒÒÒ¢ð¢6öç7BF'2ÒFö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚ræ&öö¶–ær×v–FvWEõ÷F"r“°¢F'2æf÷$V6‚‡BÓâBæöæ6Æ–6²Ò‚’Óâ°¢F'2æf÷$V6‚‡‚Óâ‚æ6Æ74Æ—7Bç&VÖ÷fR‚v7F—fRr’“°¢Bæ6Æ74Æ—7BæFB‚v7F—fRr“°¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚ræ&öö¶–ær×v–FvWEõöf÷&Òr’æf÷$V6‚†bÓâbæ6Æ74Æ—7Bç&VÖ÷fR‚v7F—fRr’“°¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚vf÷&ÒÒr²BæFF6WBçF"’æ6Æ74Æ—7BæFB‚v7F—fRr“°¢–æ—DWFö6ö×ÆWFR‚“°¢Ò“° ¢v–æF÷rç6WD&öö¶–æuF"Ò†æÖR’Óâ°¢6öç7BF"ÒFö7VÖVçBçVW'•6VÆV7F÷"†¶FF×F#ÕÂ"G¶æÖWÕÂ%Ö“°¢–b‡F"’F"æ6Æ–6²‚“°¢v–æF÷rç67&öÆÅFò‡·F÷¢Â&V†f–÷#¢w6Öö÷F‚wÒ“°¢Ó° ¢ò¢ÒÒÒÔôDÂÄôt”2ÒÒÒ¢ð¢v–æF÷ræ÷VäFFöäÖöFÂÒ‚’ÓâFö7VÖVçBævWDVÆVÖVçD'”–B‚vFFöä÷fW&Æ’r’æ6Æ74Æ—7BæFB‚v7F—fRr“°¢v–æF÷ræ6Æ÷6TFFöäÖöFÂÒ‚’ÓâFö7VÖVçBævWDVÆVÖVçD'”–B‚vFFöä÷fW&Æ’r’æ6Æ74Æ—7Bç&VÖ÷fR‚v7F—fRr“°¢v–æF÷rçWFFT6÷VçFW"Ò‡G—RÂ6†ævR’Óâ°¢–b‡G—RÓÓÒw76VævW'2r’²76VævW$6÷VçBÒÖF‚æÖ‚ƒÂ76VævW$6÷VçB²6†ævR“²Fö7VÖVçBævWDVÆVÖVçD'”–B‚v6÷VçB×76VævW'2r’çFW‡D6öçFVçBÒ76VævW$6÷VçC²Ð¢VÇ6R²ÇVvvvT6÷VçBÒÖF‚æÖ‚ƒÂÇVvvvT6÷VçB²6†ævR“²Fö7VÖVçBævWDVÆVÖVçD'”–B‚v6÷VçBÖÇVvvvRr’çFW‡D6öçFVçBÒÇVvvvT6÷VçC²Ð¢7–æ4FFöç2‚“°¢Ó°¢v–æF÷rç7–æ4FFöç2Ò‚’Óâ°¢6öç7B7VÖÖ'’ÒG·76VævW$6÷VçGÒV÷ÆRÂG¶ÇVvvvT6÷VçGÒÇVvvvV°¢²vöæWv’rÂw&÷VæGG&—rÂv†÷W&Ç’uÒæf÷$V6‚†ÒÓâ²6öç7BVÂÒFö7VÖVçBævWDVÆVÖVçD'”–B†V÷ÆR×7VÖÖ'’ÒG¶×Ö“²–b†VÂ’VÂçFW‡D6öçFVçBÒ7VÖÖ'“²Ò“°¢Ó° ¢ò¢ÒÒÒtôôtÄRUDô4ôÕÄUDRÒÒÒ¢ð¢gVæ7F–öâ–æ—DWFö6ö×ÆWFR‚’°¢–b‡G—VöbvöövÆRÓÓÒwVæFVf–æVBr’&WGW&ã°¢6öç7B÷F–öç2Ò²G—W3¢²vvVö6öFRrÂvW7F&Æ—6†ÖVçBuÒÂ6ö×öæVçE&W7G&–7F–öç3¢²6÷VçG'“¢Â'W5Â"ÒÓ°¢6öç7B–G2Ò²w–6·WÖöæWv’rÂvG&÷öfbÖöæWv’rÂw–6·W×&÷VæGG&—rÂvG&÷öfb×&÷VæGG&—rÂw&WGW&â×–6·W×&÷VæGG&—rÂw&WGW&âÖG&÷öfb×&÷VæGG&—rÂw–6·WÖ†÷W&Ç’uÓ°¢–G2æf÷$V6‚†–BÓâ°¢6öç7B–çWBÒFö7VÖVçBævWDVÆVÖVçD'”–B†–B“°¢–b†–çWBbb–çWBæFF6WBæ4&÷VæB’°¢6öç7B2ÒæWrvöövÆRæÖ2çÆ6W2äWFö6ö×ÆWFR†–çWBÂ÷F–öç2“°¢–çWBæFF6WBæ4&÷VæBÒÂ'G'VUÂ#°¢2æFDÆ—7FVæW"‚wÆ6Uö6†ævVBrÂ‚’Óâ°¢6öç7BÖöFRÒ–Bæ–æ6ÇVFW2‚vöæWv’r’òvöæWv’r¢†–Bæ–æ6ÇVFW2‚w&÷VæGG&—r’òw&÷VæGG&—r¢çVÆÂ“°¢–b†ÖöFR’&Vg&W6„F—7Fæ6W2†ÖöFR“°¢Ò“°¢Ð¢Ò“°¢Ð¢–b‡G—VöbvöövÆRÓÒwVæFVf–æVBr’–æ—DWFö6ö×ÆWFR‚“° ¢7–æ2gVæ7F–öâ&Vg&W6„F—7Fæ6W2†ÖöFR’°¢6öç7B–çWBÒFö7VÖVçBævWDVÆVÖVçD'”–B†–6·WÒG¶ÖöFWÖ“°¢6öç7BD–çWBÒFö7VÖVçBævWDVÆVÖVçD'”–B†G&÷öfbÒG¶ÖöFWÖ“°¢–b‚–çWBÇÂD–çWB’&WGW&ã°¢6öç7B÷&–v–ãÒ–çWBçfÇVS°¢6öç7BFW7CÒD–çWBçfÇVS°¢–b‚÷&–v–ãÇÂFW7C’&WGW&ã°¢6öç7B6W'f–6RÒæWrvöövÆRæÖ2äF—7Fæ6TÖG&—…6W'f–6R‚“°¢ÆVsÖ–ÆW2Òv—BvWDÆVtÖ–ÆW2‡6W'f–6RÂ÷&–v–ãÂFW7C“°¢–b†ÖöFRÓÓÒw&÷VæGG&—r’°¢6öç7B÷&–v–ã"ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚w&WGW&â×–6·W×&÷VæGG&—r’çfÇVS°¢6öç7BFW7C"ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚w&WGW&âÖG&÷öfb×&÷VæGG&—r’çfÇVS°¢ÆVs$Ö–ÆW2Ò†÷&–v–ã"bbFW7C"’òv—BvWDÆVtÖ–ÆW2‡6W'f–6RÂ÷&–v–ã"ÂFW7C"’¢ÆVsÖ–ÆW3°¢Ð¢WFFUT’†ÖöFR“°¢Ð ¢gVæ7F–öâvWDÆVtÖ–ÆW2‡6W'f–6RÂ÷&–v–âÂFW7B’°¢&WGW&âæWr&öÖ—6R‚‡&W6öÇfR’Óâ°¢6W'f–6RævWDF—7Fæ6TÖG&—‚‡²÷&–v–ç3¢¶÷&–v–åÒÂFW7F–æF–öç3¢¶FW7EÒÂG&fVÄÖöFS¢tE$•d”ärrÂVæ—E7—7FVÓ¢vöövÆRæÖ2åVæ—E7—7FVÒä”ÕU$”ÂÒÂ‡&W7öç6RÂ7FGW2’Óâ°¢–b‡7FGW2ÓÓÒtô²rbb&W7öç6Rç&÷w5³ÒæVÆVÖVçG5³Òç7FGW2ÓÓÒtô²r’°¢6öç7BÒÒ&W7öç6Rç&÷w5³ÒæVÆVÖVçG5³ÒæF—7Fæ6RçfÇVS°¢&W6öÇfR„ÖF‚ç&÷VæB‚†Òòc’ã3B’¢’ò“°¢ÒVÇ6R&W6öÇfRƒ“°¢Ò“°¢Ò“°¢Ð ¢gVæ7F–öâWFFUT’†ÖöFR’°¢6öç7B&Wf–Wt&÷‚ÒFö7VÖVçBævWDVÆVÖVçD'”–B†&Wf–WrÒG¶ÖöFWÖ“°¢6öç7BF—7EfÂÒFö7VÖVçBævWDVÆVÖVçD'”–B†F—7B×fÂÒG¶ÖöFWÖ“°¢–b‚&Wf–Wt&÷‚’&WGW&ã°¢&Wf–Wt&÷‚ç7G–ÆRæF—7Æ’Òv&Æö6²s°¢–b†ÖöFRÓÓÒw&÷VæGG&—r’F—7EfÂæ–ææW$…DÔÂÒÆF—b7G–ÆSÒvföçB×6—¦S£ã‡&VÒsä÷WF&÷VæC¢G¶ÆVsÖ–ÆW7ÒÖ’Â&WGW&ã¢G¶ÆVs$Ö–ÆW7ÒÖ“ÂöF—cãÆF—cåF÷FÃ¢G²†ÆVsÖ–ÆW2²ÆVs$Ö–ÆW2’çFôf—†VBƒ—ÒÖ“ÂöF—cæ°¢VÇ6RF—7EfÂçFW‡D6öçFVçBÒÆVsÖ–ÆW2²rÖ’s°¢Ð ¢ò¢ÒÒÒdõ$Ò5T$Ô•54”ôâÒÒÒ¢ð¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚ræ&öö¶–ær×v–FvWEõöf÷&Òr’æf÷$V6‚†f÷&ÒÓâ°¢f÷&ÒæFDWfVçDÆ—7FVæW"‚w7V&Ö—BrÂ7–æ2†R’Óâ°¢Rç&WfVçDFVfVÇB‚“°¢6öç7B7V&Ö—D'FâÒf÷&ÒçVW'•6VÆV7F÷"‚ræ&öö¶–ær×v–FvWEõ÷7V&Ö—Br“°¢7V&Ö—D'FâæF—6&ÆVBÒG'VS²7V&Ö—D'FâçFW‡D6öçFVçBÒt6Æ7VÆF–ærâââs°¢6öç7BG—RÒf÷&Òæ–Bç&WÆ6R‚vf÷&ÒÒrÂrr“°¢ ¢&öö¶–ætFFÒ°¢G—S¢G—RÀ¢–6·W¢Fö7VÖVçBævWDVÆVÖVçD'”–B†–6·WÒG·G—WÖ“òçfÇVRÇÂtâôrÀ¢G&÷öfc¢Fö7VÖVçBævWDVÆVÖVçD'”–B†G&÷öfbÒG·G—WÖ“òçfÇVRÇÂtâôrÀ¢FFS¢f÷&ÒçVW'•6VÆV7F÷"‚v–çWE·G—SÕÂ&FFUÂ%Òr“òçfÇVRÇÂtâôrÀ¢F–ÖS¢f÷&ÒçVW'•6VÆV7F÷"‚v–çWE·G—SÕÂ'F–ÖUÂ%Òr“òçfÇVRÇÂtâôrÀ¢76VævW'3¢76VævW$6÷VçBÀ¢ÇVvvvS¢ÇVvvvT6÷VçBÀ¢†÷W'3¢'6T–çB†f÷&ÒçVW'•6VÆV7F÷"‚u¶FFÖf–VÆCÕÂ&†÷W'5Â%Òr“òçfÇVRÇÂÔ”åô„õU%2¢Ó° ¢v—B&Vg&W6„F—7Fæ6W2‡G—R“°¢÷VåfV†–6ÆU6VÆV7F÷"‡G—RÂ&öö¶–ætFFæ†÷W'2“°¢7V&Ö—D'FâæF—6&ÆVBÒfÇ6S²7V&Ö—D'FâçFW‡D6öçFVçBÒtvWBV÷FRs°¢Ò“°¢Ò“° ¢6öç7Bg4÷fW&Æ’ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚wg4÷fW&Æ’r“°¢6öç7Bg4Æ—7BÒFö7VÖVçBævWDVÆVÖVçD'”–B‚wg4Æ—7Br“°¢6öç7Bg46öçF–çVT'FâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚wg46öçF–çVT'Fâr“° ¢gVæ7F–öâ÷VåfV†–6ÆU6VÆV7F÷"‡G—RÂ†÷W'2’°¢g4Æ—7Bæ–ææW$…DÔÂÒrs²g46öçF–çVT'FâæF—6&ÆVBÒG'VS°¢6öç7BF÷FÄÖ–ÆW2ÒG—RÓÓÒw&÷VæGG&—rò†ÆVsÖ–ÆW2²ÆVs$Ö–ÆW2’¢ÆVsÖ–ÆW3°¢6öç7Bf–æÄÖ–ÆW2ÒF÷FÄÖ–ÆW2ÇÂ#°¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚wg2ÖF—7Fæ6R×7VÖÖ'’r’çFW‡D6öçFVçBÒ‡G—RÓÒv†÷W&Ç’r’òF÷FÂ¦÷W&æW“¢G¶f–æÄÖ–ÆW2çFôf—†VBƒ—ÒÖ–ÆW6¢GW&F–öã¢G¶†÷W'7Ò†÷W'6° ¢ö&¦V7Bæ¶W—2…dT„”4ÄUõ$DU2’æf÷$V6‚†¶W’Óâ°¢6öç7BbÒdT„”4ÄUõ$DU5¶¶W•Ó°¢ÆWBF÷FÂÒG—RÓÓÒv†÷W&Ç’ròbæ&6R¢†÷W'2¢‡G—RÓÓÒw&÷VæGG&—rò‡bæ&6R¢"’²‡bçW$Ö–ÆR¢F÷FÄÖ–ÆW2’¢bæ&6R²‡bçW$Ö–ÆR¢F÷FÄÖ–ÆW2’“°¢6öç7BÖ–ä&6RÒƒ°¢–b‡bææÖRÓÓÒ$Ö÷F÷"6ö6‚"bbF÷FÂÂCC’F÷FÂÒCC°¢–b‡F÷FÂÂÖ–ä&6R’F÷FÂÒÖ–ä&6S°¢6öç7B6&BÒFö7VÖVçBæ7&VFTVÆVÖVçB‚vF—br“°¢6&Bæ6Æ74æÖRÒwg2Ö6&Bs°¢6&Bæ–ææW$…DÔÂÒÆF—b6Æ73ÕÂ'g2Ö6&Eõö–æfõÂ#ãÆF—b6Æ73ÕÂ'g2Ö6&Eõö6FVv÷'•Â#âG·bæ6FVv÷'—ÓÂöF—cãÆF—b6Æ73ÕÂ'g2Ö6&EõöæÖUÂ#âG·bææÖWÓÂöF—cãÆF—b6Æ73ÕÂ'g2Ö6&Eõ÷&–6UÂ#âBG·F÷FÂçFôf—†VBƒ"—ÒU4CÂöF—cãÆF—b6Æ73ÕÂ'g2Ö6&Eõö66—G•Â#ï	ùRG·76VævW$6÷VçGÒ	ù+ÂG¶ÇVvvvT6÷VçGÓÂöF—cãÂöF—cãÆF—b6Æ73ÕÂ'g2Ö6&Eõ÷&–v‡EÂ#ãÆ–Ör7&3ÕÂ"G·bæ–ÖvWÕÂ#ãÂöF—cæ°¢6&Bæöæ6Æ–6²Ò‚’Óâ°¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rçg2Ö6&Br’æf÷$V6‚†2Óâ2æ6Æ74Æ—7Bç&VÖ÷fR‚wg2Ö6&BÒ×6VÆV7FVBr’“°¢6&Bæ6Æ74Æ—7BæFB‚wg2Ö6&BÒ×6VÆV7FVBr“°¢g46öçF–çVT'FâæF—6&ÆVBÒfÇ6S°¢g46öçF–çVT'Fâæöæ6Æ–6²Ò‚’Óâ² ¢g4÷fW&Æ’æ6Æ74Æ—7Bç&VÖ÷fR‚v7F—fRr“² ¢&öö¶–ætFFçfV†–6ÆRÒbææÖS°¢&öö¶–ætFFçF÷FÂÒF÷FÂçFôf—†VBƒ"“°¢÷Vå–ÖVçB‡bææÖRÂF÷FÂ“² ¢Ó°¢Ó°¢g4Æ—7BæVæD6†–ÆB†6&B“°¢Ò“°¢g4÷fW&Æ’æ6Æ74Æ—7BæFB‚v7F—fRr“°¢Ð ¢7–æ2gVæ7F–öâ÷Vå–ÖVçB‡fV†–6ÆRÂF÷FÂ’°¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚w’×fV†–6ÆRr’çFW‡D6öçFVçBÒfV†–6ÆS°¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚w’×F÷FÂr’çFW‡D6öçFVçBÒBG·F÷FÂçFôf—†VBƒ"—Ö°¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚w–ÖVçD÷fW&Æ’r’æ6Æ74Æ—7BæFB‚v7F—fRr“°¢ ¢6WEF–ÖV÷WB‚‚’Óâ°¢–b‚7G&—R’°¢7G&—RÒ7G&—R‚wµöÆ—fUóSE£tduFUU4wVÖ'•7…$´³Dç$Çf—””4Ç&¶u“F$§u#%¤W§V7&6gG¤GCåw¥”ÃD7%¥dgVÄ¦ÄÖSg‡——£vwFsdu‡&Br“°¢VÆVÖVçG2Ò7G&—RæVÆVÖVçG2‚“°¢6öç7B7G–ÆRÒ²&6S¢²6öÆ÷#¢r6fffffbrÂföçE6—¦S¢sg‚rÂs£§Æ6V†öÆFW"s¢²6öÆ÷#¢r3ƒƒƒƒƒ‚rÒÒÓ°¢6&DçVÖ&W"ÒVÆVÖVçG2æ7&VFR‚v6&DçVÖ&W"rÂ²7G–ÆRÒ“²6&DçVÖ&W"æÖ÷VçB‚r66&BÖçVÖ&W"ÖVÆVÖVçBr“°¢6&DW‡—'’ÒVÆVÖVçG2æ7&VFR‚v6&DW‡—'’rÂ²7G–ÆRÒ“²6&DW‡—'’æÖ÷VçB‚r66&BÖW‡—'’ÖVÆVÖVçBr“°¢6&D7f2ÒVÆVÖVçG2æ7&VFR‚v6&D7f2rÂ²7G–ÆRÒ“²6&D7f2æÖ÷VçB‚r66&BÖ7f2ÖVÆVÖVçBr“°¢Ð¢ÒÂS“°¢Ð ¢Fö7VÖVçBævWDVÆVÖVçD'”–B‚w”'Fâr’æöæ6Æ–6²Ò7–æ2‚’Óâ°¢6öç7B'FâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚w”'Fâr“°¢6öç7BæÖRÒFö7VÖVçBævWDVÆVÖVçD'”–B‚w’ÖæÖRr’çfÇVS°¢6öç7BVÖ–ÂÒFö7VÖVçBævWDVÆVÖVçD'”–B‚w’ÖVÖ–Âr’çfÇVS°¢–b‚æÖRÇÂVÖ–Â’²ÆW'B‚uÆV6Rf–ÆÂ–â–÷W"æÖRæBVÖ–Ââr“²&WGW&ã²Ð¢ ¢'FâæF—6&ÆVBÒG'VS²'FâçFW‡D6öçFVçBÒu&ö6W76–ær–ÖVçBâââs°¢ ¢6öç7B·Fö¶VâÂW'&÷'ÒÒv—B7G&—Ræ7&VFUFö¶Vâ†6&DçVÖ&W"“°¢–b‡Fö¶Vâ’² ¢G'’°¢6öç7B6†&vU&W7öç6RÒv—BfWF6‚‚ròææWFÆ–g’ögVæ7F–öç2ö7&VFRÖ6†&vRrÂ°¢ÖWF†öC¢uõ5BrÀ¢†VFW'3¢²t6öçFVçBÕG—Rs¢vÆ–6F–öâö§6öârÒÀ¢&öG“¢¥4ôâç7G&–æv–g’‡°¢Fö¶Vã¢Fö¶Vâæ–BÀ¢Ö÷VçC¢&öö¶–ætFFçF÷FÂÀ¢VÖ–Ã¢VÖ–ÂÀ¢FW67&—F–öã¢4ÒÄ”ÔõU4”äR&öö¶–æs¢G¶&öö¶–ætFFçfV†–6ÆWÒf÷"G¶æÖWÖ ¢Ò¢Ò“°¢ ¢6öç7B6†&vU&W7VÇBÒv—B6†&vU&W7öç6Ræ§6öâ‚“° ¢–b†6†&vU&W7VÇBç7V66W72’°¢'FâçFW‡D6öçFVçBÒu6VæF–æræ÷F–f–6F–öç2âââs°¢&öö¶–ætFFææÖRÒæÖS°¢&öö¶–ætFFæVÖ–ÂÒVÖ–Ã°¢&öö¶–ætFFæ6†&vT–BÒ6†&vU&W7VÇBæ6†&vT–C° ¢6öç7BF—7F6…&W2Òv—BfWF6‚‚ròææWFÆ–g’ögVæ7F–öç2öF—7F6‚rÂ°¢ÖWF†öC¢uõ5BrÀ¢†VFW'3¢²t6öçFVçBÕG—Rs¢vÆ–6F–öâö§6öârÒÀ¢&õºÈè)M=8¹ÍÑÉ¥¹¥™ä¡ì(€€€€€€€€€€€€€€€€€€€€€€€Ñ½­•¸èÑ½­•¸¹¥°(€€€€€€€€€€€€€€€€€€€€€€€…µ½Õ¹Ðè‰½½­¥¹…Ñ„¹Ñ½Ñ…°°(€€€€€€€€€€€€€€€€€€€€€€€•µ…¥°è•µ…¥°°(€€€€€€€€€€€€€€€€€€€€€€€‘•ÍÉ¥ÁÑ¥½¸èM41%5=UM%9	½½­¥¹œè€‘í‰½½­¥¹…Ñ„¹Ù•¡¥±•ô™½È€‘í¹…µ•õ€(€€€€€€€€€€€€€€€€€€€ô¤(€€€€€€€€€€€€€€€ô¤ì(€€€€€€€€€€€€€€€€(€€€€€€€€€€€€€€€½¹ÍÐ¡…É•I•ÍÕ±Ð€ô…Ý…¥Ð¡…É•I•ÍÁ½¹Í”¹©Í½¸ ¤ì((€€€€€€€€€€€€€€€¥˜€¡¡…É•I•ÍÕ±Ð¹ÍÕ•ÍÌ¤ì(€€€€€€€€€€€€€€€€€€€‰Ñ¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€M•¹‘¥¹œ9½Ñ¥™¥…Ñ¥½¹Ì¸¸¸œì(€€€€€€€€€€€€€€€€€€€‰½½­¥¹…Ñ„¹¹…µ”€ô¹…µ”ì(€€€€€€€€€€€€€€€€€€€‰½½­¥¹…Ñ„¹•µ…¥°€ô•µ…¥°ì(€€€€€€€€€€€€€€€€€€€‰½½­¥¹…Ñ„¹¡…É•%€ô¡…É•I•ÍÕ±Ð¹¡…É•%ì((€€€€€€€€€€€€€€€€€€€½¹ÍÐ‘¥ÍÁ…Ñ¡I•Ì€ô…Ý…¥Ð™•Ñ  œ¼¹¹•Ñ±¥™ä½™Õ¹Ñ¥½¹Ì½‘¥ÍÁ…Ñ œ°ì(€€€€€€€€€€€€€€€€€€€€€€€µ•Ñ¡½è€A=MPœ°(€€€€€€€€€€€€€€€€€€€€€€€¡•…‘•ÉÌèì€½¹Ñ•¹ÐµQåÁ”œè€…ÁÁ±¥…Ñ¥½¸½©Í½¸œô°(€€€€€€€€€€€€€€€€€€€€€€€‰½n‡r: JSON.stringify(bookingData)
-                    });
-                    const dispatchResult = await dispatchRes.json();
-
-                    let finalMsg = 'Payment Successful! Your reservation for ' + bookingData.vehicle + ' is confirmed.';
-                    
-                    if (dispatchResult.email_status.includes('failed')) {
-                        finalMsg += '\n\nðŸšª Email snag: ' + dispatchResult.email_error;
-                        finalMsg += '\n\nPlease screenshot this error and send it to Mike.';
-                    } else {
-                        finalMsg += '\n\nCheck your emails for confirmation details.';
-                    }
-                    alert(finalMsg);
-                    document.getElementById('paymentOverlay').classList.remove('active');
-                } else {
-                    alert('Payment Failed: ' + chargeResult.error);
-                }
-            } catch (e) {
-                console.error('System error:', e);
-                alert('Payment Success, but notification engine is syncing. Check your account.');
-                document.getElementById('paymentOverlay').classList.remove('active');
-            }
-        } else {
-            alert('Card Error: ' + error.message);
-        }
-        btn.disabled = false; btn.textContent = 'Book Now';
+        suburban:   { name: 'Chevrolet Suburban',    base: 102,  perMile: 6.00, category: 'Premium SUV',      passengers: '4-6',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg' },
+        denali:     { name: 'GMC Denali',            base: 114,  perMile: 6.60, category: 'Premium SUV',      passengers: '4-7',  suitcases: '3-5',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
+        escalade:   { name: '2026 Cadillac Escalade',    base: 150, perMile: 7.80, category: 'First class',      passengers: '4-7',  suitcases: '3-5',  image: 'hq_fleet.jpeg' },
+        maybach:    { name: 'Mercedes-Maybach',     base: 180, perMile: 9.00, category: 'Ultra Luxury',     passengers: '2-4',  suitcases: '2-3',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
+        sprinter:   { name: 'Mercedes Sprinter',     base: 270, perMile: 12.00, category: 'Sprinter van',     passengers: '6-14', suitcases: '6-10', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' },
+        motorcoach: { name: 'Motor Coach',           base: 600, perMile: 30.00, category: 'Motor coach',      passengers: '20-56', suitcases: '20-56', image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg' }
     };
 
-    document.getElementById('paymentClose').onclick = () => document.getElementById('paymentOverlay').classList.remove('active');
-    document.getElementById('vsBackBtn').onclick = () => vsOverlay.classList.remove('active');
-});
+    const RATE_MARKUP = 1.20; // +20% markup on all calculated rates
+    const MIN_HOURS = 3;
+    const DISTANCE_TIMEOUT_MS = 5000;
+    const DEFAULT_MILES = 20;
+
+    let leg1Miles = 0, leg2Miles = 0;
+    let stripe = null, elements = null, cardNumber = null, cardExpiry = null, cardCvc = null;
+    let passengerCount = 1, luggageCount = 1;
+    let bookingData = {};
+
+    /* --- SAFE DOM REFERENCES --- */
+    const vsOverlay = document.getElementById('vsOverlay');
+    const vsList = document.getElementById('vsList');
+    const vsContinueBtn = document.getElementById('vsContinueBtn');
+    const paymentOverlay = document.getElementById('paymentOverlay');
+
+    /* --- TAB SWITCHER (Global) --- */
+    window.switchForm = function(mode, btn) {
+        document.querySelectorAll('.booking-widget__form').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.booking-widget__tab').forEach(t => t.classList.remove('active'));
+        const targetForm = document.getElementById('form-' + mode);
+        if (targetForm) targetForm.classList.add('active');
+        if (btn) btn.classList.add('active');
+    };
+
+    /* --- GOOGLE MAPS AVAILABILITY CHECK --- */
+    function isGoogleMapsReady() {
+        return (typeof google !== 'undefined' && 
+                typeof google.maps !== 'undefined' && 
+                typeof google.maps.places !== 'undefined' &&
+                typeof google.maps.DistanceMatrixService !== 'undefined');
+    }
+
+    /* --- AUTOCOMPLETE INITIALIZATION --- */
+    function initAutocomplete() {
+        if (!isGoogleMapsReady()) {
+            console.warn('[SM LIMO] Google Maps not ready, retrying in 1s...');
+            setTimeout(initAutocomplete, 1000);
+            return;
+        }
+        const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: 'us' } };
+        const ids = [
+            'pickup-oneway', 'dropoff-oneway', 
+            'pickup-roundtrip', 'dropoff-roundtrip', 
+            'return-pickup-roundtrip', 'return-dropoff-roundtrip', 
+            'pickup-hourly', 'dropoff-hourly'
+        ];
+        ids.forEach(id => {
+            const input = document.getElementById(id);
+            if (input && !input.dataset.acBound) {
+                try {
+                    const ac = new google.maps.places.Autocomplete(input, options);
+                    input.dataset.acBound = 'true';
+                    // Prevent form submission on Enter when autocomplete dropdown is open
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            const pacContainer = document.querySelector('.pac-container');
+                            if (pacContainer && pacContainer.style.display !== 'none') {
+                                e.preventDefault();
+                            }
+                        }
+                    });
+                    ac.addListener('place_changed', () => {
+                        const mode = id.includes('oneway') ? 'oneway' : (id.includes('roundtrip') ? 'roundtrip' : null);
+                        if (mode) refreshDistances(mode).catch(() => {});
+                    });
+                } catch (err) {
+                    console.error('[SM LIMO] Autocomplete init error for', id, err);
+                }
+            }
+        });
+        console.log('[SM LIMO] Autocomplete initialized successfully');
+    }
+
+    /* --- DISTANCE CALCULATION (with timeout + fallback) --- */
+    async function refreshDistances(mode) {
+        if (!isGoogleMapsReady()) {
+            console.warn('[SM LIMO] Google Maps unavailable â€” using default distance');
+            leg1Miles = DEFAULT_MILES;
+            leg2Miles = DEFAULT_MILES;
+            return;
+        }
+
+        const pInput = document.getElementById('pickup-' + mode);
+        const dInput = document.getElementById('dropoff-' + mode);
+        if (!pInput || !dInput) return;
+        
+        const origin1 = pInput.value.trim();
+        const dest1 = dInput.value.trim();
+        if (!origin1 || !dest1) {
+            leg1Miles = DEFAULT_MILES;
+            return;
+        }
+
+        try {
+            const service = new google.maps.DistanceMatrixService();
+            leg1Miles = await getLegMiles(service, origin1, dest1);
+
+            if (mode === 'roundtrip') {
+                const rPickup = document.getElementById('return-pickup-roundtrip');
+                const rDropoff = document.getElementById('return-dropoff-roundtrip');
+                const origin2 = rPickup ? rPickup.value.trim() : '';
+                const dest2 = rDropoff ? rDropoff.value.trim() : '';
+                if (origin2 && dest2) {
+                    leg2Miles = await getLegMiles(service, origin2, dest2);
+                } else {
+                    leg2Miles = leg1Miles; // Mirror the first leg
+                }
+            }
+        } catch (err) {
+            console.error('[SM LIMO] Distance calculation failed:', err);
+            leg1Miles = leg1Miles || DEFAULT_MILES;
+            leg2Miles = leg2Miles || DEFAULT_MILES;
+        }
+    }
+
+    function getLegMiles(service, origin, dest) {
+        return new Promise((resolve) => {
+            const timeout = setTimeout(() => {
+                console.warn('[SM LIMO] Distance Matrix timeout â€” using default');
+                resolve(DEFAULT_MILES);
+            }, DISTANCE_TIMEOUT_MS);
+
+            try {
+                service.getDistanceMatrix({
+                    origins: [origin],
+                    destinations: [dest],
+                    travelMode: 'DRIVING',
+                    unitSystem: google.maps.UnitSystem.IMPERIAL
+                }, (response, status) => {
+                    clearTimeout(timeout);
+                    if (status === 'OK' && 
+                        response && 
+                        response.rows && 
+                        response.rows[0] && 
+                        response.rows[0].elements && 
+                        response.rows[0].elements[0] && 
+                        response.rows[0].elements[0].status === 'OK') {
+                        const meters = response.rows[0].elements[0].distance.value;
+                        resolve(Math.round((meters / 1609.34) * 10) / 10);
+                    } else {
+                        console.warn('[SM LIMO] Distance Matrix status:', status);
+                        resolve(DEFAULT_MILES);
+                    }
+                });
+            } catch (e) {
+                clearTimeout(timeout);
+                console.error('[SM LIMO] Distance Service Error:', e);
+                resolve(DEFAULT_MILES);
+            }
+        });
+    }
+
+    /* --- FORM SUBMISSION HANDLER (Bulletproof) --- */
+    function attachFormHandlers() {
+        const forms = document.querySelectorAll('.booking-widget__form');
+        forms.forEach(form => {
+            // Remove any previously attached listeners by cloning
+            const newForm = form.cloneNode(true);
+            form.parentNode.replaceChild(newForm, form);
+        });
+
+        // Re-attach to fresh form elements
+        document.querySelectorAll('.booking-widget__form').forEach(form => {
+            form.addEventListener('submit', handleFormSubmit, { passive: false });
+        });
+    }
+
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const form = e.currentTarget;
+        const submitBtn = form.querySelector('.booking-widget__submit');
+        if (!submitBtn) return;
+        
+        // Prevent double-submission
+        if (submitBtn.dataset.submitting === 'true') return;
+        submitBtn.dataset.submitting = 'true';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Calculating...';
+
+        try {
+            const type = form.id.replace('form-', '');
+            
+            bookingData = {
+                type: type,
+                pickup: (document.getElementById('pickup-' + type) || {}).value || 'N/A',
+                dropoff: (document.getElementById('dropoff-' + type) || {}).value || 'N/A',
+                date: (form.querySelector('input[type="date"]') || {}).value || 'N/A',
+                time: (form.querySelector('input[type="time"]') || {}).value || 'N/A',
+                passengers: passengerCount,
+                luggage: luggageCount,
+                hours: parseInt((form.querySelector('[data-field="hours"]') || {}).value || MIN_HOURS)
+            };
+
+            // Distance calculation with absolute timeout safety net
+            if (type !== 'hourly') {
+                await Promise.race([
+                    refreshDistances(type),
+                    new Promise(resolve => setTimeout(resolve, DISTANCE_TIMEOUT_MS + 1000))
+                ]);
+            }
+
+            openVehicleSelector(type, bookingData.hours);
+        } catch (err) {
+            console.error('[SM LIMO] Form submission error:', err);
+            // Still open vehicle selector with defaults on error
+            openVehicleSelector(form.id.replace('form-', ''), bookingData.hours || MIN_HOURS);
+        } finally {
+            // ALWAYS reset button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Get a Quote';
+            submitBtn.dataset.submitting = 'false';
+        }
+    }
+
+    /* --- VEHICLE SELECTOR --- */
+    function openVehicleSelector(type, hours) {
+        if (!vsList || !vsOverlay) return;
+        
+        vsList.innerHTML = '';
+        if (vsContinueBtn) vsContinueBtn.disabled = true;
+
+        const totalMiles = type === 'roundtrip' ? (leg1Miles + leg2Miles) : leg1Miles;
+        const finalMiles = totalMiles || DEFAULT_MILES;
+        
+        const summaryEl = document.getElementById('vs-distance-summary');
+        if (summaryEl) {
+            summaryEl.textContent = (type !== 'hourly') 
+                ? 'Total Journey: ' + finalMiles.toFixed(1) + ' miles' 
+                : 'Duration: ' + hours + ' hours';
+        }
+
+        Object.keys(VEHICLE_RATES).forEach(key => {
+            const v = VEHICLE_RATES[key];
+            let rawTotal;
+            
+            if (type === 'hourly') {
+                rawTotal = v.base * hours;
+            } else if (type === 'roundtrip') {
+                rawTotal = (v.base * 2) + (v.perMile * totalMiles);
+            } else {
+                rawTotal = v.base + (v.perMile * totalMiles);
+            }
+            
+            // Apply +20% rate markup
+            let total = rawTotal * RATE_MARKUP;
+            
+            // Minimums
+            const minBase = 108;
+            if (v.name === 'Motor Coach' && total < 1440) total = 1440;
+            if (total < minBase) total = minBase;
+
+            const card = document.createElement('div');
+            card.className = 'vs-card';
+            card.setAttribute('data-vehicle', key);
+            card.innerHTML = '<div class="vs-card__info">' +
+                '<div class="vs-card__category">' + v.category + '</div>' +
+                '<div class="vs-card__name">' + v.name + '</div>' +
+                '<div class="vs-card__price">$' + total.toFixed(2) + ' USD</div>' +
+                '</div>' +
+                '<div class="vs-card__right"><img src="' + v.image + '" alt="' + v.name + '"></div>';
+            
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.vs-card').forEach(c => c.classList.remove('vs-card--selected'));
+                card.classList.add('vs-card--selected');
+                if (vsContinueBtn) {
+                    vsContinueBtn.disabled = false;
+                    vsContinueBtn.onclick = function() {
+                        vsOverlay.classList.remove('active'); document.body.classList.remove('overlay-active');
+                        bookingData.vehicle = v.name;
+                        bookingData.total = total.toFixed(2);
+                        openPayment(v.name, total);
+                    };
+                }
+            });
+            
+            vsList.appendChild(card);
+        });
+        
+        vsOverlay.classList.add('active');
+        document.body.classList.add('overlay-active');
+        // Scroll to top of vehicle list
+        vsList.scrollTop = 0;
+    }
+
+    /* --- PAYMENT OVERLAY --- */
+    async function openPayment(vehicle, total) {
+        const payVehicleEl = document.getElementById('pay-vehicle');
+        const payTotalEl = document.getElementById('pay-total');
+        
+        if (payVehicleEl) payVehicleEl.textContent = vehicle;
+        if (payTotalEl) payTotalEl.textContent = '$' + total.toFixed(2);
+        if (paymentOverlay) { paymentOverlay.classList.add('active'); document.body.classList.add('overlay-active'); }
+
+        // Initialize Stripe only once
+        if (!stripe) {
+            try {
+                stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
+                elements = stripe.elements();
+                const style = { base: { color: '#ffffff', fontSize: '16px', '::placeholder': { color: '#888888' } } };
+                cardNumber = elements.create('cardNumber', { style });
+                cardNumber.mount('#card-number-element');
+                cardExpiry = elements.create('cardExpiry', { style });
+                cardExpiry.mount('#card-expiry-element');
+                cardCvc = elements.create('cardCvc', { style });
+                cardCvc.mount('#card-cvc-element');
+            } catch (err) {
+                console.error('[SM LIMO] Stripe initialization failed:', err);
+            }
+        }
+    }
+
+    /* --- PAYMENT BUTTON HANDLER --- */
+    function attachPaymentHandler() {
+        const payBtn = document.getElementById('payBtn');
+        if (!payBtn) return;
+        
+        payBtn.addEventListener('click', async function() {
+            const name = (document.getElementById('pay-name') || {}).value;
+            const email = (document.getElementById('pay-email') || {}).value;
+            
+            if (!name || !email) {
+                alert('Please fill in your name and email.');
+                return;
+            }
+            if (!stripe || !cardNumber) {
+                alert('Payment system is loading. Please wait a moment and try again.');
+                return;
+            }
+
+            payBtn.disabled = true;
+            payBtn.textContent = 'Processing...';
+
+            try {
+                const {token, error} = await stripe.createToken(cardNumber);
+                if (error) {
+                    alert('Card Error: ' + error.message);
+                    return;
+                }
+                if (token) {
+                    const res = await fetch('/.netlify/functions/create-charge', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            token: token.id,
+                            amount: bookingData.total,
+                            email: email,
+                            description: 'SM LIMOUSINE Booking: ' + bookingData.vehicle
+                        })
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        bookingData.name = name;
+                        bookingData.email = email;
+                        // Fire dispatch (non-blocking)
+                        fetch('/.netlify/functions/dispatch', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(bookingData)
+                        }).catch(err => console.error('[SM LIMO] Dispatch error:', err));
+                        
+                        alert('Booking Successful! A confirmation will be sent to ' + email);
+                        if (paymentOverlay) { paymentOverlay.classList.remove('active'); document.body.classList.remove('overlay-active'); }
+                    } else {
+                        alert('Payment Error: ' + (result.error || 'Unknown error. Please try again.'));
+                    }
+                }
+            } catch (err) {
+                console.error('[SM LIMO] Payment processing error:', err);
+                alert('An error occurred processing your payment. Please try again.');
+            } finally {
+                payBtn.disabled = false;
+                payBtn.textContent = 'Book Now';
+            }
+        });
+    }
+
+    /* --- CLOSE BUTTONS --- */
+    function attachCloseHandlers() {
+        const paymentClose = document.getElementById('paymentClose');
+        const vsBackBtn = document.getElementById('vsBackBtn');
+        
+        if (paymentClose) {
+            paymentClose.addEventListener('click', function() {
+                if (paymentOverlay) { paymentOverlay.classList.remove('active'); document.body.classList.remove('overlay-active'); }
+            });
+        }
+        if (vsBackBtn) {
+            vsBackBtn.addEventListener('click', function() {
+                if (vsOverlay) { vsOverlay.classList.remove('active'); document.body.classList.remove('overlay-active'); }
+            });
+        }
+        
+        // Close overlays on backdrop click (mobile UX improvement)
+        if (vsOverlay) {
+            vsOverlay.addEventListener('click', function(e) {
+                if (e.target === vsOverlay) { vsOverlay.classList.remove('active'); document.body.classList.remove('overlay-active'); }
+            });
+        }
+        if (paymentOverlay) {
+            paymentOverlay.addEventListener('click', function(e) {
+                if (e.target === paymentOverlay) { paymentOverlay.classList.remove('active'); document.body.classList.remove('overlay-active'); }
+            });
+        }
+    }
+
+    /* --- ADDON MODAL (Global Close) --- */
+    window.closeAddonModal = function() {
+        const addonOverlay = document.getElementById('addonOverlay');
+        if (addonOverlay) addonOverlay.classList.remove('active');
+    };
+
+    /* --- INITIALIZATION --- */
+    function init() {
+        console.log('[SM LIMO] Initializing v5.0 â€” Bulletproof Booking Architecture');
+        initAutocomplete();
+        attachFormHandlers();
+        attachPaymentHandler();
+        attachCloseHandlers();
+        console.log('[SM LIMO] All handlers attached successfully');
+    }
+
+    // Ensure initialization regardless of document state
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
