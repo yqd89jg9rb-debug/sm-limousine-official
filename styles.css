@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SM LIMOUSINE – Elite Master Stylesheet (v5.7 - Fix Modal Display)
+   SM LIMOUSINE – Elite Master Stylesheet (v5.8 - Fix All Assets)
    ========================================================================== */
 
 *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,7 +74,7 @@ html, body {
 .section-subtitle { font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 30px; }
 .fleet-grid { display: grid; grid-template-columns: 1fr; gap: 25px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
 .fleet-card { background: #111; border-radius: 16px; overflow: hidden; border: 1px solid #222; text-align: left; cursor: pointer; }
-.fleet-card img { width: 100%; height: 200px; object-fit: contain; background: #0a0a0a; }
+.fleet-card img { width: 100%; height: 200px; object-fit: contain; background: #0a0a0a; display: block; }
 .fleet-card__content { padding: 20px; }
 .fleet-card__content h3 { font-size: 1.1rem; font-weight: 700; }
 
@@ -82,12 +82,9 @@ html, body {
 .partnership-section { padding: 80px 20px; background: #000; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
 .partnership__title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--silver); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 50px; position: relative; display: inline-block; }
 .partnership__title:after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 60px; height: 1px; background: var(--gold); }
-.partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: center; justify-items: center; gap: 50px 40px; max-width: 1200px; margin: 0 auto; }
-.partner-logo-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 100px; }
-.partner-logo { max-height: 100%; max-width: 150px; width: auto; object-fit: contain; }
-
-.logo-groundlink { max-width: 200px !important; }
-.logo-bookinglane { max-width: 180px !important; }
+.partnership__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); align-items: center; justify-items: center; gap: 40px; max-width: 1100px; margin: 0 auto; }
+.partner-logo-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 80px; }
+.partner-logo { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; display: block; filter: grayscale(0.2) contrast(1.1); }
 
 /* FOOTER */
 .elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
@@ -100,7 +97,7 @@ html, body {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.85);
-    z-index: 9999; /* Ensure modal is always on top */
+    z-index: 9999;
     display: none;
     align-items: center;
     justify-content: center;
@@ -112,7 +109,7 @@ html, body {
     background: #111;
     border: 1px solid #333;
     border-radius: 20px;
-    width: 90%;
+    width: 95%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
@@ -120,7 +117,6 @@ html, body {
     position: relative;
 }
 
-/* VS CARD STYLES */
 .vs-card {
     display: flex;
     justify-content: space-between;
@@ -138,14 +134,10 @@ html, body {
 .vs-card__category { font-size: 0.7rem; color: #888; text-transform: uppercase; }
 .vs-card__name { font-weight: 700; font-size: 1rem; margin: 4px 0; }
 .vs-card__price { font-size: 1.1rem; font-weight: 800; }
-.vs-card__right img { width: 100px; height: 70px; object-fit: contain; }
+.vs-card__right img { width: 100px; height: 70px; object-fit: contain; background: #000; display: block; }
 
 /* RESPONSIVE */
 @media (min-width: 768px) {
     .fleet-grid { grid-template-columns: repeat(3, 1fr); }
     .booking-widget { max-width: 440px; }
-}
-@media (max-width: 768px) {
-    .partnership__grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; }
-    .partner-logo-wrap { height: 60px; }
 }
