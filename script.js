@@ -1,1 +1,1 @@
-$(cat script_b64.txt)
+$(cat /root/workspace/script_b64.txt)
