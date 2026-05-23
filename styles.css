@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SM LIMOUSINE – Elite Master Stylesheet (v6.2 - Payment Overhaul)
+   SM LIMOUSINE – Elite Master Stylesheet (v6.3 - Enhanced Input Sizes)
    ========================================================================== */
 
 *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -48,18 +48,31 @@ html, body {
 .hero__subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
 
 /* BOOKING WIDGET */
-.booking-widget { background: rgba(20, 20, 20, 0.95); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
-.booking-widget__tabs { display: flex; gap: 4px; margin-bottom: 15px; background: #000; padding: 3px; border-radius: 8px; }
-.booking-widget__tab { flex: 1; padding: 10px; border: none; background: transparent; color: #888; font-size: 0.75rem; font-weight: 600; cursor: pointer; border-radius: 6px; }
+.booking-widget { background: rgba(20, 20, 20, 0.95); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+.booking-widget__tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #000; padding: 4px; border-radius: 10px; }
+.booking-widget__tab { flex: 1; padding: 12px; border: none; background: transparent; color: #888; font-size: 0.8rem; font-weight: 700; cursor: pointer; border-radius: 8px; }
 .booking-widget__tab.active { background: #fff; color: #000; }
-.booking-widget__form { display: none; flex-direction: column; gap: 10px; }
+.booking-widget__form { display: none; flex-direction: column; gap: 15px; }
 .booking-widget__form.active { display: flex; }
 .booking-widget__field { margin-bottom: 5px; }
 .booking-widget__row { display: flex; gap: 10px; }
-.field-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; text-align: left; display: block; }
-.leg-label { font-size: 0.75rem; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; margin-top: 10px; text-align: left; }
-.st-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; }
-.booking-widget__submit { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: 800; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
+.field-label { font-size: 0.7rem; color: #888; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; text-align: left; display: block; }
+.leg-label { font-size: 0.8rem; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; margin-top: 15px; text-align: left; }
+
+/* Enhanced Input Sizes */
+.st-input {
+    width: 100%;
+    padding: 18px; /* Significantly bigger padding */
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.1rem; /* Larger font size */
+    transition: border-color 0.3s;
+}
+.st-input:focus { border-color: var(--gold); outline: none; }
+
+.booking-widget__submit { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; margin-top: 10px; cursor: pointer; letter-spacing: 1px; }
 
 /* FEATURED HQ SECTION */
 .featured-hq { width: 100%; line-height: 0; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -145,7 +158,6 @@ html, body {
 .clear-price { font-size: 2rem; font-weight: 800; color: #fff; }
 
 .pm-field { margin-bottom: 20px; }
-.pm-field .st-input { padding: 16px; font-size: 1.1rem; } /* Bigger inputs */
 
 .pm-book-btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
 .pm-book-btn:active { transform: scale(0.98); }
