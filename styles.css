@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SM LIMOUSINE – Elite Master Stylesheet (v6.1 - Professional Footer)
+   SM LIMOUSINE – Elite Master Stylesheet (v6.2 - Payment Overhaul)
    ========================================================================== */
 
 *, *:before, *:after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -130,6 +130,25 @@ html, body {
     padding: 20px;
     position: relative;
 }
+
+/* PAYMENT MODAL REFINEMENT */
+.payment-modal {
+    background: #121212;
+    border: 1px solid #2a2a2a;
+    border-radius: 24px;
+    padding: 30px;
+}
+.payment-modal__close { position: absolute; top: 20px; right: 20px; background: #222; border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+.payment-modal__summary { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+.payment-modal__summary h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #888; margin-bottom: 5px; }
+.clear-price { font-size: 2rem; font-weight: 800; color: #fff; }
+
+.pm-field { margin-bottom: 20px; }
+.pm-field .st-input { padding: 16px; font-size: 1.1rem; } /* Bigger inputs */
+
+.pm-book-btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
+.pm-book-btn:active { transform: scale(0.98); }
 
 /* ADDON MODAL REFINEMENT */
 .addon-modal {
