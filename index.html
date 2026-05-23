@@ -7,6 +7,7 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+
   gtag('config', 'G-6L1PRDET8ZK');
 </script>
     <meta charset="UTF-8">
@@ -52,7 +53,6 @@
                     <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
                 </div>
 
-                <!-- ONE WAY FORM -->
                 <form class="booking-widget__form active" id="form-oneway">
                     <div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input address-input"></div>
                     <div class="booking-widget__field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input address-input"></div>
@@ -62,49 +62,31 @@
                     </div>
                     <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-oneway">Select number of people</span></div></div>
                     <div class="price-preview" id="preview-oneway" style="display:none;"><span id="dist-val-oneway" class="clear-price">0 mi</span></div>
-                    <p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
+<p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
-                <!-- ROUND TRIP FORM -->
                 <form class="booking-widget__form" id="form-roundtrip">
                     <div class="leg-label">Departing Trip</div>
                     <div class="booking-widget__field"><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input address-input"></div>
                     <div class="booking-widget__field"><input type="text" id="dropoff-roundtrip" placeholder="Destination" required class="st-input address-input"></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
-                    
                     <div class="leg-label" style="margin-top:10px;">Return Trip</div>
                     <div class="booking-widget__field"><input type="text" id="return-pickup-roundtrip" placeholder="Return Pickup" required class="st-input address-input"></div>
                     <div class="booking-widget__field"><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input address-input"></div>
                     <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
-                    
                     <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-roundtrip">Select number of people</span></div></div>
                     <div class="price-preview" id="preview-roundtrip" style="display:none;"><span id="dist-val-roundtrip" class="clear-price">0 mi</span></div>
-                    <p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
+<p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
 
-                <!-- HOURLY FORM -->
                 <form class="booking-widget__form" id="form-hourly">
-                    <div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-hourly" placeholder="Pickup Location" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><label class="field-label">Dropoff (Optional)</label><input type="text" id="dropoff-hourly" placeholder="End-of-Trip Destination" class="st-input address-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="booking-widget__field"><label class="field-label">Date</label><input type="date" required class="st-input"></div>
-                        <div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
-                    </div>
-                    <div class="booking-widget__field">
-                        <label class="field-label">Duration</label>
-                        <select data-field="hours" id="hours-val" class="st-input">
-                            <option value="3">3 Hours (Minimum)</option>
-                            <option value="4">4 Hours</option>
-                            <option value="5">5 Hours</option>
-                            <option value="6">6 Hours</option>
-                            <option value="8">8 Hours</option>
-                            <option value="10">10 Hours</option>
-                        </select>
-                    </div>
+                    <div class="booking-widget__field"><input type="text" id="pickup-hourly" placeholder="Pickup Location" required class="st-input address-input"></div>
+                    <div class="booking-widget__field"><input type="text" id="dropoff-hourly" placeholder="End-of-Trip Destination (Optional)" class="st-input address-input"></div>
+                    <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div><div class="booking-widget__field"><select data-field="hours" id="hours-val" class="st-input"><option value="3">3 Hours (Min)</option><option value="4">4 Hours</option><option value="5">5 Hours</option></select></div></div>
                     <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-hourly">Select number of people</span></div></div>
-                    <p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
+<p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
                     <button type="submit" class="booking-widget__submit">Get a Quote</button>
                 </form>
             </div>
@@ -112,7 +94,7 @@
     </section>
 
     <section class="featured-hq">
-        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f501cb35cd4b02636a1cac09fe452771b6a2c22641f5aa86e3205d0107514c75.png" alt="SM LIMOUSINE Fleet at 3500 Oak Lawn Avenue">
+        <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/50ef234deac34a169b5631d0e8343402_D82C2248-07F5-4EB9-A4B2-C23A0081AF99.jpeg" alt="SM LIMOUSINE Fleet at 3500 Oak Lawn Avenue">
         <div class="hq-info">
             <h2>The Standard of Excellence</h2>
             <p>Our brand-new 2026 fleet is headquartered in the heart of Dallas at 3500 Oak Lawn Avenue, ready to provide elite chauffeur service at a moment's notice.</p>
@@ -125,8 +107,8 @@
         <div class="fleet-grid">
             <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg"><div class="fleet-card__content"><h3>Cadillac XT6</h3><p>Premium Luxury Sedan</p></div></div>
             <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png"><div class="fleet-card__content"><h3>Mercedes-Maybach</h3><p>Ultra Luxury Sedan</p></div></div>
-            <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2e57c8707998441ada71f30611004c25cdc32bf69297e9741f5ed6747ef63327.png"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
-            <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c535ec35e31ee0dbc9eebf7e8c4ab1f9fb24e6e9c301d8fe7f94f26854d7ec0f.png"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
+            <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f271bfa5f116a37ac3411b7203dbd0100bb61a10183601a25a88b96482ff917f.jpeg"><div class="fleet-card__content"><h3>Chevrolet Suburban</h3><p>Premium SUV</p></div></div>
+            <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg"><div class="fleet-card__content"><h3>GMC Denali</h3><p>Luxury SUV</p></div></div>
             <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg"><div class="fleet-card__content"><h3>2026 Cadillac Escalade</h3><p>First Class Executive SUV</p></div></div>
             <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><div class="fleet-card__content"><h3>Mercedes Sprinter</h3><p>Luxury Sprinter</p></div></div>
             <div class="fleet-card" onclick="window.setBookingTab('oneway')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/24291b6d665e5efacd5c52c74bd8f77b834190514dfdab731dec6ff1185a7048.jpeg"><div class="fleet-card__content"><h3>Motor Coach</h3><p>Grand Motor Coach</p></div></div>
@@ -136,21 +118,14 @@
     <section class="partnership-section">
         <h2 class="partnership__title">Affiliate Partnership</h2>
         <div class="partnership__grid">
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/470011a106d444f9a69db446ed05382e_IMG_1085.png" class="partner-logo logo-groundlink" alt="GroundLink Partner"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/d69f074759cd4d86b32b5383617535f9_IMG_1112.jpeg" class="partner-logo" alt="Dav El BostonCoach"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/8197b60b9b7d4ec6a31358709f0f8962_IMG_1364.jpeg" class="partner-logo" alt="Affiliate Partner"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/2ff9a396b29f49249760c91767783f69_IMG_1107.png" class="partner-logo" alt="Carey International"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/dfdb4f90fd0d4126a09be7186053059c_IMG_1105.jpeg" class="partner-logo" alt="AJL International"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/5f988133289847c3be8b866448dcd648_IMG_1108.jpeg" class="partner-logo" alt="Prime Limo"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/d87a6a0fe3764546b53e0badeca56252_IMG_1104.png" class="partner-logo logo-bookinglane" alt="Bookinglane"></div>
-            <div class="partner-logo-wrap"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/6b6c6523f2ce41b8848bc86a74c97e2b_IMG_1114.jpeg" class="partner-logo" alt="LUXY"></div>
+            <img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/ac015bf57acd4efe97f9b7eacd023f40_partners_collage.png" class="partnership-collage" alt="SM LIMOUSINE Partners Collage">
         </div>
     </section>
 
     <footer class="elite-footer">
         <div class="elite-footer__top">
             <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32">
-            <a href="mailto:smlimousine2026@gmail.com" class="elite-footer__contact-btn">Contact us</a>
+            <a href="mailto:smlimousine2026@gmail.com" class="elite-footer__copyright">© 2026 SM LIMOUSINE, Inc.</a>
         </div>
         <div class="elite-footer__social-row">
             <a href="https://www.facebook.com/profile.php?id=61588791567732" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png"></a>
@@ -160,14 +135,13 @@
         </div>
         <div class="elite-footer__bottom">
             <div class="elite-footer__legal"><a href='/terms'>Terms of service</a><a href='/privacy'>Privacy policy</a></div>
-            <p class="elite-footer__copyright">© 2026 SM LIMOUSINE, Inc.</p>
         </div>
     </footer>
 
     <div class="addbon-overlay" id="addon-Overlay" onclick="if(event.target===this)closeAddonModal()">
         <div class="addon-modal">
             <div class="addon-sheet-handle"></div>
-            <div class="addon-header"><h3>Passengers &amp; add-ons</h3><button onclick="closeAddonModal()">&#10005;</button></div>
+            <div class="addon-header"><h3>Passengers &amp; add-ons</h3><button onclick="closeAddonModal()">✕</button></div>
             <div class="addon-content">
                 <div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div>
                 <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
@@ -184,7 +158,7 @@
     </div>
     <div class="payment-overlay" id="paymentOverlay">
         <div class="payment-modal">
-            <button class="payment-modal__close" id="paymentClose">&#10005;</button>
+            <button class="payment-modal__close" id="paymentClose">✕</button>
             <div class="payment-modal__summary">
                 <h3 id="pay-vehicle">Vehicle</h3>
                 <p id="pay-total" class="clear-price">$0.00 USD</p>
