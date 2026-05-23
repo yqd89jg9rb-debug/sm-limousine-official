@@ -82,7 +82,7 @@ html, body {
 .partnership-section { padding: 80px 20px; background: #000; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
 .partnership__title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--silver); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 50px; position: relative; display: inline-block; }
 .partnership__title:after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 60px; height: 1px; background: var(--gold); }
-.partnership-collage { width: 100%; max-width: 1000px; margin: 0 auto; display: block; border-radius: 12px; }
+.partnership-collage { width: 100%; max-width: 800px; margin: 0 auto; display: block; border-radius: 12px; }
 
 /* FOOTER */
 .elite-footer { background: #0d0d0e; padding: 60px 15px 30px; border-top: 1px solid #1a1a1b; color: #fff; margin-top: 80px; }
