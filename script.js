@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initAutocomplete() {
         if (typeof google === 'undefined') return;
         const options = { types: ['geocode', 'establishment'], componentRestrictions: { country: "us" } };
-        const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly'];
+        const ids = ['pickup-oneway', 'dropoff-oneway', 'pickup-roundtrip', 'dropoff-roundtrip', 'return-pickup-roundtrip', 'return-dropoff-roundtrip', 'pickup-hourly', 'dropoff-hourly'];
         ids.forEach(id => {
             const input = document.getElementById(id);
             if (input && !input.dataset.acBound) {
