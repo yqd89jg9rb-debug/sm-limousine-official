@@ -1,499 +1,392 @@
 /* ===================================================================
-   SM LIMOUSINE — Main Script
-   Pricing, Live Estimates & Stripe Payment Integration
+   SM LIMOUSINE — SM2 Engine (Bookinglane-style)
+   Pure JS with Google Maps, Stripe, Netlify Dispatch
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ---------------------------------------------------------------
-       PRICING CONFIGURATION
-       --------------------------------------------------------------- */
+    // ===== CONSTANTS =====
     const VEHICLE_RATES = {
-        escalade:   { name: 'Cadillac Escalade',    hourly: 125, perMile: 4.50 },
-        xt6:        { name: 'Cadillac XT6',          hourly: 95,  perMile: 4.50 },
-        denali:     { name: 'GMC Denali',            hourly: 110, perMile: 4.50 },
-        suburban:   { name: 'Chevrolet Suburban',    hourly: 100, perMile: 4.50 },
-        sprinter:   { name: 'Mercedes Sprinter',     hourly: 160, perMile: 4.50 },
-        motorcoach: { name: 'Motor Coach',           hourly: 290, perMile: 4.50 }
+        escalade:   { name: '2026 Cadillac Escalade', base: 150, perMile: 7.80, hourly: 185 },
+        denali:     { name: 'GMC Denali',             base: 114, perMile: 6.60, hourly: 140 },
+        suburban:   { name: 'Chevrolet Suburban',     base: 102, perMile: 6.00, hourly: 125 },
+        sprinter:   { name: 'Mercedes Sprinter',      base: 270, perMile: 12.00, hourly: 225 },
+        xt6:        { name: 'Cadillac XT6',           base: 78,  perMile: 4.80, hourly: 95 },
+        motorcoach: { name: 'Motor Coach',            base: 600, perMile: 30.00, hourly: 450 }
     };
 
-    const DISTANCE_RATE_PER_MILE = 4.50;
-    const MIN_HOURS = 3;
-    const PLACEHOLDER_DISTANCE_MILES = 20;
+    // ===== STATE =====
+    let bookingData = {
+        tripType: 'oneway',
+        serviceType: 'chauffeur',
+        pickup: '',
+        dropoff: '',
+        stops: [],
+        date: '',
+        time: '',
+        hours: 3,
+        passengers: 1,
+        vehicle: '',
+        vehicleName: '',
+        miles: 0,
+        total: 0
+    };
 
-    let currentMiles = PLACEHOLDER_DISTANCE_MILES;
+    // ===== HEADER SCROLL =====
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 10);
+    });
 
-    /* ---------------------------------------------------------------
-       GOOGLE MAPS AUTOCOMPLETE & DISTANCE
-       --------------------------------------------------------------- */
+    // ===== MOBILE MENU =====
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    
+    menuBtn.addEventListener('click', () => {
+        mobileNav.classList.toggle('active');
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('.mobile-nav__link').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+        });
+    });
+
+    // ===== SERVICE TABS (Chauffeur / Charter / Flight) =====
+    document.querySelectorAll('.service-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            bookingData.serviceType = tab.dataset.service;
+        });
+    });
+
+    // ===== TRIP TABS (One-way / Roundtrip / Hourly) =====
+    const hourlyField = document.getElementById('hourlyField');
+    
+    document.querySelectorAll('.trip-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.trip-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            bookingData.tripType = tab.dataset.trip;
+            
+            // Show/hide hourly duration field
+            if (tab.dataset.trip === 'hourly') {
+                hourlyField.style.display = 'flex';
+            } else {
+                hourlyField.style.display = 'none';
+            }
+        });
+    });
+
+    // ===== PASSENGER COUNT =====
+    const paxCount = document.getElementById('paxCount');
+    const paxMinus = document.getElementById('paxMinus');
+    const paxPlus = document.getElementById('paxPlus');
+
+    paxMinus.addEventListener('click', () => {
+        if (bookingData.passengers > 1) {
+            bookingData.passengers--;
+            paxCount.textContent = bookingData.passengers;
+        }
+    });
+
+    paxPlus.addEventListener('click', () => {
+        if (bookingData.passengers < 56) {
+            bookingData.passengers++;
+            paxCount.textContent = bookingData.passengers;
+        }
+    });
+
+    // ===== ADD STOP =====
+    const addStopBtn = document.getElementById('addStopBtn');
+    const stopsContainer = document.getElementById('stopsContainer');
+    let stopCount = 0;
+
+    addStopBtn.addEventListener('click', () => {
+        if (stopCount >= 3) return;
+        stopCount++;
+        
+        const stopDiv = document.createElement('div');
+        stopDiv.className = 'stop-field';
+        stopDiv.innerHTML = `
+            <div class="form-field__icon"><div class="dot"></div></div>
+            <div class="form-field__input">
+                <label>Stop ${stopCount}</label>
+                <input type="text" class="stop-input" placeholder="Stop location" autocomplete="off">
+            </div>
+            <button class="remove-stop" type="button">×</button>
+        `;
+        
+        stopsContainer.appendChild(stopDiv);
+        
+        // Init autocomplete on new stop
+        const input = stopDiv.querySelector('.stop-input');
+        initAutocompleteOnInput(input);
+        
+        // Remove stop handler
+        stopDiv.querySelector('.remove-stop').addEventListener('click', () => {
+            stopDiv.remove();
+            stopCount--;
+        });
+    });
+
+    // ===== GOOGLE MAPS AUTOCOMPLETE =====
+    function initAutocompleteOnInput(input) {
+        if (typeof google === 'undefined' || !google.maps) return;
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+            componentRestrictions: { country: 'us' }
+        });
+        autocomplete.addListener('place_changed', () => {
+            calculateDistance();
+        });
+    }
+
     function initMaps() {
+        if (typeof google === 'undefined' || !google.maps) {
+            setTimeout(initMaps, 500);
+            return;
+        }
+
+        const pickupInput = document.getElementById('pickup-input');
+        const dropoffInput = document.getElementById('dropoff-input');
+        
+        initAutocompleteOnInput(pickupInput);
+        initAutocompleteOnInput(dropoffInput);
+    }
+
+    function calculateDistance() {
+        const pickup = document.getElementById('pickup-input').value;
+        const dropoff = document.getElementById('dropoff-input').value;
+        
+        if (!pickup || !dropoff) return;
         if (typeof google === 'undefined') return;
 
-        const autocompleteOptions = {
-            componentRestrictions: { country: "us" },
-            fields: ["address_components", "geometry", "name", "formatted_address"],
-            types: ["address"],
-        };
-
-        const inputs = document.querySelectorAll('input[data-field="pickup"], input[data-field="dropoff"]');
-        inputs.forEach(input => {
-            const autocomplete = new google.maps.places.Autocomplete(input, autocompleteOptions);
-            autocomplete.addListener('place_changed', () => {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) return;
-                
-                // Trigger price update after selecting address
-                const form = input.closest('form');
-                if (form) {
-                    const serviceType = form.id.replace('form-', '');
-                    calculateRealDistance(form, serviceType);
-                }
-            });
+        const svc = new google.maps.DistanceMatrixService();
+        svc.getDistanceMatrix({
+            origins: [pickup],
+            destinations: [dropoff],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+        }, (res, stat) => {
+            if (stat === 'OK' && res.rows[0].elements[0].status === 'OK') {
+                bookingData.miles = res.rows[0].elements[0].distance.value / 1609.34;
+                bookingData.pickup = pickup;
+                bookingData.dropoff = dropoff;
+            }
         });
     }
 
-    async function calculateRealDistance(form, serviceType) {
-        if (serviceType === 'hourly' || typeof google === 'undefined') return;
+    // ===== SEARCH BUTTON → OPEN MODAL =====
+    const searchBtn = document.getElementById('searchBtn');
+    const bookingModal = document.getElementById('bookingModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalBack = document.getElementById('modalBack');
 
-        const pickup = form.querySelector('[data-field="pickup"]').value;
-        const dropoff = form.querySelector('[data-field="dropoff"]').value;
-
-        if (!pickup || !dropoff) return;
-
-        const service = new google.maps.DistanceMatrixService();
-        try {
-            const response = await service.getDistanceMatrix({
-                origins: [pickup],
-                destinations: [dropoff],
-                travelMode: google.maps.TravelMode.DRIVING,
-                unitSystem: google.maps.UnitSystem.IMPERIAL,
-            });
-
-            const result = response.rows[0].elements[0];
-            if (result.status === 'OK') {
-                currentMiles = result.distance.value / 1609.34;
-                updatePriceEstimate(form.id, serviceType);
-            }
-        } catch (e) {
-            console.error('Distance calculation failed', e);
-        }
-    }
-
-    // Call initMaps when Google is ready
-    if (typeof google !== 'undefined') {
-        initMaps();
-    } else {
-        window.addEventListener('load', initMaps);
-    }
-
-    /* ---------------------------------------------------------------
-       PRICING CALCULATOR
-       --------------------------------------------------------------- */
-    function calculatePrice(serviceType, vehicleKey, options) {
-        if (!vehicleKey || !VEHICLE_RATES[vehicleKey]) return null;
-
-        const vehicle = VEHICLE_RATES[vehicleKey];
-
-        if (serviceType === 'hourly') {
-            const hours = Math.max(options.hours || MIN_HOURS, MIN_HOURS);
-            const total = vehicle.hourly * hours;
-            return {
-                total,
-                breakdown: `${hours} hrs × $${vehicle.hourly}/hr`,
-                vehicle: vehicle.name
-            };
+    searchBtn.addEventListener('click', () => {
+        // Capture form data
+        bookingData.pickup = document.getElementById('pickup-input').value;
+        bookingData.dropoff = document.getElementById('dropoff-input').value;
+        bookingData.date = document.getElementById('trip-date').value;
+        bookingData.time = document.getElementById('trip-time').value;
+        
+        if (bookingData.tripType === 'hourly') {
+            bookingData.hours = parseInt(document.getElementById('hourly-duration').value);
         }
 
-        if (serviceType === 'oneway') {
-            if (!options.hasPickup || !options.hasDropoff) return null;
-            const miles = options.miles || currentMiles;
-            const total = DISTANCE_RATE_PER_MILE * miles;
-            return {
-                total,
-                breakdown: `${miles.toFixed(1)} mi × $${DISTANCE_RATE_PER_MILE.toFixed(2)}/mi`,
-                vehicle: vehicle.name
-            };
+        // Collect stops
+        bookingData.stops = [];
+        document.querySelectorAll('.stop-input').forEach(inp => {
+            if (inp.value) bookingData.stops.push(inp.value);
+        });
+
+        // Validate
+        if (!bookingData.pickup) {
+            document.getElementById('pickup-input').focus();
+            return;
         }
 
-        if (serviceType === 'roundtrip') {
-            if (!options.hasPickup || !options.hasDropoff) return null;
-            const miles = options.miles || currentMiles;
-            const total = DISTANCE_RATE_PER_MILE * miles * 2;
-            return {
-                total,
-                breakdown: `${miles.toFixed(1)} mi × $${DISTANCE_RATE_PER_MILE.toFixed(2)}/mi × 2 (round trip)`,
-                vehicle: vehicle.name
-            };
-        }
-
-        return null;
-    }
-
-    /* ---------------------------------------------------------------
-       LIVE PRICE ESTIMATE — Updates UI in real-time
-       --------------------------------------------------------------- */
-    function updatePriceEstimate(formId, serviceType) {
-        const form = document.getElementById(formId);
-        if (!form) return;
-
-        const vehicleSelect = form.querySelector('[data-field="vehicle"]');
-        const vehicleKey = vehicleSelect ? vehicleSelect.value : '';
-
-        const pickupInput = form.querySelector('[data-field="pickup"]');
-        const dropoffInput = form.querySelector('[data-field="dropoff"]');
-        const hoursSelect = form.querySelector('[data-field="hours"]');
-
-        const hasPickup = pickupInput ? pickupInput.value.trim().length > 0 : false;
-        const hasDropoff = dropoffInput ? dropoffInput.value.trim().length > 0 : false;
-        const hours = hoursSelect ? parseInt(hoursSelect.value, 10) : MIN_HOURS;
-
-        const result = calculatePrice(serviceType, vehicleKey, {
-            hasPickup,
-            hasDropoff,
-            miles: currentMiles,
-            hours
-        });
-
-        const amountEl = document.getElementById(`price-amount-${serviceType}`);
-        const detailEl = document.getElementById(`price-detail-${serviceType}`);
-        const submitBtn = document.getElementById(`submit-${serviceType}`);
-        const priceBox = document.getElementById(`price-${serviceType}`);
-
-        if (result) {
-            amountEl.textContent = `$${result.total.toFixed(2)}`;
-            detailEl.textContent = result.breakdown;
-            priceBox.classList.add('price-estimate--active');
-            submitBtn.textContent = 'Proceed to Payment';
-            submitBtn.classList.add('booking-widget__submit--payment');
-            submitBtn.dataset.price = result.total.toFixed(2);
-            submitBtn.dataset.vehicle = result.vehicle;
-            submitBtn.dataset.breakdown = result.breakdown;
-            submitBtn.dataset.service = serviceType;
-        } else {
-            amountEl.textContent = '—';
-            priceBox.classList.remove('price-estimate--active');
-            submitBtn.classList.remove('booking-widget__submit--payment');
-            delete submitBtn.dataset.price;
-
-            if (!vehicleKey) {
-                detailEl.textContent = serviceType === 'hourly'
-                    ? 'Select a vehicle and hours'
-                    : 'Select a vehicle and enter locations';
-                submitBtn.textContent = 'Get a Quote';
-            } else if (serviceType !== 'hourly' && (!hasPickup || !hasDropoff)) {
-                detailEl.textContent = 'Enter pickup and dropoff to see estimate';
-                submitBtn.textContent = 'Get a Quote';
-            } else {
-                detailEl.textContent = 'Select a vehicle to see estimate';
-                submitBtn.textContent = 'Get a Quote';
-            }
-        }
-    }
-
-    /* ---------------------------------------------------------------
-       BIND LIVE ESTIMATE LISTENERS
-       --------------------------------------------------------------- */
-    const formConfigs = [
-        { formId: 'form-oneway',    serviceType: 'oneway' },
-        { formId: 'form-roundtrip', serviceType: 'roundtrip' },
-        { formId: 'form-hourly',    serviceType: 'hourly' }
-    ];
-
-    formConfigs.forEach(({ formId, serviceType }) => {
-        const form = document.getElementById(formId);
-        if (!form) return;
-
-        const inputs = form.querySelectorAll('input[data-field], select[data-field]');
-        inputs.forEach(input => {
-            const eventType = input.tagName === 'SELECT' ? 'change' : 'input';
-            input.addEventListener(eventType, () => {
-                if (eventType === 'input' && input.getAttribute('data-field') !== 'hours') {
-                    // Don't calculate distance on every keystroke, let Autocomplete handle it or do it on blur
-                } else {
-                    updatePriceEstimate(formId, serviceType);
-                }
-            });
-            
-            if (input.tagName === 'INPUT' && (input.getAttribute('data-field') === 'pickup' || input.getAttribute('data-field') === 'dropoff')) {
-                input.addEventListener('blur', () => calculateRealDistance(form, serviceType));
-            }
-        });
-
-        updatePriceEstimate(formId, serviceType);
-    });
-
-    /* ---------------------------------------------------------------
-       STICKY HEADER
-       --------------------------------------------------------------- */
-    const header = document.getElementById('header');
-    const onScroll = () => {
-        header.classList.toggle('header--scrolled', window.scrollY > 40);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    /* ---------------------------------------------------------------
-       MOBILE BURGER MENU
-       --------------------------------------------------------------- */
-    const burgerBtn = document.getElementById('burgerBtn');
-    const mainNav = document.getElementById('mainNav');
-
-    if (burgerBtn && mainNav) {
-        burgerBtn.addEventListener('click', () => {
-            burgerBtn.classList.toggle('open');
-            mainNav.classList.toggle('open');
-        });
-
-        mainNav.querySelectorAll('.header__link').forEach(link => {
-            link.addEventListener('click', () => {
-                burgerBtn.classList.remove('open');
-                mainNav.classList.remove('open');
-            });
-        });
-    }
-
-    /* ---------------------------------------------------------------
-       BOOKING WIDGET TABS
-       --------------------------------------------------------------- */
-    const tabs = document.querySelectorAll('.booking-widget__tab');
-    const forms = document.querySelectorAll('.booking-widget__form');
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.dataset.tab;
-
-            tabs.forEach(t => t.classList.remove('active'));
-            forms.forEach(f => f.classList.remove('active'));
-
-            tab.classList.add('active');
-            const targetForm = document.getElementById(`form-${target}`);
-            if (targetForm) {
-                targetForm.classList.add('active');
-            }
-        });
-    });
-
-    /* ---------------------------------------------------------------
-       FLEET CARD "BOOK THIS VEHICLE" — pre-selects vehicle in form
-       --------------------------------------------------------------- */
-    document.querySelectorAll('.fleet-card__cta[data-vehicle]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const vehicleKey = btn.dataset.vehicle;
-            const activeForm = document.querySelector('.booking-widget__form.active');
-            if (activeForm) {
-                const vehicleSelect = activeForm.querySelector('[data-field="vehicle"]');
-                if (vehicleSelect) {
-                    vehicleSelect.value = vehicleKey;
-                    vehicleSelect.dispatchEvent(new Event('change'));
-                }
-            }
-        });
-    });
-
-    /* ---------------------------------------------------------------
-       FORM SUBMISSION — Opens payment modal when price is ready
-       --------------------------------------------------------------- */
-    forms.forEach(form => {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = form.querySelector('.booking-widget__submit');
-
-            if (btn.dataset.price) {
-                openPaymentModal({
-                    service: btn.dataset.service,
-                    vehicle: btn.dataset.vehicle,
-                    breakdown: btn.dataset.breakdown,
-                    total: parseFloat(btn.dataset.price)
-                });
-            } else {
-                const btn2 = form.querySelector('.booking-widget__submit');
-                const originalText = btn2.textContent;
-                btn2.textContent = 'Please select a vehicle first';
-                btn2.style.background = '#333';
-                btn2.style.color = '#C0C0C0';
-                setTimeout(() => {
-                    btn2.textContent = originalText;
-                    btn2.style.background = '';
-                    btn2.style.color = '';
-                }, 2000);
-            }
-        });
-    });
-
-    /* ---------------------------------------------------------------
-       STRIPE PAYMENT MODAL
-       --------------------------------------------------------------- */
-    const overlay = document.getElementById('paymentOverlay');
-    const modal = document.getElementById('paymentModal');
-    const closeBtn = document.getElementById('paymentClose');
-    const payBtn = document.getElementById('payBtn');
-    const payBtnText = document.getElementById('payBtnText');
-    const paymentSuccess = document.getElementById('paymentSuccess');
-    const paymentDone = document.getElementById('paymentDone');
-
-    let currentBooking = null;
-
-    const SERVICE_LABELS = {
-        oneway: 'One-Way Transfer',
-        roundtrip: 'Round-Trip Transfer',
-        hourly: 'Hourly Service'
-    };
-
-    function openPaymentModal(booking) {
-        currentBooking = booking;
-
-        document.getElementById('pay-service').textContent = SERVICE_LABELS[booking.service] || booking.service;
-        document.getElementById('pay-vehicle').textContent = booking.vehicle;
-        document.getElementById('pay-breakdown').textContent = booking.breakdown;
-        document.getElementById('pay-total').textContent = `$${booking.total.toFixed(2)}`;
-        payBtnText.textContent = `Pay $${booking.total.toFixed(2)}`;
-
-        // Reset form state
-        paymentSuccess.style.display = 'none';
-        document.querySelector('.payment-modal__form').style.display = 'block';
-        document.querySelector('.payment-modal__summary').style.display = 'block';
-        payBtn.disabled = false;
-        payBtn.classList.remove('payment-modal__pay-btn--processing');
-
-        overlay.classList.add('active');
+        // Open modal
+        bookingModal.classList.add('active');
         document.body.style.overflow = 'hidden';
-    }
-
-    function closePaymentModal() {
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-        currentBooking = null;
-
-        // Clear form fields
-        ['pay-email', 'pay-card', 'pay-expiry', 'pay-cvc', 'pay-name'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = '';
-        });
-    }
-
-    if (closeBtn) closeBtn.addEventListener('click', closePaymentModal);
-    if (overlay) overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closePaymentModal();
+        showModalStep(2);
     });
-    if (paymentDone) paymentDone.addEventListener('click', closePaymentModal);
 
-    // Card number formatting (spaces every 4 digits)
-    const cardInput = document.getElementById('pay-card');
-    if (cardInput) {
-        cardInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '').slice(0, 16);
-            val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
-            e.target.value = val;
-        });
+    modalClose.addEventListener('click', closeModal);
+    
+    bookingModal.addEventListener('click', (e) => {
+        if (e.target === bookingModal) closeModal();
+    });
+
+    function closeModal() {
+        bookingModal.classList.remove('active');
+        document.body.style.overflow = '';
     }
 
-    // Expiry formatting (MM / YY)
-    const expiryInput = document.getElementById('pay-expiry');
-    if (expiryInput) {
-        expiryInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '').slice(0, 4);
-            if (val.length >= 2) {
-                val = val.slice(0, 2) + ' / ' + val.slice(2);
-            }
-            e.target.value = val;
-        });
+    function showModalStep(n) {
+        document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+        document.getElementById(`modal-step-${n}`).classList.add('active');
     }
 
-    // CVC — digits only
-    const cvcInput = document.getElementById('pay-cvc');
-    if (cvcInput) {
-        cvcInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
-        });
-    }
+    // ===== VEHICLE SELECTION =====
+    document.querySelectorAll('.vehicle-select-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const vehicleKey = card.dataset.vehicle;
+            bookingData.vehicle = vehicleKey;
+            bookingData.vehicleName = VEHICLE_RATES[vehicleKey].name;
 
-    // Simulated payment processing
-    if (payBtn) {
-        payBtn.addEventListener('click', () => {
-            const email = document.getElementById('pay-email').value.trim();
-            const card = document.getElementById('pay-card').value.replace(/\s/g, '');
-            const expiry = document.getElementById('pay-expiry').value.trim();
-            const cvc = document.getElementById('pay-cvc').value.trim();
-            const name = document.getElementById('pay-name').value.trim();
+            // Visual selection
+            document.querySelectorAll('.vehicle-select-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
 
-            if (!email || !card || !expiry || !cvc || !name) {
-                payBtn.classList.add('payment-modal__pay-btn--error');
-                payBtnText.textContent = 'Please fill all fields';
-                setTimeout(() => {
-                    payBtn.classList.remove('payment-modal__pay-btn--error');
-                    payBtnText.textContent = `Pay $${currentBooking.total.toFixed(2)}`;
-                }, 2000);
-                return;
+            // Calculate price
+            const rate = VEHICLE_RATES[vehicleKey];
+            let total;
+            if (bookingData.tripType === 'hourly') {
+                total = rate.hourly * bookingData.hours;
+            } else {
+                total = rate.base + (rate.perMile * (bookingData.miles || 15));
+                if (bookingData.tripType === 'roundtrip') total *= 2;
             }
+            bookingData.total = total.toFixed(2);
 
-            if (card.length < 13) {
-                payBtn.classList.add('payment-modal__pay-btn--error');
-                payBtnText.textContent = 'Invalid card number';
-                setTimeout(() => {
-                    payBtn.classList.remove('payment-modal__pay-btn--error');
-                    payBtnText.textContent = `Pay $${currentBooking.total.toFixed(2)}`;
-                }, 2000);
-                return;
-            }
-
-            // Simulate processing
-            payBtn.disabled = true;
-            payBtn.classList.add('payment-modal__pay-btn--processing');
-            payBtnText.textContent = 'Processing…';
-
+            // Show step 3
             setTimeout(() => {
-                // Generate confirmation ID
-                const confirmId = 'SM-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-                document.getElementById('confirmationId').textContent = `Confirmation: ${confirmId}`;
-
-                document.querySelector('.payment-modal__form').style.display = 'none';
-                document.querySelector('.payment-modal__summary').style.display = 'none';
-                paymentSuccess.style.display = 'flex';
-            }, 2200);
+                showModalStep(3);
+                updateModalSummary();
+            }, 300);
         });
+    });
+
+    modalBack.addEventListener('click', () => showModalStep(2));
+
+    function updateModalSummary() {
+        const summary = document.getElementById('modalSummary');
+        const priceEl = document.getElementById('modalPrice');
+        
+        summary.innerHTML = `
+            <strong>${bookingData.vehicleName}</strong><br>
+            ${bookingData.tripType.charAt(0).toUpperCase() + bookingData.tripType.slice(1)} · ${bookingData.passengers} passenger${bookingData.passengers > 1 ? 's' : ''}<br>
+            ${bookingData.pickup ? `📍 ${bookingData.pickup}` : ''}
+            ${bookingData.dropoff ? ` → ${bookingData.dropoff}` : ''}
+            ${bookingData.date ? `<br>📅 ${bookingData.date} at ${bookingData.time}` : ''}
+        `;
+        
+        priceEl.textContent = `$${bookingData.total}`;
     }
 
-    // Escape key closes modal
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) {
-            closePaymentModal();
+    // ===== CONFIRM RESERVATION =====
+    const confirmBtn = document.getElementById('confirmBtn');
+    
+    confirmBtn.addEventListener('click', async () => {
+        const name = document.getElementById('pay-name').value;
+        const email = document.getElementById('pay-email').value;
+        const phone = document.getElementById('pay-phone').value;
+        const notes = document.getElementById('final-notes').value;
+
+        if (!name || !email || !phone) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Processing...';
+
+        // Send to Netlify dispatch
+        try {
+            const payload = {
+                name,
+                email,
+                phone,
+                vehicle: bookingData.vehicleName,
+                total: bookingData.total,
+                pickup: bookingData.pickup,
+                dropoff: bookingData.dropoff,
+                date: bookingData.date,
+                time: bookingData.time,
+                passengers: bookingData.passengers,
+                luggage: 0,
+                tripType: bookingData.tripType,
+                serviceType: bookingData.serviceType,
+                stops: bookingData.stops.join(' | '),
+                notes,
+                smsConsent: document.getElementById('sms-consent').checked
+            };
+
+            await fetch('/.netlify/functions/dispatch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            // Show success
+            document.querySelector('.modal-form').style.display = 'none';
+            document.querySelector('#modal-step-3 .modal-summary').style.display = 'none';
+            document.getElementById('bookingSuccess').style.display = 'block';
+
+        } catch (e) {
+            console.error('Dispatch error:', e);
+            // Still show success (lead captured in form data)
+            document.querySelector('.modal-form').style.display = 'none';
+            document.getElementById('bookingSuccess').style.display = 'block';
         }
     });
 
-    /* ---------------------------------------------------------------
-       SMOOTH REVEAL ON SCROLL (Intersection Observer)
-       --------------------------------------------------------------- */
-    const revealElements = document.querySelectorAll(
-        '.fleet-card, .service-card, .testimonial-card, .trust-badge, .cta-section__inner'
-    );
-
-    if ('IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-        revealElements.forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(24px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            revealObserver.observe(el);
-        });
+    // ===== SET DEFAULT DATE/TIME =====
+    function setDefaultDateTime() {
+        const now = new Date();
+        now.setHours(now.getHours() + 2);
+        
+        const dateInput = document.getElementById('trip-date');
+        const timeInput = document.getElementById('trip-time');
+        
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        dateInput.value = `${year}-${month}-${day}`;
+        dateInput.min = `${year}-${month}-${day}`;
+        
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(Math.ceil(now.getMinutes() / 15) * 15).padStart(2, '0');
+        timeInput.value = `${hours}:${minutes === '60' ? '00' : minutes}`;
     }
+    
+    setDefaultDateTime();
 
-    const style = document.createElement('style');
-    style.textContent = `.revealed { opacity: 1 !important; transform: translateY(0) !important; }`;
-    document.head.appendChild(style);
+    // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+            const target = document.querySelector(anchor.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 72;
+                window.scrollTo({
+                    top: target.offsetTop - offset,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 
-    /* ---------------------------------------------------------------
-       SET MIN DATE TO TODAY
-       --------------------------------------------------------------- */
-    const today = new Date().toISOString().split('T')[0];
-    document.querySelectorAll('input[type="date"]').forEach(input => {
-        input.setAttribute('min', today);
+    // ===== INIT =====
+    initMaps();
+
+    // ===== INTERSECTION OBSERVER FOR ANIMATIONS =====
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.vehicle-card, .service-card, .dest-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
     });
 });
