@@ -264,3 +264,63 @@ body { font-family: var(--font); color: var(--text-dark); background: var(--bg-w
 .social-btn:hover { background: var(--gold); color: #fff; transform: translateY(-3px); }
 
 .area-img-wrap-simple img { position: static; opacity: 1 !important; visibility: visible !important; width: 100%; height: auto; border-radius: 20px; }
+
+/* PAYMENT MODAL STYLES */
+.payment-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.payment-overlay.active { display: flex; }
+.payment-modal {
+    background: #0c0c0c;
+    border: 1px solid rgba(192, 192, 192, 0.2);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    color: #fff;
+    overflow: hidden;
+}
+.payment-modal__close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+}
+.payment-modal__header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.payment-modal__secure { font-size: 0.7rem; color: #888; display: flex; align-items: center; gap: 5px; }
+.payment-modal__summary { padding: 20px 24px; background: rgba(255, 255, 255, 0.02); }
+.payment-modal__title { font-size: 0.9rem; margin-bottom: 15px; color: var(--gold); }
+.payment-modal__line { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; }
+.payment-modal__divider { height: 1px; background: rgba(255, 255, 255, 0.05); margin: 10px 0; }
+.payment-modal__line--total { font-weight: 800; font-size: 1.1rem; color: #fff; }
+.payment-modal__form { padding: 24px; }
+.payment-modal__field { margin-bottom: 15px; }
+.payment-modal__field label { display: block; font-size: 0.7rem; text-transform: uppercase; color: #888; margin-bottom: 5px; }
+.payment-modal__field input {
+    width: 100%;
+    padding: 12px;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+}

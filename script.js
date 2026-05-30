@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Master Elite Engine (v17.1 - HOISTING FIX)
+   SM LIMOUSINE — Master Elite Engine (v20.2 - PAYMENT FLOW FIX)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -87,9 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.updateFinalPrice = updateFinalPrice;
 
-    // --- DISPATCH ---
-    window.handleFinalReservation = async () => {
-        const btn = document.getElementById('final-submit-btn');
+    // --- PAYMENT MODAL LOGIC ---
+    const overlay = document.getElementById('paymentOverlay');
+    const closeBtn = document.getElementById('paymentClose');
+    const payModalBtn = document.getElementById('pay-modal-submit-btn');
+
+    window.handleFinalReservation = () => {
         const nameEl = document.getElementById('pay-name');
         const emailEl = document.getElementById('pay-email');
         const phoneEl = document.getElementById('pay-phone');
@@ -103,33 +106,76 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !email || !phone) { alert("Please fill all contact fields."); return; }
         if (!consent) { alert("Please agree to receive SMS updates."); return; }
 
-        btn.disabled = true;
-        btn.innerText = "Sending...";
+        // Populate Payment Modal Summary
+        document.getElementById('pay-summary-vehicle').textContent = bookingData.vehicleName;
+        document.getElementById('pay-summary-total').textContent = `$${bookingData.total}`;
+        
+        // Pre-fill Payment Modal Fields
+        document.getElementById('pay-card-email').value = email;
+        document.getElementById('pay-card-name').value = name;
 
-        try {
-            await fetch('/.netlify/functions/dispatch', {
-                method: 'POST',
-                body: JSON.stringify({
-                    ...bookingData,
-                    clientName: name,
-                    clientEmail: email,
-                    clientPhone: phone,
-                    notes: document.getElementById('final-notes')?.value || '',
+        overlay.classList.add('active');
+        overlay.style.display = 'flex';
+    };
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            overlay.classList.remove('active');
+            overlay.style.display = 'none';
+        });
+    }
+
+    if (payModalBtn) {
+        payModalBtn.addEventListener('click', async () => {
+            const cardNum = document.getElementById('pay-card-number').value.trim();
+            const cardExpiry = document.getElementById('pay-card-expiry').value.trim();
+            const cardCvc = document.getElementById('pay-card-cvc').value.trim();
+
+            if (!cardNum || !cardExpiry || !cardCvc) {
+                alert("Please fill all card details.");
+                return;
+            }
+
+            payModalBtn.disabled = true;
+            payModalBtn.innerText = "Processing...";
+
+            try {
+                // FIXED DATA MAPPING FOR DISPATCH.JS
+                const payload = {
+                    name: document.getElementById('pay-name').value.trim(),
+                    email: document.getElementById('pay-email').value.trim(),
+                    clientPhone: document.getElementById('pay-phone').value.trim(),
+                    vehicle: bookingData.vehicleName,
+                    total: bookingData.total,
                     pickup: document.getElementById('pickup-input')?.value || '',
                     dropoff: document.getElementById('dropoff-input')?.value || '',
                     date: document.getElementById('trip-date')?.value || '',
-                    time: document.getElementById('trip-time')?.value || ''
-                })
-            });
-            btn.style.display = 'none';
-            const success = document.getElementById('booking-success-msg');
-            if (success) success.style.display = 'block';
-        } catch (e) {
-            alert("Connection error. Please try again.");
-            btn.disabled = false;
-            btn.innerText = "Confirm Reservation";
-        }
-    };
+                    time: document.getElementById('trip-time')?.value || '',
+                    passengers: bookingData.pax,
+                    luggage: bookingData.luggage,
+                    notes: document.getElementById('final-notes')?.value || ''
+                };
+
+                await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                // Generate confirmation ID
+                const confirmId = 'SM-' + Date.now().toString(36).toUpperCase();
+                document.getElementById('confirmationId').textContent = `Confirmation: ${confirmId}`;
+
+                document.querySelector('.payment-modal__form').style.display = 'none';
+                document.querySelector('.payment-modal__summary').style.display = 'none';
+                document.getElementById('paymentSuccess').style.display = 'flex';
+                
+            } catch (e) {
+                alert("Connection error. Please try again.");
+                payModalBtn.disabled = false;
+                payModalBtn.innerText = "Pay Now";
+            }
+        });
+    }
 
     // --- VIEW / SCROLL ---
     window.viewAction = (tab) => {
