@@ -179,6 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- VIEW / SCROLL ---
     window.viewAction = (tab) => {
+        if (tab === 'Charter bus') {
+            const charter = document.getElementById('charter-section');
+            if (charter) charter.scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
         if (tab) {
             const tabBtn = document.querySelector(`.trip-tab[data-trip="${tab}"]`);
             if (tabBtn) tabBtn.click();
@@ -217,6 +222,17 @@ document.addEventListener('DOMContentLoaded', () => {
             bookingData.serviceType = tab.dataset.trip;
             const hField = document.getElementById('hourly-field');
             if (hField) hField.style.display = (tab.dataset.trip === 'hourly') ? 'block' : 'none';
+        });
+    });
+
+    document.querySelectorAll('.service-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            if (tab.innerText.includes('Charter')) {
+                const charter = document.getElementById('charter-section');
+                if (charter) charter.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 
