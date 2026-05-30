@@ -6,16 +6,25 @@ exports.handler = async (event) => {
 
   try {
     const data = JSON.parse(event.body);
-    const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
-
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
     const DISPATCH_TO = process.env.DISPATCH_TO;
 
-    let bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
+    let bookingSummary = '';
+    let subject = '';
 
-    const { returnDate, returnTime, returnPickup, returnDropoff } = data;
-    if (returnDate && returnDate !== 'N/A') {
-      bookingSummary += `\n\nReturn Trip: ${returnPickup} TO ${returnDropoff}\nReturn Date/Time: ${returnDate} @ ${returnTime}`;
+    if (data.type === 'FEEDBACK') {
+        const { name, rating, comment, bookingId } = data;
+        subject = `⭐ FEEDBACK: ${rating}-Star from ${name}`;
+        bookingSummary = `⭐ NEW CLIENT FEEDBACK\n\nClient: ${name}\nRating: ${rating}/5 Stars\nBooking ID: ${bookingId}\n\nComment: ${comment}`;
+    } else {
+        const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
+        subject = `🚨 Booking: ${name} - ${vehicle}`;
+        bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
+
+        const { returnDate, returnTime, returnPickup, returnDropoff } = data;
+        if (returnDate && returnDate !== 'N/A') {
+          bookingSummary += `\n\nReturn Trip: ${returnPickup} TO ${returnDropoff}\nReturn Date/Time: ${returnDate} @ ${returnTime}`;
+        }
     }
 
     const transporter = nodemailer.createTransport({
@@ -28,7 +37,7 @@ exports.handler = async (event) => {
     const mailOptions = {
       from: '"SM DISPATCH" <smlimousine2026@gmail.com>',
       to: 'smlimousine2026@gmail.com',
-      subject: `🚨 Booking: ${name} - ${vehicle}`,
+      subject: subject,
       text: bookingSummary
     };
 

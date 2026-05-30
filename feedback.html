@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rate Your Journey | SM LIMOUSINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --black: #000; --silver: #C0C0C0; --gold: #D4AF37; --white: #fff; --font-main: 'Inter', sans-serif; }
+        html, body { background: var(--black); color: var(--white); font-family: var(--font-main); line-height: 1.5; width: 100%; height: 100%; overflow-x: hidden; }
+        
+        .header { height: 80px; background: rgba(0,0,0,0.98); border-bottom: 1px solid #111; display: flex; align-items: center; justify-content: center; }
+        .header__logo { height: 40px; }
+
+        .container { max-width: 480px; margin: 40px auto; padding: 20px; text-align: center; }
+        .title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--silver); margin-bottom: 10px; }
+        .subtitle { font-size: 1rem; color: #666; margin-bottom: 30px; }
+
+        .card { background: #080808; border: 1px solid #222; border-radius: 24px; padding: 30px; box-shadow: 0 40px 100px rgba(0,0,0,0.9); }
+        
+        .stars { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .star { font-size: 2.5rem; color: #222; cursor: pointer; transition: color 0.2s; }
+        .star.active { color: var(--gold); }
+
+        .st-input { width: 100%; padding: 18px; background: #000; border: 1px solid #222; border-radius: 14px; color: #fff; font-size: 1rem; margin-bottom: 20px; -webkit-appearance: none; }
+        .submit-btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; border-radius: 14px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 1.1rem; }
+        .submit-btn:disabled { opacity: 0.5; }
+
+        #success-msg { display: none; margin-top: 20px; color: var(--gold); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="sm_logo_silver.png" alt="SM LIMOUSINE" class="header__logo">
+    </header>
+
+    <div class="container">
+        <h1 class="title">How was your ride?</h1>
+        <p class="subtitle">We value your private feedback.</p>
+
+        <div class="card" id="feedback-form">
+            <div class="stars" id="star-rating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            
+            <textarea id="comment" class="st-input" rows="4" placeholder="Tell us about your experience..."></textarea>
+            
+            <button id="submitBtn" class="submit-btn">Submit Feedback</button>
+            <p id="success-msg">Thank you! Your feedback has been sent to management.</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedRating = 0;
+        const stars = document.querySelectorAll('.star');
+        const p = new URLSearchParams(window.location.search);
+        const bookingId = p.get('id') || 'Unknown';
+        const passenger = p.get('name') || 'Guest';
+
+        stars.forEach(s => {
+            s.addEventListener('click', () => {
+                selectedRating = s.dataset.value;
+                stars.forEach(st => {
+                    st.classList.toggle('active', st.dataset.value <= selectedRating);
+                });
+            });
+        });
+
+        document.getElementById('submitBtn').onclick = async () => {
+            if (selectedRating === 0) { alert('Please select a star rating.'); return; }
+            
+            const btn = document.getElementById('submitBtn');
+            const comment = document.getElementById('comment').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            try {
+                const res = await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'FEEDBACK',
+                        name: passenger,
+                        bookingId: bookingId,
+                        rating: selectedRating,
+                        comment: comment,
+                        email: 'feedback-system@sm-limo.com'
+                    })
+                });
+
+                if (res.ok) {
+                    document.getElementById('feedback-form').style.opacity = '0.5';
+                    document.getElementById('submitBtn').style.display = 'none';
+                    document.getElementById('success-msg').style.display = 'block';
+                }
+            } catch (e) {
+                alert('Connection error. Please try again.');
+                btn.disabled = false;
+                btn.textContent = 'Submit Feedback';
+            }
+        };
+    </script>
+</body>
+</html>
