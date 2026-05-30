@@ -1,12 +1,14 @@
 functionsDirectory = "/root/workspace/black-car-service/netlify/functions"
-functionsDirectoryOrigin = "default"
+functionsDirectoryOrigin = "config-v1"
+headersOrigin = "config"
+redirectsOrigin = "config"
 plugins = []
 headers = []
 redirects = []
 
 [build]
 publish = "/root/workspace/black-car-service"
-publishOrigin = "default"
+publishOrigin = "config"
 functions = "/root/workspace/black-car-service/netlify/functions"
 
 [build.environment]

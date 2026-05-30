@@ -8,15 +8,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20260530a">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <!-- Preload critical area images for immediate rendering -->
+    <link rel="preload" as="image" href="images/areas/dallas.jpg?v=20260530a">
+    <link rel="preload" as="image" href="images/areas/fortworth.jpg?v=20260530a">
+    <link rel="preload" as="image" href="images/areas/arlington.jpg?v=20260530a">
+    <link rel="preload" as="image" href="images/areas/plano.jpg?v=20260530a">
 </head>
 <body>
     <header class="header">
         <div class="header__container">
             <a href="/" class="header__logo">
-                <img src="sm_logo_silver.png" alt="SM LIMOUSINE">
+                <img src="sm_logo_silver.png?v=20260530a" alt="SM LIMOUSINE">
             </a>
             <div class="header__nav">
                 <a href="#services">Our services</a>
@@ -62,13 +67,13 @@
                         <button class="search-btn" onclick="goToStep(2)">Continue</button>
                     </div>
                     <div class="booking-step" id="step-2">
-                        <a href="javascript:goToStep(1)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">← Back to Details</a>
+                        <a href="javascript:goToStep(1)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">&#8592; Back to Details</a>
                         <div class="picker-group"><label>Passengers</label><div class="picker-opts" id="pax-picker"><div class="picker-opt active">1</div><div class="picker-opt">2</div><div class="picker-opt">3</div><div class="picker-opt">7</div><div class="picker-opt">14</div></div></div>
                         <div class="picker-group" style="margin-top:20px;"><label>Luggage</label><div class="picker-opts" id="luggage-picker"><div class="picker-opt active">0</div><div class="picker-opt">1</div><div class="picker-opt">3</div><div class="picker-opt">5</div></div></div>
                         <button class="search-btn" onclick="goToStep(3)">Continue</button>
                     </div>
                     <div class="booking-step" id="step-3">
-                        <a href="javascript:goToStep(2)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">← Back to Passengers</a>
+                        <a href="javascript:goToStep(2)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">&#8592; Back to Passengers</a>
                         <div class="form-field"><label>Vehicle</label><select id="final-vehicle-select" onchange="updateFinalPrice()"><option value="escalade">2026 Cadillac Escalade</option><option value="denali">GMC Denali</option><option value="suburban">Chevrolet Suburban</option><option value="sprinter">Mercedes Sprinter</option><option value="xt6">Cadillac XT6</option><option value="motorcoach">Motor Coach</option></select></div>
                         <div class="form-field"><input type="text" id="pay-name" placeholder="Full Name"></div>
                         <div class="form-field"><input type="email" id="pay-email" placeholder="Email Address"></div>
@@ -77,7 +82,7 @@
                         <div class="price-box" style="padding:15px; background:#f8f9fc; border-radius:8px; margin-bottom:15px; text-align:center;"><span id="final-price-amount" style="font-size:1.5rem; font-weight:800; color:#11142d;">$0.00</span></div>
                         <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:20px;"><input type="checkbox" id="sms-consent" style="width:18px; height:18px; margin-top:2px;"><span style="font-size:0.7rem; color:#666;">I agree to receive SMS trip updates.</span></div>
                         <button class="search-btn" id="final-submit-btn" onclick="handleFinalReservation()">Confirm Reservation</button>
-                        <div id="booking-success-msg" style="display:none; text-align:center; color:#28a745; margin-top:20px;"><h3>✅ Reservation Sent</h3></div>
+                        <div id="booking-success-msg" style="display:none; text-align:center; color:#28a745; margin-top:20px;"><h3>&#10004; Reservation Sent</h3></div>
                     </div>
                 </div>
             </div>
@@ -88,10 +93,10 @@
         <div class="container">
             <h2 class="section-title">Premium Vehicles for Every Occasion</h2>
             <div class="fleet-grid">
-                <div class="fleet-card" onclick="selectVehicle('xt6')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg"><h3>Premium sedan</h3><p>👥 2 &nbsp; 🧳 2</p><div class="fleet-card__price">From <span>$78.00</span></div></div>
-                <div class="fleet-card" onclick="selectVehicle('denali')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg"><h3>Premium SUV</h3><p>👥 6 &nbsp; 🧳 5</p><div class="fleet-card__price">From <span>$114.00</span></div></div>
-                <div class="fleet-card" onclick="selectVehicle('escalade')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg"><h3>First class</h3><p>👥 2-6 &nbsp; 🧳 2-5</p><div class="fleet-card__price">From <span>$150.00</span></div></div>
-                <div class="fleet-card" onclick="selectVehicle('sprinter')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg"><h3>Sprinter van</h3><p>👥 12 &nbsp; 🧳 10</p><div class="fleet-card__price">From <span>$270.00</span></div></div>
+                <div class="fleet-card" onclick="selectVehicle('xt6')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg?v=20260530a" alt="Premium Sedan"><h3>Premium sedan</h3><p>&#128101; 2 &nbsp; &#129523; 2</p><div class="fleet-card__price">From <span>$78.00</span></div></div>
+                <div class="fleet-card" onclick="selectVehicle('denali')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg?v=20260530a" alt="Premium SUV"><h3>Premium SUV</h3><p>&#128101; 6 &nbsp; &#129523; 5</p><div class="fleet-card__price">From <span>$114.00</span></div></div>
+                <div class="fleet-card" onclick="selectVehicle('escalade')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg?v=20260530a" alt="First Class"><h3>First class</h3><p>&#128101; 2-6 &nbsp; &#129523; 2-5</p><div class="fleet-card__price">From <span>$150.00</span></div></div>
+                <div class="fleet-card" onclick="selectVehicle('sprinter')"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg?v=20260530a" alt="Sprinter Van"><h3>Sprinter van</h3><p>&#128101; 12 &nbsp; &#129523; 10</p><div class="fleet-card__price">From <span>$270.00</span></div></div>
             </div>
         </div>
     </section>
@@ -100,7 +105,7 @@
         <div class="container">
             <div class="bigger-card">
                 <div class="bigger-content"><h2>Need Something Bigger?</h2><p>Check out premium buses for large groups.</p><button class="view-btn" onclick="viewAction('Charter bus')">View</button></div>
-                <img src="https://images.ctfassets.net/youh2ajahg7j/35mg10tqU3HdcQLjD2izW0/b4d2b3658d8ff3d97130177675574a76/buses.webp">
+                <img src="https://images.ctfassets.net/youh2ajahg7j/35mg10tqU3HdcQLjD2izW0/b4d2b3658d8ff3d97130177675574a76/buses.webp" alt="Charter Buses">
             </div>
         </div>
     </section>
@@ -109,8 +114,8 @@
         <div class="container">
             <h2 class="section-title">Our Services</h2>
             <div class="services-grid">
-                <div class="service-card"><img src="https://www.bookinglane.com/_next/static/media/service-v3-1.589c41f9.avif"><div class="service-text"><h3>Airport Transfers</h3><button onclick="viewAction('oneway')">View</button></div></div>
-                <div class="service-card"><img src="https://www.bookinglane.com/_next/static/media/service-v3-2.77b7771c.avif"><div class="service-text"><h3>Corporate Travel</h3><button onclick="viewAction('hourly')">View</button></div></div>
+                <div class="service-card"><img src="https://www.bookinglane.com/_next/static/media/service-v3-1.589c41f9.avif" alt="Airport Transfers"><div class="service-text"><h3>Airport Transfers</h3><button onclick="viewAction('oneway')">View</button></div></div>
+                <div class="service-card"><img src="https://www.bookinglane.com/_next/static/media/service-v3-2.77b7771c.avif" alt="Corporate Travel"><div class="service-text"><h3>Corporate Travel</h3><button onclick="viewAction('hourly')">View</button></div></div>
             </div>
         </div>
     </section>
@@ -120,20 +125,76 @@
             <h2 class="section-title">Luxury Charter Buses for Every Group</h2>
             <p class="section-subtitle">SM LIMOUSINE partners with top-tier group charter bus providers to deliver premium group transportation...</p>
             <div class="elite-cards">
-                <div class="elite-card"><img src="charter_hero.jpg"><div class="elite-card__content"><h3>Corporate Charter Bus</h3><p>Reliable charter transportation for business meetings and executive outings.</p><a href="javascript:void(0)" onclick="viewAction('Charter bus')" class="elite-card__link">View &rarr;</a></div></div>
-                <div class="elite-card"><img src="sports_teams_old.jpg"><div class="elite-card__content"><h3>Group Transportation</h3><p>Comfortable and efficient charter buses for athletes and team staff.</p><a href="javascript:void(0)" onclick="viewAction('Charter bus')" class="elite-card__link">View &rarr;</a></div></div>
+                <div class="elite-card"><img src="charter_hero.jpg?v=20260530a" alt="Corporate Charter Bus"><div class="elite-card__content"><h3>Corporate Charter Bus</h3><p>Reliable charter transportation for business meetings and executive outings.</p><a href="javascript:void(0)" onclick="viewAction('Charter bus')" class="elite-card__link">View &#8594;</a></div></div>
+                <div class="elite-card"><img src="sports_teams_old.jpg?v=20260530a" alt="Group Transportation"><div class="elite-card__content"><h3>Group Transportation</h3><p>Comfortable and efficient charter buses for athletes and team staff.</p><a href="javascript:void(0)" onclick="viewAction('Charter bus')" class="elite-card__link">View &#8594;</a></div></div>
             </div>
         </div>
     </section>
 
+    <!-- ============================================================
+         AREAS WE SERVE - BULLETPROOF TRIPLE-REDUNDANT IMAGE SYSTEM
+         ============================================================
+         Layer 1 (PRIMARY): Same-origin self-hosted optimized JPEGs
+                            Served from sm-limo.com - CANNOT be ad-blocked
+         Layer 2 (FALLBACK): JavaScript onerror swaps to Unsplash CDN
+         Layer 3 (FAIL-SAFE): CSS luxury gradient always visible behind
+         ============================================================ -->
     <section class="areas-serve section--bg" id="destinations">
         <div class="container">
             <h2 class="section-title">AREAS WE SERVE</h2>
             <div class="areas-list">
-                <div class="area-item"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/d04a4777e0f74074a2b6881a68916880_dallas_city.png"><h3>Dallas</h3></div>
-                <div class="area-item"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/9411e1537f8844b6aba1a0f50838cef9_fortworth_city.png"><h3>Fort Worth</h3></div>
-                <div class="area-item"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/a1ad9e421282422e9157b50da4f8c7da_arlington_city.png"><h3>Arlington</h3></div>
-                <div class="area-item"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/8f774b549d6b4d46af60dcf69bdb83dd_plano_city.png"><h3>Plano</h3></div>
+                <div class="area-item" data-city="dallas">
+                    <div class="area-img-wrap">
+                        <img src="images/areas/dallas.jpg?v=20260530a" 
+                             alt="Dallas Texas - Premium Limousine Service" 
+                             loading="eager"
+                             decoding="async"
+                             crossorigin="anonymous"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1545194445-dddb8f4487c6?w=800&q=80&fit=crop';this.parentElement.classList.add('img-fallback');"
+                             onload="this.parentElement.classList.add('img-loaded');">
+                        <div class="area-img-gradient-overlay"></div>
+                    </div>
+                    <h3>Dallas</h3>
+                </div>
+                <div class="area-item" data-city="fortworth">
+                    <div class="area-img-wrap">
+                        <img src="images/areas/fortworth.jpg?v=20260530a" 
+                             alt="Fort Worth Texas - Premium Limousine Service" 
+                             loading="eager"
+                             decoding="async"
+                             crossorigin="anonymous"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1531218150217-54595bc2b934?w=800&q=80&fit=crop';this.parentElement.classList.add('img-fallback');"
+                             onload="this.parentElement.classList.add('img-loaded');">
+                        <div class="area-img-gradient-overlay"></div>
+                    </div>
+                    <h3>Fort Worth</h3>
+                </div>
+                <div class="area-item" data-city="arlington">
+                    <div class="area-img-wrap">
+                        <img src="images/areas/arlington.jpg?v=20260530a" 
+                             alt="Arlington Texas - Premium Limousine Service" 
+                             loading="eager"
+                             decoding="async"
+                             crossorigin="anonymous"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1570089858688-6e1f5d1f1c43?w=800&q=80&fit=crop';this.parentElement.classList.add('img-fallback');"
+                             onload="this.parentElement.classList.add('img-loaded');">
+                        <div class="area-img-gradient-overlay"></div>
+                    </div>
+                    <h3>Arlington</h3>
+                </div>
+                <div class="area-item" data-city="plano">
+                    <div class="area-img-wrap">
+                        <img src="images/areas/plano.jpg?v=20260530a" 
+                             alt="Plano Texas - Premium Limousine Service" 
+                             loading="eager"
+                             decoding="async"
+                             crossorigin="anonymous"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1494526585095-c41746248156?w=800&q=80&fit=crop';this.parentElement.classList.add('img-fallback');"
+                             onload="this.parentElement.classList.add('img-loaded');">
+                        <div class="area-img-gradient-overlay"></div>
+                    </div>
+                    <h3>Plano</h3>
+                </div>
             </div>
         </div>
     </section>
@@ -141,14 +202,14 @@
     <section class="trust-section section">
         <div class="container">
             <h2 class="section-title">Don't Just Take Our Word for It</h2>
-            <img src="trustpilot_rating.jpg" style="width:100%; max-width:400px; display:block; margin:0 auto;">
+            <img src="trustpilot_rating.jpg?v=20260530a" alt="Trustpilot Rating" style="width:100%; max-width:400px; display:block; margin:0 auto;">
         </div>
     </section>
 
     <section class="partners-elite">
         <div class="container">
             <h2 class="section-title" style="color:#fff">Global Affiliate Network</h2>
-            <img src="affiliates_elite.jpg" style="width:100%; max-width:900px; display:block; margin:40px auto; border-radius:12px;">
+            <img src="affiliates_elite.jpg?v=20260530a" alt="Global Affiliates" style="width:100%; max-width:900px; display:block; margin:40px auto; border-radius:12px;">
         </div>
     </section>
 
@@ -157,15 +218,34 @@
             <div class="footer__social-row">
                 <a href="https://www.facebook.com/share/1DBJ281rsN/?mibextid=wwXIfr" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/limousinesm?igsh=dzgydWcxdTYybDcx&utm_source=qr" class="social-btn ig"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@smlimo2026?_r=1&_t=ZT-96kfT1KiDp0" class="social-btn tt"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.tiktok.com/@smlimo2026?_r=1&_t=ZT-96kfT1KiDp0" class="social-btn x">TT</a>
             </div>
             <div class="footer__links-row">
-                <a href="/privacy.html">Controlling Your Personal Data</a><a href="/terms.html">Terms of service</a><a href="/privacy.html">Privacy policy</a>
+                <a href='/privacy'>Controlling Your Personal Data</a><a href='/terms'>Terms of service</a><a href='/privacy'>Privacy policy</a>
             </div>
-            <div class="footer__copyright">© 2026 SM LIMOUSINE. All rights reserved.</div>
+            <div class="footer__copyright">&copy; 2026 SM LIMOUSINE. All rights reserved.</div>
         </div>
     </footer>
 
-    <script src="script.js?v=18.1"></script>
+    <script src="script.js?v=20260530a"></script>
+    <!-- Bulletproof Image Integrity Monitor - Catches silent failures -->
+    <script>
+    (function(){
+        var imgs = document.querySelectorAll('.area-img-wrap img');
+        function verify(img){
+            if(img.complete && (img.naturalWidth===0 || img.naturalHeight===0)){
+                // Silent load failure detected - trigger onerror
+                var evt = new Event('error');
+                img.dispatchEvent(evt);
+            }
+        }
+        // Verify at multiple intervals to catch delayed failures
+        imgs.forEach(function(img){
+            setTimeout(function(){ verify(img); }, 2000);
+            setTimeout(function(){ verify(img); }, 5000);
+            setTimeout(function(){ verify(img); }, 10000);
+        });
+    })();
+    </script>
 </body>
 </html>
