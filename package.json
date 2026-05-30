@@ -1,6 +1,6 @@
 {
   "name": "sm-limousine-official",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "SM LIMOUSINE - Dispatch Engine with Email + SMS",
   "main": "index.html",
   "dependencies": {
