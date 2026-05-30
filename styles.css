@@ -80,7 +80,7 @@ body { font-family: var(--font); color: var(--text-dark); background: var(--bg-w
 
 /* FLEET CARDS */
 .fleet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 0 20px; }
-.fleet-card { background: #fff; border-radius: 16px; border: 1px solid #eee; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+.fleet-card { background: #fff; border-radius: 16px; border: 1px solid #eee; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
 .fleet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 .fleet-card img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 15px; }
 .fleet-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
@@ -110,7 +110,7 @@ body { font-family: var(--font); color: var(--text-dark); background: var(--bg-w
 .elite-card { background: #fff; border: 1px solid #eee; border-radius: 20px; overflow: hidden; text-align: left; display: flex; flex-direction: column; transition: 0.3s; width: 100%; }
 .elite-card img { width: 100%; height: 250px; object-fit: cover; }
 .elite-card__content { padding: 30px; flex: 1; }
-.elite-card__content h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; color: var(--primary); }
+.elite-card__content h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 15px; color: var(--primary); }
 .elite-card__content p { font-size: 1rem; color: #666; margin-bottom: 25px; line-height: 1.5; }
 .elite-card__link { color: var(--primary); font-weight: 800; text-decoration: none; }
 
@@ -148,9 +148,9 @@ body { font-family: var(--font); color: var(--text-dark); background: var(--bg-w
     .elite-card__content p { font-size: 0.9rem; margin-bottom: 15px; }
     
     .bigger-card { flex-direction: column; border-radius: 20px; }
-    .bigger-card img { width: 100%; height: 180px; }
-    .bigger-content { padding: 25px; text-align: center; }
-    .bigger-content h2 { font-size: 1.4rem; margin-bottom: 10px; }
+    .bigger-card img { width: 100%; height: 160px; }
+    .bigger-content { padding: 20px; text-align: center; }
+    .bigger-content h2 { font-size: 1.25rem; margin-bottom: 10px; }
     
     .service-card img { height: 200px; }
     .service-text { padding: 20px; }
