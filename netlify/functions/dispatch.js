@@ -16,6 +16,10 @@ exports.handler = async (event) => {
         const { name, rating, comment, bookingId } = data;
         subject = `⭐ FEEDBACK: ${rating}-Star from ${name}`;
         bookingSummary = `⭐ NEW CLIENT FEEDBACK\n\nClient: ${name}\nRating: ${rating}/5 Stars\nBooking ID: ${bookingId}\n\nComment: ${comment}`;
+    } else if (data.type === 'DRIVER_STATUS') {
+        const { id, n, status } = data;
+        subject = `🚙 STATUS: ${status} - ${n}`;
+        bookingSummary = `🚙 DRIVER STATUS UPDATE\n\nReservation: ${id}\nPassenger: ${n}\nStatus: ${status}`;
     } else {
         const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
         subject = `🚨 Booking: ${name} - ${vehicle}`;

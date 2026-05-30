@@ -54,8 +54,10 @@
             font-weight: 700;
             text-align: center;
             cursor: pointer;
+            transition: 0.2s;
         }
         .status-btn.active { background: #fff; color: #000; border-color: #fff; }
+        .status-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .call-btn {
             display: block;
             width: 100%;
@@ -97,12 +99,12 @@
         </div>
 
         <div class="grid">
-            <div class="status-btn" onclick="update(this)">Enroute</div>
-            <div class="status-btn" onclick="update(this)">On-Site</div>
-            <div class="status-btn" onclick="update(this)">On-Board</div>
-            <div class="status-btn" onclick="update(this)">Complete</div>
-            <div class="status-btn" onclick="update(this)">Waiting</div>
-            <div class="status-btn" onclick="update(this)">No Show</div>
+            <button class="status-btn" onclick="update(this)">Enroute</button>
+            <button class="status-btn" onclick="update(this)">On-Site</button>
+            <button class="status-btn" onclick="update(this)">On-Board</button>
+            <button class="status-btn" onclick="update(this)">Complete</button>
+            <button class="status-btn" onclick="update(this)">Waiting</button>
+            <button class="status-btn" onclick="update(this)">No Show</button>
         </div>
 
         <a href="tel:+18177234592" class="call-btn">Call Dispatch</a>
@@ -126,9 +128,36 @@
         }
 
         async function update(el) {
-            document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+            const status = el.innerText;
+            const btns = document.querySelectorAll('.status-btn');
+            
+            // UI Feedback
+            btns.forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            alert('Status Updated: ' + el.innerText);
+            btns.forEach(b => b.disabled = true);
+            
+            try {
+                const response = await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'DRIVER_STATUS',
+                        id: urlParams.get('id') || 'N/A',
+                        n: urlParams.get('n') || 'N/A',
+                        status: status
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Status sent to dispatch: ' + status);
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (e) {
+                alert('Connection error. Please try again.');
+            } finally {
+                btns.forEach(b => b.disabled = false);
+            }
         }
     </script>
 </body>
