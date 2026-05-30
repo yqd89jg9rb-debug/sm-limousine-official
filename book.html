@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Secure Booking | SM LIMOUSINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=master_final">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
+    <style>
+        body { background: #000; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .booking-container { width: 100%; max-width: 500px; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); padding: 30px; }
+        .booking-header { text-align: center; margin-bottom: 30px; }
+        .booking-header img { height: 50px; margin-bottom: 15px; }
+        .booking-header h1 { font-size: 1.5rem; font-weight: 800; color: #11142d; }
+        .booking-header p { color: #888; font-size: 0.9rem; margin-top: 5px; }
+        .booking-widget { margin: 0 !important; max-width: 100% !important; box-shadow: none !important; border: none !important; }
+    </style>
+</head>
+<body>
+    <div class="booking-container">
+        <div class="booking-header">
+            <img src="sm_logo_silver.png" alt="SM LIMOUSINE">
+            <h1>Elite Secure Booking</h1>
+            <p>Direct priority reservation for phone clients.</p>
+        </div>
+        
+        <div class="booking-widget">
+            <div class="trip-tabs">
+                <button class="trip-tab active" data-trip="oneway">One-way</button>
+                <button class="trip-tab" data-trip="roundtrip">Roundtrip</button>
+                <button class="trip-tab" data-trip="hourly">Hourly</button>
+            </div>
+            <div class="booking-form">
+                <!-- STEP 1 -->
+                <div class="booking-step active" id="step-1">
+                    <div class="form-field"><label>From</label><input type="text" id="pickup-input" data-field="pickup" placeholder="Pickup location"></div>
+                    <div class="form-field"><label>To</label><input type="text" id="dropoff-input" data-field="dropoff" placeholder="Dropoff location"></div>
+                    <div class="add-stop">+ Add stop</div>
+                    <div class="form-row" style="display:flex; gap:15px; margin-bottom:15px;">
+                        <div class="form-field" style="flex:1;"><label>Pickup date</label><input type="date" id="trip-date"></div>
+                        <div class="form-field" style="flex:1;"><label>Pickup time</label><input type="time" id="trip-time"></div>
+                    </div>
+                    <div class="form-field" id="hourly-field" style="display:none;">
+                        <label>Hours</label>
+                        <select id="trip-hours"><option value="3">3 hours (min)</option><option value="4">4 hours</option><option value="5">5 hours</option><option value="8">8 hours</option></select>
+                    </div>
+                    <button class="search-btn" onclick="goToStep(2)" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Continue</button>
+                </div>
+                
+                <!-- STEP 2 -->
+                <div class="booking-step" id="step-2">
+                    <a href="javascript:goToStep(1)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">&#8592; Back to Details</a>
+                    <div class="picker-group"><label>Passengers</label><div class="picker-opts" id="pax-picker" style="display:flex; gap:10px; margin-top:10px;"><div class="picker-opt active">1</div><div class="picker-opt">2</div><div class="picker-opt">3</div><div class="picker-opt">7</div><div class="picker-opt">14</div></div></div>
+                    <div class="picker-group" style="margin-top:20px;"><label>Luggage</label><div class="picker-opts" id="luggage-picker" style="display:flex; gap:10px; margin-top:10px;"><div class="picker-opt active">0</div><div class="picker-opt">1</div><div class="picker-opt">3</div><div class="picker-opt">5</div></div></div>
+                    <button class="search-btn" onclick="goToStep(3)" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; margin-top:20px;">Continue</button>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="booking-step" id="step-3">
+                    <a href="javascript:goToStep(2)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">&#8592; Back to Passengers</a>
+                    <div class="form-field"><label>Vehicle</label><select id="final-vehicle-select" onchange="updateFinalPrice()"><option value="escalade">2026 Cadillac Escalade</option><option value="denali">GMC Denali</option><option value="suburban">Chevrolet Suburban</option><option value="sprinter">Mercedes Sprinter</option><option value="xt6">Cadillac XT6</option><option value="motorcoach">Motor Coach</option></select></div>
+                    <div class="form-field"><input type="text" id="pay-name" placeholder="Full Name"></div>
+                    <div class="form-field"><input type="email" id="pay-email" placeholder="Email Address"></div>
+                    <div class="form-field"><input type="tel" id="pay-phone" placeholder="Mobile Phone"></div>
+                    <div class="form-field"><textarea id="final-notes" rows="2" placeholder="Notes (Flight #, gate code, etc.)"></textarea></div>
+                    <div class="price-box" style="padding:15px; background:#f8f9fc; border-radius:8px; margin-bottom:15px; text-align:center;"><span id="final-price-amount" style="font-size:1.5rem; font-weight:800; color:#11142d;">$0.00</span></div>
+                    <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:20px;"><input type="checkbox" id="sms-consent" style="width:18px; height:18px; margin-top:2px;"><span style="font-size:0.7rem; color:#666;">I agree to receive SMS trip updates.</span></div>
+                    <button class="search-btn" id="final-submit-btn" onclick="handleFinalReservation()" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Confirm Reservation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT OVERLAY (HIDDEN BY DEFAULT) -->
+    <div class="payment-overlay" id="paymentOverlay">
+        <!-- Reusing Modal Structure from main site -->
+        <div class="payment-modal" id="paymentModal">
+            <button class="payment-modal__close" id="paymentClose">&times;</button>
+            <div class="payment-modal__header">
+                <div class="payment-modal__brand"><img src="sm_logo_silver.png" style="height:36px;"></div>
+                <div class="payment-modal__secure">Secure Payment</div>
+            </div>
+            <div class="payment-modal__summary">
+                <div class="payment-modal__line"><span>Vehicle</span><span id="pay-summary-vehicle">—</span></div>
+                <div class="payment-modal__divider"></div>
+                <div class="payment-modal__line payment-modal__line--total"><span>Total</span><span id="pay-summary-total">$0.00</span></div>
+            </div>
+            <div class="payment-modal__form">
+                <div class="payment-modal__field"><label>Email</label><input type="email" id="pay-card-email"></div>
+                <div class="payment-modal__field"><label>Card Number</label><input type="text" id="pay-card-number"></div>
+                <div style="display:flex; gap:15px;">
+                    <div class="payment-modal__field" style="flex:1;"><label>Expiry</label><input type="text" id="pay-card-expiry"></div>
+                    <div class="payment-modal__field" style="flex:1;"><label>CVC</label><input type="text" id="pay-card-cvc"></div>
+                </div>
+                <div class="payment-modal__field"><label>Name on Card</label><input type="text" id="pay-card-name"></div>
+                <button id="pay-modal-submit-btn" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Pay Now</button>
+            </div>
+            <div id="paymentSuccess" style="display:none; flex-direction:column; align-items:center; padding:40px 20px; text-align:center;">
+                <h2 style="color:#fff;">Payment Successful</h2>
+                <p id="confirmationId" style="color:var(--gold); margin-top:10px;"></p>
+                <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:transparent; border:1px solid #444; color:#fff; border-radius:5px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=master_final"></script>
+</body>
+</html>
