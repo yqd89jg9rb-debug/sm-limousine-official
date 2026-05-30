@@ -5,9 +5,9 @@ headers = []
 redirects = []
 
 [build]
-publish = "/root/workspace/black-car-service"
+publish = "."
 publishOrigin = "default"
-functions = "/root/workspace/black-car-service/netlify/functions"
+functions = "netlify/functions"
 
 [build.environment]
 
