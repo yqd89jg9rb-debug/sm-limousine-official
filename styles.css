@@ -170,7 +170,7 @@ body { font-family: var(--font); color: var(--text-dark); background: var(--bg-w
 
 /* Hide the overlay text once image loads successfully */
 .area-img-wrap.img-loaded::after {
-    opacity: 0;
+    opacity: 1;
 }
 
 .area-img-wrap img {
@@ -181,7 +181,7 @@ body { font-family: var(--font); color: var(--text-dark); background: var(--bg-w
     height: 100%;
     object-fit: cover;
     z-index: 1;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.4s ease;
 }
 
