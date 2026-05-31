@@ -20,16 +20,11 @@
         
         .field { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-        input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
+        input, .stripe-input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
         
-        /* Stripe Element Styling */
-        #card-element {
-            padding: 14px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 10px;
-        }
-
+        .row { display: flex; gap: 15px; }
+        .row .field { flex: 1; }
+        
         .btn-pay { width: 100%; padding: 20px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
         
@@ -59,11 +54,22 @@
             <div class="field"><label>Email Address</label><input type="email" id="pay-email" placeholder="your@email.com" required></div>
             <div class="field"><label>Name on Card</label><input type="text" id="pay-name" placeholder="Full Name" required></div>
             
+            <!-- Two-line Card Information -->
             <div class="field">
-                <label>Card Information</label>
-                <div id="card-element"></div>
-                <div id="card-errors" role="alert"></div>
+                <label>Card Number</label>
+                <div id="card-number" class="stripe-input"></div>
             </div>
+            <div class="row">
+                <div class="field">
+                    <label>Expiry (MM/YY)</label>
+                    <div id="card-expiry" class="stripe-input"></div>
+                </div>
+                <div class="field">
+                    <label>CVC (Code)</label>
+                    <div id="card-cvc" class="stripe-input"></div>
+                </div>
+            </div>
+            <div id="card-errors" role="alert"></div>
             
             <button class="btn-pay" id="payBtn">Complete Payment</button>
         </form>
@@ -83,19 +89,25 @@
     <script>
         const stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
         const elements = stripe.elements();
-        const card = elements.create('card', {
-            style: {
-                base: {
-                    color: '#fff',
-                    fontFamily: 'Inter, sans-serif',
-                    fontSmoothing: 'antialiased',
-                    fontSize: '16px',
-                    '::placeholder': { color: '#666' }
-                },
-                invalid: { color: '#fa755a', iconColor: '#fa755a' }
-            }
-        });
-        card.mount('#card-element');
+        
+        const style = {
+            base: {
+                color: '#fff',
+                fontFamily: 'Inter, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': { color: '#666' }
+            },
+            invalid: { color: '#fa755a', iconColor: '#fa755a' }
+        };
+
+        const cardNumber = elements.create('cardNumber', {style: style});
+        const cardExpiry = elements.create('cardExpiry', {style: style});
+        const cardCvc = elements.create('cardCvc', {style: style});
+
+        cardNumber.mount('#card-number');
+        cardExpiry.mount('#card-expiry');
+        cardCvc.mount('#card-cvc');
 
         const p = new URLSearchParams(window.location.search);
         const amount = p.get('a') || '0.00';
@@ -111,7 +123,7 @@
             btn.disabled = true;
             btn.innerText = "Processing...";
 
-            const {token, error} = await stripe.createToken(card);
+            const {token, error} = await stripe.createToken(cardNumber);
 
             if (error) {
                 const errorElement = document.getElementById('card-errors');
@@ -125,7 +137,6 @@
 
         async function processCharge(tokenId) {
             try {
-                // 1. CREATE ACTUAL STRIPE CHARGE
                 const chargeRes = await fetch('/.netlify/functions/create-charge', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -138,12 +149,8 @@
                 });
                 
                 const chargeData = await chargeRes.json();
-                
-                if(!chargeData.success) {
-                    throw new Error(chargeData.error || "Charge failed");
-                }
+                if(!chargeData.success) throw new Error(chargeData.error || "Charge failed");
 
-                // 2. TRIGGER DISPATCH NOTIFICATION
                 await fetch('/.netlify/functions/dispatch', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
