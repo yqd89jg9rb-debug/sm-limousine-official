@@ -2,32 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Creator | SM LIMOUSINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background: #f8f9fc; font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
-        .creator-card { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
-        h1 { font-size: 1.2rem; margin-bottom: 25px; }
-        .field { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; color: #666; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        #result { margin-top: 30px; padding: 20px; background: #f1f1f1; border-radius: 6px; word-break: break-all; display: none; }
+        body { 
+            background: #f8f9fc; 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            padding: 20px 10px; 
+            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .creator-card { 
+            background: #fff; 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08); 
+            width: 100%; 
+            max-width: 500px; 
+            box-sizing: border-box;
+        }
+        h1 { 
+            font-size: 1.6rem; 
+            margin-bottom: 30px; 
+            font-weight: 800; 
+            text-align: center;
+            color: #111;
+        }
+        .field { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            color: #555; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input { 
+            width: 100%; 
+            padding: 16px; 
+            border: 1px solid #eee; 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-size: 1.05rem; 
+            background: #fbfbfb;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            background: #fff;
+            border-color: #000;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.02);
+        }
+        button { 
+            width: 100%; 
+            padding: 20px; 
+            background: #000; 
+            color: #fff; 
+            border: none; 
+            border-radius: 14px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        button:active { transform: scale(0.98); }
+        
+        #result { 
+            margin-top: 30px; 
+            padding: 25px; 
+            background: #f1f3f9; 
+            border-radius: 16px; 
+            word-break: break-all; 
+            display: none; 
+            text-align: center;
+        }
+        #link-text {
+            font-size: 0.9rem;
+            color: #0066ff;
+            margin: 15px 0;
+            font-family: monospace;
+            background: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e0e6ed;
+        }
+        .copy-btn {
+            background: #444;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .creator-card { padding: 30px 20px; }
+            h1 { font-size: 1.4rem; }
+            input { padding: 14px; font-size: 1rem; }
+            button { padding: 18px; font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
     <div class="creator-card">
-        <img src="sm_logo_silver.png" style="height:40px; margin-bottom:20px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="sm_logo_silver.png" style="height:50px;">
+        </div>
         <h1>Elite Invoice Creator</h1>
+        
         <div class="field"><label>Client Name</label><input id="name" placeholder="e.g. John Doe"></div>
         <div class="field"><label>Total Amount ($)</label><input id="amount" placeholder="e.g. 150.00"></div>
         <div class="field"><label>Vehicle Used</label><input id="vehicle" placeholder="e.g. 2026 Cadillac Escalade"></div>
         <div class="field"><label>Invoice Number (Optional)</label><input id="inv" placeholder="e.g. 1001"></div>
+        
         <button onclick="generate()">Generate Invoice Link</button>
 
         <div id="result">
-            <label>Copy & Text this link to Client:</label>
-            <p id="link-text" style="font-size: 0.85rem; color: #007bff; margin: 10px 0; font-family: monospace;"></p>
-            <button style="background: #444;" onclick="copy()">Copy Link</button>
+            <label>Link Ready to Send:</label>
+            <p id="link-text"></p>
+            <button class="copy-btn" onclick="copy()">Copy Link</button>
         </div>
     </div>
 
@@ -38,16 +137,25 @@
             const vehicle = document.getElementById('vehicle').value;
             const inv = document.getElementById('inv').value;
 
+            if(!name || !amount) { alert("Please enter at least Name and Amount."); return; }
+
             const base = "https://sm-limo.com/invoice.html";
             const params = new URLSearchParams({ n: name, a: amount, v: vehicle, i: inv });
             const fullUrl = base + "?" + params.toString();
             
             document.getElementById('link-text').innerText = fullUrl;
             document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
         }
         function copy() {
             const text = document.getElementById('link-text').innerText;
-            navigator.clipboard.writeText(text).then(() => alert('Link Copied!'));
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Link Copied to Clipboard!');
         }
     </script>
 </body>
