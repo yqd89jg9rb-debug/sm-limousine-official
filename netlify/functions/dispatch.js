@@ -7,7 +7,8 @@ exports.handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
-    const DISPATCH_TO = process.env.DISPATCH_TO;
+    const DISPATCH_TO_PRIMARY = process.env.DISPATCH_TO;
+    const DISPATCH_TO_SECONDARY = '+12146385030'; // Added second phone number
 
     let bookingSummary = '';
     let subject = '';
@@ -31,6 +32,7 @@ exports.handler = async (event) => {
         }
     }
 
+    // --- EMAIL NOTIFICATION ---
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -54,15 +56,23 @@ exports.handler = async (event) => {
       emailStatus = 'FAILED';
     }
 
+    // --- SMS NOTIFICATION (DUAL RECIPIENTS) ---
     let smsStatus = 'pending';
     try {
       const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-      await client.messages.create({
-        body: bookingSummary,
-        from: process.env.TWILIO_FROM,
-        to: DISPATCH_TO
+      const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY];
+      
+      // Send to all recipients in parallel
+      const smsPromises = recipients.filter(Boolean).map(phone => {
+        return client.messages.create({
+          body: bookingSummary,
+          from: process.env.TWILIO_FROM,
+          to: phone
+        });
       });
-      smsStatus = 'sent';
+      
+      await Promise.all(smsPromises);
+      smsStatus = `sent to ${recipients.length} numbers`;
     } catch (e) {
       smsStatus = `snag: ${e.message}`;
     }
