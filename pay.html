@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Secure Payment | SM LIMOUSINE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root { --gold: #D4AF37; --silver: #C0C0C0; --bg: #000; --primary: #11142d; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -20,11 +21,15 @@
         .field { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
         input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
-        input:focus { border-color: var(--gold); outline: none; }
         
-        .row { display: flex; gap: 15px; }
-        .row .field { flex: 1; }
-        
+        /* Stripe Element Styling */
+        #card-element {
+            padding: 14px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
         .btn-pay { width: 100%; padding: 20px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
         
@@ -32,6 +37,7 @@
         .check-circle { width: 70px; height: 70px; background: #28a745; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 25px; }
         
         .footer { text-align: center; margin-top: 30px; font-size: 0.7rem; color: #444; }
+        #card-errors { color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
@@ -49,17 +55,18 @@
             <div class="amount-value" id="disp-amount">$0.00</div>
         </div>
 
-        <div id="payment-form">
-            <div class="field"><label>Email Address</label><input type="email" id="pay-email" placeholder="your@email.com"></div>
-            <div class="field"><label>Card Number</label><input type="text" id="pay-card" placeholder="1234 5678 9012 3456" maxlength="19"></div>
-            <div class="row">
-                <div class="field"><label>Expiry</label><input type="text" id="pay-expiry" placeholder="MM / YY" maxlength="7"></div>
-                <div class="field"><label>CVC</label><input type="text" id="pay-cvc" placeholder="123" maxlength="4"></div>
-            </div>
-            <div class="field"><label>Name on Card</label><input type="text" id="pay-name" placeholder="Full Name"></div>
+        <form id="payment-form">
+            <div class="field"><label>Email Address</label><input type="email" id="pay-email" placeholder="your@email.com" required></div>
+            <div class="field"><label>Name on Card</label><input type="text" id="pay-name" placeholder="Full Name" required></div>
             
-            <button class="btn-pay" id="payBtn" onclick="processPayment()">Complete Payment</button>
-        </div>
+            <div class="field">
+                <label>Card Information</label>
+                <div id="card-element"></div>
+                <div id="card-errors" role="alert"></div>
+            </div>
+            
+            <button class="btn-pay" id="payBtn">Complete Payment</button>
+        </form>
 
         <div class="success-screen" id="success-screen">
             <div class="check-circle">✓</div>
@@ -74,6 +81,22 @@
     </div>
 
     <script>
+        const stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
+        const elements = stripe.elements();
+        const card = elements.create('card', {
+            style: {
+                base: {
+                    color: '#fff',
+                    fontFamily: 'Inter, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': { color: '#666' }
+                },
+                invalid: { color: '#fa755a', iconColor: '#fa755a' }
+            }
+        });
+        card.mount('#card-element');
+
         const p = new URLSearchParams(window.location.search);
         const amount = p.get('a') || '0.00';
         const clientName = p.get('n') || '';
@@ -81,26 +104,55 @@
         document.getElementById('disp-amount').innerText = '$' + amount;
         if(clientName) document.getElementById('pay-name').value = clientName;
 
-        async function processPayment() {
-            const email = document.getElementById('pay-email').value.trim();
-            const card = document.getElementById('pay-card').value.trim();
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
             const btn = document.getElementById('payBtn');
-
-            if(!email || !card) { alert("Please fill in all payment details."); return; }
-
             btn.disabled = true;
             btn.innerText = "Processing...";
 
+            const {token, error} = await stripe.createToken(card);
+
+            if (error) {
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+                btn.disabled = false;
+                btn.innerText = "Complete Payment";
+            } else {
+                processCharge(token.id);
+            }
+        });
+
+        async function processCharge(tokenId) {
             try {
-                // Trigger Dispatch Notification
+                // 1. CREATE ACTUAL STRIPE CHARGE
+                const chargeRes = await fetch('/.netlify/functions/create-charge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: tokenId,
+                        amount: amount,
+                        email: document.getElementById('pay-email').value,
+                        description: 'Invoice Payment: ' + document.getElementById('pay-name').value
+                    })
+                });
+                
+                const chargeData = await chargeRes.json();
+                
+                if(!chargeData.success) {
+                    throw new Error(chargeData.error || "Charge failed");
+                }
+
+                // 2. TRIGGER DISPATCH NOTIFICATION
                 await fetch('/.netlify/functions/dispatch', {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         type: 'PAYMENT_RECEIVED',
                         name: document.getElementById('pay-name').value,
-                        email: email,
+                        email: document.getElementById('pay-email').value,
                         total: amount,
-                        vehicle: 'Invoice Payment',
+                        vehicle: 'Live Stripe Payment',
                         pickup: 'N/A',
                         dropoff: 'N/A',
                         date: new Date().toLocaleDateString(),
@@ -110,9 +162,11 @@
 
                 document.getElementById('payment-form').style.display = 'none';
                 document.getElementById('success-screen').style.display = 'flex';
-                document.getElementById('confId').innerText = 'CONF: SM-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+                document.getElementById('confId').innerText = 'STRIPE ID: ' + chargeData.chargeId;
+                
             } catch(e) {
-                alert("Payment processing error. Please try again.");
+                alert("Payment error: " + e.message);
+                const btn = document.getElementById('payBtn');
                 btn.disabled = false;
                 btn.innerText = "Complete Payment";
             }
