@@ -68,7 +68,7 @@
         const name = p.get('n') || 'Guest';
         const total = p.get('a') || '0.00';
         const vehicle = p.get('v') || 'Premium Fleet';
-        const inv = p.get('i') || Math.floor(Math.random()*9000)+1000;
+        const inv = p.get('i') || '---';
         const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
         document.getElementById('disp-name').innerText = name;
@@ -78,8 +78,8 @@
         document.getElementById('disp-inv').innerText = inv;
         document.getElementById('disp-date').innerText = date;
 
-        // Redirect to main site booking/payment if they want to pay online
-        document.getElementById('pay-link').href = 'https://sm-limo.com/pay.html?a=' + total + 'document.getElementById('pay-link').href = 'https://sm-limo.com/book.html?amount=' + total + '&name=' + encodeURIComponent(name);n=' + encodeURIComponent(name);
+        // Correct Link for Payment
+        document.getElementById('pay-link').href = 'https://sm-limo.com/pay.html?a=' + total + '&n=' + encodeURIComponent(name);
     </script>
 </body>
 </html>
