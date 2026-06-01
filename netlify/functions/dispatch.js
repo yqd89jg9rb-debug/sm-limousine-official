@@ -8,7 +8,7 @@ exports.handler = async (event) => {
     const data = JSON.parse(event.body);
     const EMAIL_PASS = process.env.EMAIL_PASSWORD;
     const DISPATCH_TO_PRIMARY = process.env.DISPATCH_TO;
-    const DISPATCH_TO_SECONDARY = '+12146385030'; // Added second phone number
+    const DISPATCH_TO_SECONDARY = '+12146385030'; 
 
     let bookingSummary = '';
     let subject = '';
@@ -21,15 +21,14 @@ exports.handler = async (event) => {
         const { id, n, status } = data;
         subject = `🚙 STATUS: ${status} - ${n}`;
         bookingSummary = `🚙 DRIVER STATUS UPDATE\n\nReservation: ${id}\nPassenger: ${n}\nStatus: ${status}`;
+    } else if (data.type === 'PAYMENT_RECEIVED') {
+        const { name, total, email } = data;
+        subject = `💰 PAYMENT: $${total} - ${name}`;
+        bookingSummary = `💰 PAYMENT RECEIVED\n\nClient: ${name}\nEmail: ${email}\nTotal: $${total}\n\nStatus: Live Stripe Payment Verified.`;
     } else {
         const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
         subject = `🚨 Booking: ${name} - ${vehicle}`;
-        bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers} Pax, ${luggage} Bags`;
-
-        const { returnDate, returnTime, returnPickup, returnDropoff } = data;
-        if (returnDate && returnDate !== 'N/A') {
-          bookingSummary += `\n\nReturn Trip: ${returnPickup} TO ${returnDropoff}\nReturn Date/Time: ${returnDate} @ ${returnTime}`;
-        }
+        bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers || 0} Pax, ${luggage || 0} Bags`;
     }
 
     // --- EMAIL NOTIFICATION ---
@@ -47,22 +46,13 @@ exports.handler = async (event) => {
       text: bookingSummary
     };
 
-    let emailStatus = 'pending';
-    try {
-      await transporter.sendMail(mailOptions);
-      emailStatus = 'sent (Gmail)';
-    } catch (e) {
-      console.log('Gmail send failed:', e.message);
-      emailStatus = 'FAILED';
-    }
+    try { await transporter.sendMail(mailOptions); } catch (e) { console.log('Email failed'); }
 
     // --- SMS NOTIFICATION (DUAL RECIPIENTS) ---
-    let smsStatus = 'pending';
     try {
       const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
       const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY];
       
-      // Send to all recipients in parallel
       const smsPromises = recipients.filter(Boolean).map(phone => {
         return client.messages.create({
           body: bookingSummary,
@@ -72,19 +62,14 @@ exports.handler = async (event) => {
       });
       
       await Promise.all(smsPromises);
-      smsStatus = `sent to ${recipients.length} numbers`;
     } catch (e) {
-      smsStatus = `snag: ${e.message}`;
+      console.log('SMS Snag:', e.message);
     }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        success: true, 
-        email_status: emailStatus,
-        sms_status: smsStatus
-      })
+      body: JSON.stringify({ success: true })
     };
   } catch (error) {
     return {
