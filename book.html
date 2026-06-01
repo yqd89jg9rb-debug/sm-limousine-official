@@ -74,38 +74,3 @@
         </div>
     </div>
 
-    <!-- PAYMENT OVERLAY (HIDDEN BY DEFAULT) -->
-    <div class="payment-overlay" id="paymentOverlay">
-        <!-- Reusing Modal Structure from main site -->
-        <div class="payment-modal" id="paymentModal">
-            <button class="payment-modal__close" id="paymentClose">&times;</button>
-            <div class="payment-modal__header">
-                <div class="payment-modal__brand"><img src="sm_logo_silver.png" style="height:36px;"></div>
-                <div class="payment-modal__secure">Secure Payment</div>
-            </div>
-            <div class="payment-modal__summary">
-                <div class="payment-modal__line"><span>Vehicle</span><span id="pay-summary-vehicle">—</span></div>
-                <div class="payment-modal__divider"></div>
-                <div class="payment-modal__line payment-modal__line--total"><span>Total</span><span id="pay-summary-total">$0.00</span></div>
-            </div>
-            <div class="payment-modal__form">
-                <div class="payment-modal__field"><label>Email</label><input type="email" id="pay-card-email"></div>
-                <div class="payment-modal__field"><label>Card Number</label><input type="text" id="pay-card-number"></div>
-                <div style="display:flex; gap:15px;">
-                    <div class="payment-modal__field" style="flex:1;"><label>Expiry</label><input type="text" id="pay-card-expiry"></div>
-                    <div class="payment-modal__field" style="flex:1;"><label>CVC</label><input type="text" id="pay-card-cvc"></div>
-                </div>
-                <div class="payment-modal__field"><label>Name on Card</label><input type="text" id="pay-card-name"></div>
-                <button id="pay-modal-submit-btn" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Pay Now</button>
-            </div>
-            <div id="paymentSuccess" style="display:none; flex-direction:column; align-items:center; padding:40px 20px; text-align:center;">
-                <h2 style="color:#fff;">Payment Successful</h2>
-                <p id="confirmationId" style="color:var(--gold); margin-top:10px;"></p>
-                <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:transparent; border:1px solid #444; color:#fff; border-radius:5px;">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js?v=master_final"></script>
-</body>
-</html>

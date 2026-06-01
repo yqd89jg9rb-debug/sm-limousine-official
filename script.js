@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Master Elite Engine (v20.2 - PAYMENT FLOW FIX)
+   SM LIMOUSINE — Master Elite Engine (v22.5 - LIVE STRIPE CONNECT)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +20,25 @@ document.addEventListener('DOMContentLoaded', () => {
         miles: 15,
         total: 0
     };
+
+    // --- STRIPE INITIALIZATION ---
+    let stripe, elements, cardNumber, cardExpiry, cardCvc;
+    if (typeof Stripe !== 'undefined') {
+        stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
+        elements = stripe.elements();
+        const style = {
+            base: { color: '#fff', fontFamily: 'Inter, sans-serif', fontSize: '16px', '::placeholder': { color: '#666' } },
+            invalid: { color: '#fa755a', iconColor: '#fa755a' }
+        };
+        if(document.getElementById('card-number')) {
+            cardNumber = elements.create('cardNumber', {style: style});
+            cardExpiry = elements.create('cardExpiry', {style: style});
+            cardCvc    = elements.create('cardCvc',    {style: style});
+            cardNumber.mount('#card-number');
+            cardExpiry.mount('#card-expiry');
+            cardCvc.mount('#card-cvc');
+        }
+    }
 
     // --- PRICING ENGINE ---
     function updateFinalPrice() {
@@ -51,6 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- NAVIGATION ---
     window.goToStep = (n) => {
+        if (n === 2) {
+            const p = document.getElementById('pickup-input')?.value;
+            const d = document.getElementById('dropoff-input')?.value;
+            if (!p || !d) { alert("Please enter Pickup and Dropoff locations."); return; }
+        }
         document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
         const target = document.getElementById(`step-${n}`);
         if (target) {
@@ -106,13 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !email || !phone) { alert("Please fill all contact fields."); return; }
         if (!consent) { alert("Please agree to receive SMS updates."); return; }
 
-        // Populate Payment Modal Summary
         document.getElementById('pay-summary-vehicle').textContent = bookingData.vehicleName;
         document.getElementById('pay-summary-total').textContent = `$${bookingData.total}`;
         
-        // Pre-fill Payment Modal Fields
-        document.getElementById('pay-card-email').value = email;
-        document.getElementById('pay-card-name').value = name;
+        const modalEmail = document.getElementById('pay-card-email');
+        const modalName = document.getElementById('pay-card-name');
+        if(modalEmail) modalEmail.value = email;
+        if(modalName) modalName.value = name;
 
         overlay.classList.add('active');
         overlay.style.display = 'flex';
@@ -126,21 +150,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (payModalBtn) {
-        payModalBtn.addEventListener('click', async () => {
-            const cardNum = document.getElementById('pay-card-number').value.trim();
-            const cardExpiry = document.getElementById('pay-card-expiry').value.trim();
-            const cardCvc = document.getElementById('pay-card-cvc').value.trim();
-
-            if (!cardNum || !cardExpiry || !cardCvc) {
-                alert("Please fill all card details.");
-                return;
-            }
-
+        payModalBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
             payModalBtn.disabled = true;
             payModalBtn.innerText = "Processing...";
 
             try {
-                // FIXED DATA MAPPING FOR DISPATCH.JS
+                // 1. CREATE STRIPE TOKEN
+                const {token, error} = await stripe.createToken(cardNumber);
+                if (error) throw new Error(error.message);
+
+                // 2. PROCESS ACTUAL CHARGE
+                const chargeRes = await fetch('/.netlify/functions/create-charge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: token.id,
+                        amount: bookingData.total,
+                        email: document.getElementById('pay-email').value,
+                        description: 'Online Booking: ' + bookingData.vehicleName
+                    })
+                });
+                const chargeData = await chargeRes.json();
+                if(!chargeData.success) throw new Error(chargeData.error || "Charge failed");
+
+                // 3. TRIGGER DISPATCH NOTIFICATION
                 const payload = {
                     name: document.getElementById('pay-name').value.trim(),
                     email: document.getElementById('pay-email').value.trim(),
@@ -161,16 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(payload)
                 });
 
-                // Generate confirmation ID
                 const confirmId = 'SM-' + Date.now().toString(36).toUpperCase();
-                document.getElementById('confirmationId').textContent = `Confirmation: ${confirmId}`;
+                document.getElementById('confirmationId').textContent = `Confirmation: ${confirmId} (Live Payment Verified)`;
 
                 document.querySelector('.payment-modal__form').style.display = 'none';
                 document.querySelector('.payment-modal__summary').style.display = 'none';
                 document.getElementById('paymentSuccess').style.display = 'flex';
                 
-            } catch (e) {
-                alert("Connection error. Please try again.");
+            } catch (err) {
+                alert("Payment Error: " + err.message);
                 payModalBtn.disabled = false;
                 payModalBtn.innerText = "Pay Now";
             }
@@ -208,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     svc.getDistanceMatrix({ origins: [p], destinations: [d], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (res, stat) => {
                         if (stat === 'OK' && res.rows[0].elements[0].status === 'OK') {
                             bookingData.miles = res.rows[0].elements[0].distance.value / 1609.34;
+                            updateFinalPrice();
                         }
                     });
                 }
@@ -222,17 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
             bookingData.serviceType = tab.dataset.trip;
             const hField = document.getElementById('hourly-field');
             if (hField) hField.style.display = (tab.dataset.trip === 'hourly') ? 'block' : 'none';
-        });
-    });
-
-    document.querySelectorAll('.service-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            if (tab.innerText.includes('Charter')) {
-                const charter = document.getElementById('charter-section');
-                if (charter) charter.scrollIntoView({ behavior: 'smooth' });
-            }
         });
     });
 
