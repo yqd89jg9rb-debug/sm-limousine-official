@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Master Elite Engine (v22.5 - LIVE STRIPE CONNECT)
+   SM LIMOUSINE — Master Elite Engine (v22.6 - GLOBAL REPAIR)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         bookingData.total = total.toFixed(2);
         bookingData.vehicleName = v.name;
-        amountEl.textContent = `$${bookingData.total}`;
+        amountEl.textContent = '$' + bookingData.total;
     }
 
     // --- NAVIGATION ---
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!consent) { alert("Please agree to receive SMS updates."); return; }
 
         document.getElementById('pay-summary-vehicle').textContent = bookingData.vehicleName;
-        document.getElementById('pay-summary-total').textContent = `$${bookingData.total}`;
+        document.getElementById('pay-summary-total').textContent = '$' + bookingData.total;
         
         const modalEmail = document.getElementById('pay-card-email');
         const modalName = document.getElementById('pay-card-name');
@@ -157,11 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
             payModalBtn.innerText = "Processing...";
 
             try {
-                // 1. CREATE STRIPE TOKEN
                 const {token, error} = await stripe.createToken(cardNumber);
                 if (error) throw new Error(error.message);
 
-                // 2. PROCESS ACTUAL CHARGE
                 const chargeRes = await fetch('/.netlify/functions/create-charge', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -175,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const chargeData = await chargeRes.json();
                 if(!chargeData.success) throw new Error(chargeData.error || "Charge failed");
 
-                // 3. TRIGGER DISPATCH NOTIFICATION
                 const payload = {
                     name: document.getElementById('pay-name').value.trim(),
                     email: document.getElementById('pay-email').value.trim(),
@@ -197,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const confirmId = 'SM-' + Date.now().toString(36).toUpperCase();
-                document.getElementById('confirmationId').textContent = `Confirmation: ${confirmId} (Live Payment Verified)`;
+                document.getElementById('confirmationId').textContent = 'Confirmation: ' + confirmId;
 
                 document.querySelector('.payment-modal__form').style.display = 'none';
                 document.querySelector('.payment-modal__summary').style.display = 'none';
@@ -210,6 +207,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- TABS LOGIC ---
+    document.querySelectorAll('.trip-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.trip-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            bookingData.serviceType = tab.dataset.trip;
+            const hField = document.getElementById('hourly-field');
+            if (hField) hField.style.display = (tab.dataset.trip === 'hourly') ? 'block' : 'none';
+        });
+    });
+
+    document.querySelectorAll('.service-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            if (tab.innerText.includes('Charter')) {
+                const charter = document.getElementById('charter-section');
+                if (charter) charter.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
 
     // --- VIEW / SCROLL ---
     window.viewAction = (tab) => {
@@ -249,16 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-    document.querySelectorAll('.trip-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.trip-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            bookingData.serviceType = tab.dataset.trip;
-            const hField = document.getElementById('hourly-field');
-            if (hField) hField.style.display = (tab.dataset.trip === 'hourly') ? 'block' : 'none';
-        });
-    });
 
     initMaps();
 });
