@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Creator | SM LIMOUSINE</title>
+    <title>Elite Invoice Creator | SM LIMOUSINE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -75,6 +75,7 @@
             transition: all 0.3s ease;
         }
         button:active { transform: scale(0.98); }
+        .email-btn { background: #D4AF37; color: #000; margin-top: 10px; }
         
         #result { 
             margin-top: 30px; 
@@ -117,6 +118,7 @@
         <h1>Elite Invoice Creator</h1>
         
         <div class="field"><label>Client Name</label><input id="name" placeholder="e.g. John Doe"></div>
+        <div class="field"><label>Client Email</label><input id="email" placeholder="e.g. john@example.com"></div>
         <div class="field"><label>Total Amount ($)</label><input id="amount" placeholder="e.g. 150.00"></div>
         <div class="field"><label>Vehicle Used</label><input id="vehicle" placeholder="e.g. 2026 Cadillac Escalade"></div>
         <div class="field"><label>Invoice Number (Optional)</label><input id="inv" placeholder="e.g. 1001"></div>
@@ -124,13 +126,17 @@
         <button onclick="generate()">Generate Invoice Link</button>
 
         <div id="result">
-            <label>Link Ready to Send:</label>
+            <label>Link Ready:</label>
             <p id="link-text"></p>
             <button class="copy-btn" onclick="copy()">Copy Link</button>
+            <button class="email-btn" onclick="sendEmail()">Email to Client</button>
+            <p id="status" style="font-size: 0.8rem; color: #28a745; margin-top: 10px; display: none;">Invoice Sent Successfully!</p>
         </div>
     </div>
 
     <script>
+        let currentUrl = "";
+
         function generate() {
             const name = document.getElementById('name').value;
             const amount = document.getElementById('amount').value;
@@ -141,12 +147,50 @@
 
             const base = "https://sm-limo.com/invoice.html";
             const params = new URLSearchParams({ n: name, a: amount, v: vehicle, i: inv });
-            const fullUrl = base + "?" + params.toString();
+            currentUrl = base + "?" + params.toString();
             
-            document.getElementById('link-text').innerText = fullUrl;
+            document.getElementById('link-text').innerText = currentUrl;
             document.getElementById('result').style.display = 'block';
             document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
         }
+
+        async function sendEmail() {
+            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value;
+            const amount = document.getElementById('amount').value;
+            const status = document.getElementById('status');
+
+            if(!email) { alert("Please enter the Client Email address."); return; }
+
+            const btn = document.querySelector('.email-btn');
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+
+            try {
+                const response = await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'SEND_INVOICE',
+                        email: email,
+                        name: name,
+                        amount: amount,
+                        link: currentUrl
+                    })
+                });
+                
+                if(response.ok) {
+                    status.style.display = 'block';
+                    btn.innerText = "Email Sent";
+                } else {
+                    throw new Error();
+                }
+            } catch(e) {
+                alert("Error sending email. Please copy the link and send it manually.");
+                btn.disabled = false;
+                btn.innerText = "Email to Client";
+            }
+        }
+
         function copy() {
             const text = document.getElementById('link-text').innerText;
             const el = document.createElement('textarea');
@@ -155,7 +199,7 @@
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-            alert('Link Copied to Clipboard!');
+            alert('Link Copied!');
         }
     </script>
 </body>

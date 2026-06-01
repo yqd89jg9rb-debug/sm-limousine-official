@@ -12,8 +12,14 @@ exports.handler = async (event) => {
 
     let bookingSummary = '';
     let subject = '';
+    let emailRecipient = 'smlimousine2026@gmail.com'; // Default to admin
 
-    if (data.type === 'FEEDBACK') {
+    if (data.type === 'SEND_INVOICE') {
+        const { name, amount, email, link } = data;
+        emailRecipient = email;
+        subject = `Invoice from SM LIMOUSINE - $${amount}`;
+        bookingSummary = `Dear ${name},\n\nPlease find your invoice from SM LIMOUSINE for your upcoming travel.\n\nTotal Amount: $${amount}\n\nYou can view your invoice and pay securely online using the link below:\n${link}\n\nThank you for choosing SM LIMOUSINE.\n\nBest regards,\nSam Boulos\n(817) 723-4592`;
+    } else if (data.type === 'FEEDBACK') {
         const { name, rating, comment, bookingId } = data;
         subject = `⭐ FEEDBACK: ${rating}-Star from ${name}`;
         bookingSummary = `⭐ NEW CLIENT FEEDBACK\n\nClient: ${name}\nRating: ${rating}/5 Stars\nBooking ID: ${bookingId}\n\nComment: ${comment}`;
@@ -31,7 +37,6 @@ exports.handler = async (event) => {
         bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers || 0} Pax, ${luggage || 0} Bags`;
     }
 
-    // --- EMAIL NOTIFICATION ---
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -40,30 +45,28 @@ exports.handler = async (event) => {
     });
 
     const mailOptions = {
-      from: '"SM DISPATCH" <smlimousine2026@gmail.com>',
-      to: 'smlimousine2026@gmail.com',
+      from: '"SM LIMOUSINE" <smlimousine2026@gmail.com>',
+      to: emailRecipient,
       subject: subject,
       text: bookingSummary
     };
 
-    try { await transporter.sendMail(mailOptions); } catch (e) { console.log('Email failed'); }
+    await transporter.sendMail(mailOptions);
 
-    // --- SMS NOTIFICATION (DUAL RECIPIENTS) ---
-    try {
-      const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-      const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY];
-      
-      const smsPromises = recipients.filter(Boolean).map(phone => {
-        return client.messages.create({
-          body: bookingSummary,
-          from: process.env.TWILIO_FROM,
-          to: phone
-        });
-      });
-      
-      await Promise.all(smsPromises);
-    } catch (e) {
-      console.log('SMS Snag:', e.message);
+    // Only send SMS for staff notifications (not for sending invoices to clients)
+    if (data.type !== 'SEND_INVOICE') {
+        try {
+          const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+          const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY];
+          const smsPromises = recipients.filter(Boolean).map(phone => {
+            return client.messages.create({
+              body: bookingSummary,
+              from: process.env.TWILIO_FROM,
+              to: phone
+            });
+          });
+          await Promise.all(smsPromises);
+        } catch (e) { console.log('SMS Snag'); }
     }
 
     return {
