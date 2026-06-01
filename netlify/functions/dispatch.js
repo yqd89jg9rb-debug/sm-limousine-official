@@ -12,13 +12,18 @@ exports.handler = async (event) => {
 
     let bookingSummary = '';
     let subject = '';
-    let emailRecipient = 'smlimousine2026@gmail.com'; // Default to admin
+    let emailRecipient = 'smlimousine2026@gmail.com'; 
 
     if (data.type === 'SEND_INVOICE') {
         const { name, amount, email, link } = data;
         emailRecipient = email;
         subject = `Invoice from SM LIMOUSINE - $${amount}`;
         bookingSummary = `Dear ${name},\n\nPlease find your invoice from SM LIMOUSINE for your upcoming travel.\n\nTotal Amount: $${amount}\n\nYou can view your invoice and pay securely online using the link below:\n${link}\n\nThank you for choosing SM LIMOUSINE.\n\nBest regards,\nSam Boulos\n(817) 723-4592`;
+    } else if (data.type === 'SEND_RECEIPT') {
+        const { name, amount, email, link } = data;
+        emailRecipient = email;
+        subject = `Receipt from SM LIMOUSINE - $${amount} (PAID)`;
+        bookingSummary = `Dear ${name},\n\nThank you for your payment. Please find your official receipt from SM LIMOUSINE attached via the link below.\n\nTotal Amount Paid: $${amount}\nStatus: PAID IN FULL\n\nView/Download Receipt:\n${link}\n\nThank you for choosing SM LIMOUSINE.\n\nBest regards,\nSam Boulos\n(817) 723-4592`;
     } else if (data.type === 'FEEDBACK') {
         const { name, rating, comment, bookingId } = data;
         subject = `⭐ FEEDBACK: ${rating}-Star from ${name}`;
@@ -53,8 +58,7 @@ exports.handler = async (event) => {
 
     await transporter.sendMail(mailOptions);
 
-    // Only send SMS for staff notifications (not for sending invoices to clients)
-    if (data.type !== 'SEND_INVOICE') {
+    if (data.type !== 'SEND_INVOICE' && data.type !== 'SEND_RECEIPT') {
         try {
           const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
           const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY];

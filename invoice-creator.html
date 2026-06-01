@@ -59,6 +59,10 @@
             outline: none;
             box-shadow: 0 0 0 4px rgba(0,0,0,0.02);
         }
+        .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; user-select: none; }
+        .checkbox-row input { width: 22px; height: 22px; margin: 0; cursor: pointer; }
+        .checkbox-row span { font-weight: 700; color: #111; font-size: 0.9rem; text-transform: uppercase; }
+
         button { 
             width: 100%; 
             padding: 20px; 
@@ -123,14 +127,19 @@
         <div class="field"><label>Vehicle Used</label><input id="vehicle" placeholder="e.g. 2026 Cadillac Escalade"></div>
         <div class="field"><label>Invoice Number (Optional)</label><input id="inv" placeholder="e.g. 1001"></div>
         
-        <button onclick="generate()">Generate Invoice Link</button>
+        <label class="checkbox-row">
+            <input type="checkbox" id="paid-status">
+            <span>Mark as PAID (Receipt Mode)</span>
+        </label>
+
+        <button onclick="generate()">Generate Link</button>
 
         <div id="result">
             <label>Link Ready:</label>
             <p id="link-text"></p>
             <button class="copy-btn" onclick="copy()">Copy Link</button>
             <button class="email-btn" onclick="sendEmail()">Email to Client</button>
-            <p id="status" style="font-size: 0.8rem; color: #28a745; margin-top: 10px; display: none;">Invoice Sent Successfully!</p>
+            <p id="status" style="font-size: 0.8rem; color: #28a745; margin-top: 10px; display: none;">Sent Successfully!</p>
         </div>
     </div>
 
@@ -142,11 +151,18 @@
             const amount = document.getElementById('amount').value;
             const vehicle = document.getElementById('vehicle').value;
             const inv = document.getElementById('inv').value;
+            const isPaid = document.getElementById('paid-status').checked;
 
             if(!name || !amount) { alert("Please enter at least Name and Amount."); return; }
 
             const base = "https://sm-limo.com/invoice.html";
-            const params = new URLSearchParams({ n: name, a: amount, v: vehicle, i: inv });
+            const params = new URLSearchParams({ 
+                n: name, 
+                a: amount, 
+                v: vehicle, 
+                i: inv,
+                p: isPaid ? "1" : "0"
+            });
             currentUrl = base + "?" + params.toString();
             
             document.getElementById('link-text').innerText = currentUrl;
@@ -159,6 +175,7 @@
             const name = document.getElementById('name').value;
             const amount = document.getElementById('amount').value;
             const status = document.getElementById('status');
+            const isPaid = document.getElementById('paid-status').checked;
 
             if(!email) { alert("Please enter the Client Email address."); return; }
 
@@ -170,7 +187,7 @@
                 const response = await fetch('/.netlify/functions/dispatch', {
                     method: 'POST',
                     body: JSON.stringify({
-                        type: 'SEND_INVOICE',
+                        type: isPaid ? 'SEND_RECEIPT' : 'SEND_INVOICE',
                         email: email,
                         name: name,
                         amount: amount,
@@ -180,7 +197,7 @@
                 
                 if(response.ok) {
                     status.style.display = 'block';
-                    btn.innerText = "Email Sent";
+                    btn.innerText = "Sent";
                 } else {
                     throw new Error();
                 }
