@@ -14,6 +14,7 @@ exports.handler = async (event) => {
     let subject = '';
     let emailRecipient = 'smlimousine2026@gmail.com'; 
 
+    // --- LOGIC FOR DIFFERENT REQUEST TYPES ---
     if (data.type === 'SEND_INVOICE') {
         const { name, amount, email, link } = data;
         emailRecipient = email;
@@ -36,12 +37,27 @@ exports.handler = async (event) => {
         const { name, total, email } = data;
         subject = `💰 PAYMENT: $${total} - ${name}`;
         bookingSummary = `💰 PAYMENT RECEIVED\n\nClient: ${name}\nEmail: ${email}\nTotal: $${total}\n\nStatus: Live Stripe Payment Verified.`;
+    } else if (data.type === 'MARKETING_SMS') {
+        // --- NEW MARKETING SMS TYPE ---
+        const { to, message } = data;
+        const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+        await client.messages.create({
+            body: message,
+            from: process.env.TWILIO_FROM,
+            to: to
+        });
+        return {
+            statusCode: 200,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ success: true, message: "Marketing SMS sent successfully" })
+        };
     } else {
         const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
         subject = `🚨 Booking: ${name} - ${vehicle}`;
         bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers || 0} Pax, ${luggage || 0} Bags`;
     }
 
+    // --- EMAIL SENDING ---
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -58,6 +74,7 @@ exports.handler = async (event) => {
 
     await transporter.sendMail(mailOptions);
 
+    // --- DUAL SMS STAFF NOTIFICATION ---
     if (data.type !== 'SEND_INVOICE' && data.type !== 'SEND_RECEIPT') {
         try {
           const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
