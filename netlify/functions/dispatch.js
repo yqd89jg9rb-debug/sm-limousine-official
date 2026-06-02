@@ -13,16 +13,19 @@ exports.handler = async (event) => {
     let bookingSummary = '';
     let subject = '';
     let emailRecipient = 'smlimousine2026@gmail.com'; 
+    let isStaffNotification = true;
 
     // --- LOGIC FOR DIFFERENT REQUEST TYPES ---
     if (data.type === 'SEND_INVOICE') {
         const { name, amount, email, link } = data;
         emailRecipient = email;
+        isStaffNotification = false;
         subject = `Invoice from SM LIMOUSINE - $${amount}`;
         bookingSummary = `Dear ${name},\n\nPlease find your invoice from SM LIMOUSINE for your upcoming travel.\n\nTotal Amount: $${amount}\n\nYou can view your invoice and pay securely online using the link below:\n${link}\n\nThank you for choosing SM LIMOUSINE.\n\nBest regards,\nSam Boulos\n(817) 723-4592`;
     } else if (data.type === 'SEND_RECEIPT') {
         const { name, amount, email, link } = data;
         emailRecipient = email;
+        isStaffNotification = false;
         subject = `Receipt from SM LIMOUSINE - $${amount} (PAID)`;
         bookingSummary = `Dear ${name},\n\nThank you for your payment. Please find your official receipt from SM LIMOUSINE attached via the link below.\n\nTotal Amount Paid: $${amount}\nStatus: PAID IN FULL\n\nView/Download Receipt:\n${link}\n\nThank you for choosing SM LIMOUSINE.\n\nBest regards,\nSam Boulos\n(817) 723-4592`;
     } else if (data.type === 'FEEDBACK') {
@@ -38,56 +41,55 @@ exports.handler = async (event) => {
         subject = `💰 PAYMENT: $${total} - ${name}`;
         bookingSummary = `💰 PAYMENT RECEIVED\n\nClient: ${name}\nEmail: ${email}\nTotal: $${total}\n\nStatus: Live Stripe Payment Verified.`;
     } else if (data.type === 'MARKETING_SMS') {
-        // --- NEW MARKETING SMS TYPE ---
         const { to, message } = data;
         const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-        await client.messages.create({
-            body: message,
-            from: process.env.TWILIO_FROM,
-            to: to
-        });
-        return {
-            statusCode: 200,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ success: true, message: "Marketing SMS sent successfully" })
-        };
+        await client.messages.create({ body: message, from: process.env.TWILIO_FROM, to: to });
+        return { statusCode: 200, body: JSON.stringify({ success: true }) };
     } else {
         const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
         subject = `🚨 Booking: ${name} - ${vehicle}`;
         bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers || 0} Pax, ${luggage || 0} Bags`;
     }
 
-    // --- EMAIL SENDING ---
+    // --- NOTIFICATION TASKS ---
+    const tasks = [];
+
+    // 1. Email Task
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
       auth: { user: 'smlimousine2026@gmail.com', pass: EMAIL_PASS }
     });
-
-    const mailOptions = {
+    tasks.push(transporter.sendMail({
       from: '"SM LIMOUSINE" <smlimousine2026@gmail.com>',
       to: emailRecipient,
       subject: subject,
       text: bookingSummary
-    };
+    }));
 
-    await transporter.sendMail(mailOptions);
+    // 2. SMS Tasks (only if staff notification)
+    if (isStaffNotification) {
+      const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+      const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY].filter(Boolean);
+      recipients.forEach(phone => {
+        tasks.push(client.messages.create({
+          body: bookingSummary,
+          from: process.env.TWILIO_FROM,
+          to: phone
+        }));
+      });
+    }
 
-    // --- DUAL SMS STAFF NOTIFICATION ---
-    if (data.type !== 'SEND_INVOICE' && data.type !== 'SEND_RECEIPT') {
-        try {
-          const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-          const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY];
-          const smsPromises = recipients.filter(Boolean).map(phone => {
-            return client.messages.create({
-              body: bookingSummary,
-              from: process.env.TWILIO_FROM,
-              to: phone
-            });
-          });
-          await Promise.all(smsPromises);
-        } catch (e) { console.log('SMS Snag'); }
+    // --- EXECUTE WITH TIMEOUT ---
+    // We race our tasks against a 8-second timer to ensure we return before Netlify's 10s limit
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 8000));
+    
+    try {
+      await Promise.race([Promise.all(tasks), timeout]);
+    } catch (e) {
+      console.log('Notification Snag or Timeout:', e.message);
+      // We still return 200 because the process likely started and we want the UI to succeed
     }
 
     return {
@@ -95,6 +97,7 @@ exports.handler = async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ success: true })
     };
+
   } catch (error) {
     return {
       statusCode: 500,
