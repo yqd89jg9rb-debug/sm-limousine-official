@@ -15,7 +15,6 @@ exports.handler = async (event) => {
     let emailRecipient = 'smlimousine2026@gmail.com'; 
     let isStaffNotification = true;
 
-    // --- LOGIC FOR DIFFERENT REQUEST TYPES ---
     if (data.type === 'SEND_INVOICE') {
         const { name, amount, email, link } = data;
         emailRecipient = email;
@@ -51,7 +50,6 @@ exports.handler = async (event) => {
         bookingSummary = `🚨 NEW BOOKING: SM LIMOUSINE\n\nClient: ${name}\nEmail: ${email}\nVehicle: ${vehicle}\nTotal: $${total}\n\nTrip: ${pickup} TO ${dropoff}\nDate/Time: ${date} @ ${time}\nLoad: ${passengers || 0} Pax, ${luggage || 0} Bags`;
     }
 
-    // --- NOTIFICATION TASKS ---
     const tasks = [];
 
     // 1. Email Task
@@ -66,31 +64,28 @@ exports.handler = async (event) => {
       to: emailRecipient,
       subject: subject,
       text: bookingSummary
-    }));
+    }).catch(e => console.error('Email Error:', e.message)));
 
-    // 2. SMS Tasks (only if staff notification)
+    // 2. SMS Tasks (Individual handling to ensure one failure doesn't block the other)
     if (isStaffNotification) {
       const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
       const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY].filter(Boolean);
+      
       recipients.forEach(phone => {
-        tasks.push(client.messages.create({
-          body: bookingSummary,
-          from: process.env.TWILIO_FROM,
-          to: phone
-        }));
+        tasks.push(
+          client.messages.create({
+            body: bookingSummary,
+            from: process.env.TWILIO_FROM,
+            to: phone
+          })
+          .then(msg => console.log(`SMS Sent to ${phone}: ${msg.sid}`))
+          .catch(err => console.error(`SMS Error for ${phone}:`, err.message))
+        );
       });
     }
 
-    // --- EXECUTE WITH TIMEOUT ---
-    // We race our tasks against a 8-second timer to ensure we return before Netlify's 10s limit
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 8000));
-    
-    try {
-      await Promise.race([Promise.all(tasks), timeout]);
-    } catch (e) {
-      console.log('Notification Snag or Timeout:', e.message);
-      // We still return 200 because the process likely started and we want the UI to succeed
-    }
+    // Wait for all tasks to complete or timeout
+    await Promise.all(tasks);
 
     return {
       statusCode: 200,
@@ -99,6 +94,7 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
+    console.error('Global Function Error:', error.message);
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
