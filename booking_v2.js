@@ -1,14 +1,76 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Booking Engine (Bookinglane Replica v1.2)
+   SM LIMOUSINE — Elite Booking Engine (v22.7 - FULL FLEET RESTORE)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const FLEET = [
-        { key: 'sedan', name: 'Premium sedan', base: 95, perMile: 4.50, hourly: 95, pax: 2, bag: 2, sub: 'Mercedes E-Class, Lexus ES, Cadillac CT6, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        { key: 'suv',   name: 'Premium SUV',   base: 125, perMile: 6.50, hourly: 125, pax: 6, bag: 5, sub: 'Chevrolet Suburban, GMC Yukon, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
-        { key: 'elite', name: 'First class',   base: 150, perMile: 7.80, hourly: 185, pax: 6, bag: 5, sub: 'Cadillac Escalade, Mercedes S-Class, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
-        { key: 'van',   name: 'Sprinter van',  base: 270, perMile: 12.00, hourly: 225, pax: 12, bag: 10, sub: 'Mercedes Sprinter, Ford Transit, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' }
+        { 
+            key: 'sedan', 
+            name: 'Premium sedan', 
+            base: 78, 
+            perMile: 4.80, 
+            hourly: 95, 
+            pax: 3, 
+            bag: 2, 
+            sub: 'Cadillac XT6 or similar.', 
+            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' 
+        },
+        { 
+            key: 'suburban', 
+            name: 'Executive SUV',   
+            base: 102, 
+            perMile: 6.00, 
+            hourly: 125, 
+            pax: 6, 
+            bag: 5, 
+            sub: 'Chevrolet Suburban or similar.', 
+            img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1000&q=80' 
+        },
+        { 
+            key: 'denali',   
+            name: 'Premium SUV',   
+            base: 114, 
+            perMile: 6.60, 
+            hourly: 140, 
+            pax: 6, 
+            bag: 5, 
+            sub: 'GMC Denali or similar.', 
+            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' 
+        },
+        { 
+            key: 'elite', 
+            name: 'First class',   
+            base: 150, 
+            perMile: 7.80, 
+            hourly: 185, 
+            pax: 6, 
+            bag: 6, 
+            sub: '2026 Cadillac Escalade or similar.', 
+            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' 
+        },
+        { 
+            key: 'van',   
+            name: 'Sprinter van',  
+            base: 270, 
+            perMile: 12.00, 
+            hourly: 225, 
+            pax: 14, 
+            bag: 10, 
+            sub: 'Mercedes Sprinter or similar.', 
+            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' 
+        },
+        { 
+            key: 'motorcoach', 
+            name: 'Motor Coach', 
+            base: 600, 
+            perMile: 30.00, 
+            hourly: 450, 
+            pax: 56, 
+            bag: 50, 
+            sub: 'Premium Charter Bus for large groups.', 
+            img: 'https://images.ctfassets.net/youh2ajahg7j/35mg10tqU3HdcQLjD2izW0/b4d2b3658d8ff3d97130177675574a76/buses.webp' 
+        }
     ];
 
     let bookingData = {
@@ -92,7 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingData.selectedVehicle = v;
         bookingData.total = price;
         document.querySelectorAll('.bl-vehicle-card').forEach(c => c.classList.remove('active'));
-        document.getElementById(`v-${key}`).classList.add('active');
+        const el = document.getElementById(`v-${key}`);
+        if(el) el.classList.add('active');
         document.getElementById('bl-continue-btn').style.background = '#5d2b45';
         document.getElementById('summary-v-name').innerText = v.name;
         document.getElementById('summary-total').innerText = `$${price}`;
@@ -154,12 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- GOOGLE MAPS FIX ---
     function initMaps() {
         const pInput = document.getElementById('pickup-input');
         const dInput = document.getElementById('dropoff-input');
         if (!pInput || !dInput) return;
-
         const setupAutocomplete = (input) => {
             const autocomplete = new google.maps.places.Autocomplete(input, { componentRestrictions: { country: "us" } });
             autocomplete.addListener('place_changed', () => {
@@ -179,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAutocomplete(dInput);
     }
 
-    // Check if Google Maps is already loaded, otherwise wait for it
     if (typeof google !== 'undefined' && google.maps) {
         initMaps();
     } else {
