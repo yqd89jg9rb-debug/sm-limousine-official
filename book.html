@@ -6,124 +6,161 @@
     <title>Secure Booking | SM LIMOUSINE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=master_final">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=bl_replica">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
-    <style>
-        body { background: #000; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .booking-container { width: 100%; max-width: 500px; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); padding: 30px; }
-        .booking-header { text-align: center; margin-bottom: 30px; }
-        .booking-header img { height: 50px; margin-bottom: 15px; }
-        .booking-header h1 { font-size: 1.5rem; font-weight: 800; color: #11142d; }
-        .booking-header p { color: #888; font-size: 0.9rem; margin-top: 5px; }
-        .booking-widget { margin: 0 !important; max-width: 100% !important; box-shadow: none !important; border: none !important; }
-    </style>
 </head>
-<body>
-    <div class="booking-container">
-        <div class="booking-header">
-            <img src="sm_logo_silver.png" alt="SM LIMOUSINE">
-            <h1>Elite Secure Booking</h1>
-            <p>Direct priority reservation for phone clients.</p>
-        </div>
+<body class="bl-body">
+
+    <div class="bl-container">
         
-        <div class="booking-widget">
-            <div class="trip-tabs">
-                <button class="trip-tab active" data-trip="oneway">One-way</button>
-                <button class="trip-tab" data-trip="roundtrip">Roundtrip</button>
-                <button class="trip-tab" data-trip="hourly">Hourly</button>
-            </div>
-            <div class="booking-form">
-                <!-- STEP 1 -->
-                <div class="booking-step active" id="step-1">
-                    <div class="form-field"><label>From</label><input type="text" id="pickup-input" data-field="pickup" placeholder="Pickup location"></div>
-                    <div class="form-field"><label>To</label><input type="text" id="dropoff-input" data-field="dropoff" placeholder="Dropoff location"></div>
-                    <div class="add-stop">+ Add stop</div>
-                    <div class="form-row" style="display:flex; gap:15px; margin-bottom:15px;">
-                        <div class="form-field" style="flex:1;"><label>Pickup date</label><input type="date" id="trip-date"></div>
-                        <div class="form-field" style="flex:1;"><label>Pickup time</label><input type="time" id="trip-time"></div>
-                    </div>
-                    <div class="form-field" id="hourly-field" style="display:none;">
-                        <label>Hours</label>
-                        <select id="trip-hours"><option value="3">3 hours (min)</option><option value="4">4 hours</option><option value="5">5 hours</option><option value="8">8 hours</option></select>
-                    </div>
-                    <button class="search-btn" onclick="goToStep(2)" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Continue</button>
-                </div>
-                
-                <!-- STEP 2 -->
-                <div class="booking-step" id="step-2">
-                    <a href="javascript:goToStep(1)" class="back-link" style="color:#888; text-decoration:none; font-size:0.8rem; margin-bottom:15px; display:block;">&#8592; Back to Details</a>
-                    <div class="picker-group"><label>Passengers</label><div class="picker-opts" id="pax-picker" style="display:flex; gap:10px; margin-top:10px;"><div class="picker-opt active">1</div><div class="picker-opt">2</div><div class="picker-opt">3</div><div class="picker-opt">7</div><div class="picker-opt">14</div></div></div>
-                    <div class="picker-group" style="margin-top:20px;"><label>Luggage</label><div class="picker-opts" id="luggage-picker" style="display:flex; gap:10px; margin-top:10px;"><div class="picker-opt active">0</div><div class="picker-opt">1</div><div class="picker-opt">3</div><div class="picker-opt">5</div></div></div>
-                    <button class="search-btn" onclick="goToStep(3)" style="width:100%; padding:15px; background:#11142d; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; margin-top:20px;">Continue</button>
+        <header class="bl-header">
+            <img src="sm_logo_silver.png" alt="SM" class="bl-logo">
+            <div style="font-weight: 800; font-size: 1.2rem; color: #1a1a1a;">SM LIMOUSINE</div>
+        </header>
+
+        <!-- STEP 1: SEARCH & ADD-ONS -->
+        <div id="bl-step-1" class="bl-step">
+            <div class="bl-search-card">
+                <div class="bl-tabs">
+                    <div class="bl-tab active" data-trip="oneway">One-way</div>
+                    <div class="bl-tab" data-trip="roundtrip">Roundtrip</div>
+                    <div class="bl-tab" data-trip="hourly">Hourly</div>
                 </div>
 
-    <!-- PAYMENT OVERLAY -->
+                <div class="bl-input-group">
+                    <div class="bl-input-item">
+                        <label>From *</label>
+                        <input type="text" id="pickup-input" data-field="pickup" placeholder="Pickup location">
+                    </div>
+                    <div class="bl-input-item">
+                        <label>Dropoff *</label>
+                        <input type="text" id="dropoff-input" data-field="dropoff" placeholder="Dropoff location">
+                    </div>
+                </div>
+
+                <div id="hourly-field" style="display:none; margin-bottom: 20px;">
+                    <div class="bl-input-item" style="background:#f8f9fc; padding:15px; border-radius:16px;">
+                        <label>Duration (Hours)</label>
+                        <select id="trip-hours" style="width:100%; border:none; background:transparent; font-size:1rem; font-weight:600;">
+                            <option value="3">3 Hours (Min)</option>
+                            <option value="4">4 Hours</option>
+                            <option value="5">5 Hours</option>
+                            <option value="8">8 Hours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 style="font-weight: 800; margin-bottom: 20px;">Passengers & add-ons</h3>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>👥 Passengers</span>
+                    </div>
+                    <div class="bl-stepper">
+                        <button class="bl-step-btn" onclick="updateStep('pax', -1)">-</button>
+                        <span class="bl-step-val" id="pax-val">1</span>
+                        <button class="bl-step-btn plus" onclick="updateStep('pax', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>💼 Luggage</span>
+                    </div>
+                    <div class="bl-stepper">
+                        <button class="bl-step-btn" onclick="updateStep('luggage', -1)">-</button>
+                        <span class="bl-step-val" id="luggage-val">0</span>
+                        <button class="bl-step-btn plus" onclick="updateStep('luggage', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>💁‍♂️ Meet & greet service</span>
+                    </div>
+                    <div class="bl-toggle" id="meet-greet" onclick="toggleAddon('meet-greet')"></div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>👶 Traveling with a child</span>
+                    </div>
+                    <div class="bl-toggle" id="child-seat" onclick="toggleAddon('child-seat')"></div>
+                </div>
+
+                <button class="bl-confirm-btn" onclick="goToStep(2)">Confirm</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: VEHICLE SELECTION -->
+        <div id="bl-step-2" class="bl-step" style="display:none;">
+            <div id="bl-fleet-list">
+                <!-- Fleet Cards Rendered by JS -->
+            </div>
+            <div style="height: 100px;"></div> <!-- Spacer for fixed button -->
+            <button class="bl-continue-btn" id="bl-continue-btn" onclick="goToStep(3)">Continue</button>
+        </div>
+
+        <!-- STEP 3: CONTACT & PAYMENT -->
+        <div id="bl-step-3" class="bl-step" style="display:none;">
+            <div class="bl-search-card">
+                <h2 style="font-weight:900; margin-bottom:20px;">Contact Details</h2>
+                <div class="bl-input-group">
+                    <div class="bl-input-item"><label>Full Name</label><input type="text" id="pay-name" placeholder="John Doe"></div>
+                    <div class="bl-input-item"><label>Email</label><input type="email" id="pay-email" placeholder="john@example.com"></div>
+                    <div class="bl-input-item"><label>Phone</label><input type="tel" id="pay-phone" placeholder="+1 214-000-0000"></div>
+                </div>
+                
+                <div style="background:#f8f9fc; padding:20px; border-radius:16px; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:#888;">Vehicle:</span>
+                        <b id="summary-v-name">---</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#888;">Total:</span>
+                        <b id="summary-total" style="font-size:1.4rem; color:#5d2b45;">$0.00</b>
+                    </div>
+                </div>
+
+                <button class="bl-confirm-btn" onclick="handleFinalReservation()">Proceed to Payment</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- REUSING SECURE MODAL -->
     <div class="payment-overlay" id="paymentOverlay">
         <div class="payment-modal" id="paymentModal">
-            <button class="payment-modal__close" id="paymentClose" aria-label="Close payment">&times;</button>
+            <button class="payment-modal__close" id="paymentClose">&times;</button>
             <div class="payment-modal__header">
-                <div class="payment-modal__brand">
-                    <img src="sm_logo_silver.png" alt="SM LIMOUSINE" style="height:36px;">
-                </div>
-                <div class="payment-modal__secure">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                    Secure Payment
-                </div>
+                <div class="payment-modal__brand"><img src="sm_logo_silver.png" alt="SM" style="height:36px;"></div>
+                <div class="payment-modal__secure">Secure Payment</div>
             </div>
-
             <div class="payment-modal__summary">
-                <h3 class="payment-modal__title">Booking Summary</h3>
-                <div class="payment-modal__line">
-                    <span>Vehicle</span>
-                    <span id="pay-summary-vehicle">—</span>
-                </div>
+                <div class="payment-modal__line"><span>Vehicle</span><span id="pay-summary-vehicle">—</span></div>
                 <div class="payment-modal__divider"></div>
-                <div class="payment-modal__line payment-modal__line--total">
-                    <span>Total</span>
-                    <span id="pay-summary-total">$0.00</span>
-                </div>
+                <div class="payment-modal__line payment-modal__line--total"><span>Total</span><span id="pay-summary-total">$0.00</span></div>
             </div>
-
             <div class="payment-modal__form">
-                <div class="payment-modal__field">
-                    <label>Email</label>
-                    <input type="email" placeholder="your@email.com" id="pay-card-email" required>
-                </div>
-                <div class="payment-modal__field">
-                    <label>Name on Card</label>
-                    <input type="text" placeholder="Full name" id="pay-card-name" required>
-                </div>
-                <div class="payment-modal__field">
-                    <label>Card Number</label>
-                    <div id="card-number" style="padding:12px; background:#151515; border:1px solid #333; border-radius:8px;"></div>
-                </div>
+                <div class="payment-modal__field"><label>Email</label><input type="email" id="pay-card-email"></div>
+                <div class="payment-modal__field"><label>Name on Card</label><input type="text" id="pay-card-name"></div>
+                <div class="payment-modal__field"><label>Card Number</label><div id="card-number" style="padding:12px; background:#151515; border:1px solid #333; border-radius:8px;"></div></div>
                 <div class="payment-modal__row" style="display:flex; gap:15px; margin-bottom:15px;">
-                    <div class="payment-modal__field" style="flex:1; margin-bottom:0;">
-                        <label>Expiry (MM/YY)</label>
-                        <div id="card-expiry" style="padding:12px; background:#151515; border:1px solid #333; border-radius:8px;"></div>
-                    </div>
-                    <div class="payment-modal__field" style="flex:1; margin-bottom:0;">
-                        <label>CVC (Code)</label>
-                        <div id="card-cvc" style="padding:12px; background:#151515; border:1px solid #333; border-radius:8px;"></div>
-                    </div>
+                    <div class="payment-modal__field" style="flex:1;"><label>Expiry</label><div id="card-expiry" style="padding:12px; background:#151515; border:1px solid #333; border-radius:8px;"></div></div>
+                    <div class="payment-modal__field" style="flex:1;"><label>CVC</label><div id="card-cvc" style="padding:12px; background:#151515; border:1px solid #333; border-radius:8px;"></div></div>
                 </div>
-                
-                <button class="payment-modal__pay-btn" id="pay-modal-submit-btn" style="width:100%; padding:15px; background:var(--gold); color:#000; border:none; border-radius:8px; font-weight:900; cursor:pointer; margin-top:10px; text-transform:uppercase;">
-                    Pay Now
-                </button>
+                <button class="payment-modal__pay-btn" id="pay-modal-submit-btn">Pay Now</button>
             </div>
-
-            <div class="payment-modal__success" id="paymentSuccess" style="display:none; flex-direction:column; align-items:center; padding:40px 20px; text-align:center;">
-                <div style="width:60px; height:60px; background:#28a745; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:20px;">✓</div>
-                <h2 style="color:#fff; margin-bottom:10px;">Payment Successful</h2>
-                <p style="color:#888; margin-bottom:20px;">Your reservation is confirmed. A receipt has been sent to your email.</p>
-                <p id="confirmationId" style="font-family:monospace; color:var(--gold); font-weight:700;"></p>
-                <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:transparent; border:1px solid #444; color:#fff; border-radius:5px; cursor:pointer;">Close</button>
+            <div id="paymentSuccess" style="display:none; text-align:center; padding:40px;">
+                <h2 style="color:#fff;">Confirmed!</h2>
+                <p id="confirmationId" style="color:#D4AF37;"></p>
+                <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px;">Close</button>
             </div>
         </div>
     </div>
-    <script src="script.js?v=22.6"></script>
+
+    <script src="booking_v2.js?v=bl_replica"></script>
 </body>
 </html>
