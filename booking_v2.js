@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof Stripe !== 'undefined') {
         stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
         elements = stripe.elements();
-        const style = { base: { color: '#fff', fontSize: '16px', '::placeholder': { color: '#666' } } };
+        const style = { base: { color: '#1a1a1a', fontSize: '16px', '::placeholder': { color: '#666' } } };
         cardNumber = elements.create('cardNumber', {style: style});
         cardExpiry = elements.create('cardExpiry', {style: style});
         cardCvc    = elements.create('cardCvc',    {style: style});
