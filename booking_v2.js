@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Booking Engine (Bookinglane Replica v1.0)
+   SM LIMOUSINE — Elite Booking Engine (Bookinglane Replica v1.1)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
