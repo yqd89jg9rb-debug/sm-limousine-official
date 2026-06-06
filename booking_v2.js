@@ -1,54 +1,14 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Booking Engine (Bookinglane Replica v1.1)
+   SM LIMOUSINE — Elite Booking Engine (Bookinglane Replica v1.2)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const FLEET = [
-        { 
-            key: 'sedan', 
-            name: 'Premium sedan', 
-            base: 95, 
-            perMile: 4.50, 
-            hourly: 95, 
-            pax: 2, 
-            bag: 2, 
-            sub: 'Mercedes E-Class, Lexus ES, Cadillac CT6, or similar.', 
-            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' 
-        },
-        { 
-            key: 'suv',   
-            name: 'Premium SUV',   
-            base: 125, 
-            perMile: 6.50, 
-            hourly: 125, 
-            pax: 6, 
-            bag: 5, 
-            sub: 'Chevrolet Suburban, GMC Yukon, or similar.', 
-            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' 
-        },
-        { 
-            key: 'elite', 
-            name: 'First class',   
-            base: 150, 
-            perMile: 7.80, 
-            hourly: 185, 
-            pax: 6, 
-            bag: 5, 
-            sub: 'Cadillac Escalade, Mercedes S-Class, or similar.', 
-            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' 
-        },
-        { 
-            key: 'van',   
-            name: 'Sprinter van',  
-            base: 270, 
-            perMile: 12.00, 
-            hourly: 225, 
-            pax: 12, 
-            bag: 10, 
-            sub: 'Mercedes Sprinter, Ford Transit, or similar.', 
-            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' 
-        }
+        { key: 'sedan', name: 'Premium sedan', base: 95, perMile: 4.50, hourly: 95, pax: 2, bag: 2, sub: 'Mercedes E-Class, Lexus ES, Cadillac CT6, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
+        { key: 'suv',   name: 'Premium SUV',   base: 125, perMile: 6.50, hourly: 125, pax: 6, bag: 5, sub: 'Chevrolet Suburban, GMC Yukon, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg' },
+        { key: 'elite', name: 'First class',   base: 150, perMile: 7.80, hourly: 185, pax: 6, bag: 5, sub: 'Cadillac Escalade, Mercedes S-Class, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
+        { key: 'van',   name: 'Sprinter van',  base: 270, perMile: 12.00, hourly: 225, pax: 12, bag: 10, sub: 'Mercedes Sprinter, Ford Transit, or similar.', img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' }
     ];
 
     let bookingData = {
@@ -103,19 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo(0,0);
     };
 
-    // --- FLEET RENDERING ---
     function renderFleet() {
         const list = document.getElementById('bl-fleet-list');
         list.innerHTML = FLEET.map(v => {
             let price = v.base + (v.perMile * bookingData.miles);
             if (bookingData.tripType === 'roundtrip') price *= 2;
-            if (bookingData.tripType === 'hourly') {
-                price = v.hourly * parseInt(document.getElementById('trip-hours').value || 3);
-            }
-            
+            if (bookingData.tripType === 'hourly') price = v.hourly * parseInt(document.getElementById('trip-hours').value || 3);
             return `
                 <div class="bl-vehicle-card" id="v-${v.key}" onclick="selectVehicle('${v.key}', ${price.toFixed(2)})">
-                    <div>
+                    <div class="bl-v-content">
                         <div class="bl-v-title">${v.name}</div>
                         <div class="bl-v-sub">${v.sub}</div>
                         <div class="bl-v-price">$${price.toFixed(2)} <span style="font-size:0.8rem; color:#888;">USD</span></div>
@@ -127,8 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="bl-v-icon-item">💼 ${v.bag}</div>
                     </div>
                     <div class="bl-v-radio"></div>
-                </div>
-            `;
+                </div>`;
         }).join('');
     }
 
@@ -136,18 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const v = FLEET.find(x => x.key === key);
         bookingData.selectedVehicle = v;
         bookingData.total = price;
-        
         document.querySelectorAll('.bl-vehicle-card').forEach(c => c.classList.remove('active'));
-        const el = document.getElementById(`v-${key}`);
-        if(el) el.classList.add('active');
-        
-        document.getElementById('bl-continue-btn').style.background = '#5d2b45'; // Activate button
-        
+        document.getElementById(`v-${key}`).classList.add('active');
+        document.getElementById('bl-continue-btn').style.background = '#5d2b45';
         document.getElementById('summary-v-name').innerText = v.name;
         document.getElementById('summary-total').innerText = `$${price}`;
     };
 
-    // --- TABS ---
     document.querySelectorAll('.bl-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.bl-tab').forEach(t => t.classList.remove('active'));
@@ -157,16 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- FINAL RESERVATION ---
     const overlay = document.getElementById('paymentOverlay');
     const payModalBtn = document.getElementById('pay-modal-submit-btn');
-
     window.handleFinalReservation = () => {
         const name = document.getElementById('pay-name').value;
         const email = document.getElementById('pay-email').value;
         const phone = document.getElementById('pay-phone').value;
         if(!name || !email || !phone) { alert("Please fill in your contact details."); return; }
-
         document.getElementById('pay-summary-vehicle').textContent = bookingData.selectedVehicle.name;
         document.getElementById('pay-summary-total').textContent = `$${bookingData.total}`;
         document.getElementById('pay-card-email').value = email;
@@ -181,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const {token, error} = await stripe.createToken(cardNumber);
                 if (error) throw new Error(error.message);
-                
                 const chargeRes = await fetch('/.netlify/functions/create-charge', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -189,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const chargeData = await chargeRes.json();
                 if(!chargeData.success) throw new Error("Payment failed.");
-
                 await fetch('/.netlify/functions/dispatch', {
                     method: 'POST',
                     body: JSON.stringify({ 
@@ -209,14 +154,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MAPS ---
+    // --- GOOGLE MAPS FIX ---
     function initMaps() {
-        const inputs = document.querySelectorAll('input[data-field="pickup"], input[data-field="dropoff"]');
-        inputs.forEach(input => {
+        const pInput = document.getElementById('pickup-input');
+        const dInput = document.getElementById('dropoff-input');
+        if (!pInput || !dInput) return;
+
+        const setupAutocomplete = (input) => {
             const autocomplete = new google.maps.places.Autocomplete(input, { componentRestrictions: { country: "us" } });
             autocomplete.addListener('place_changed', () => {
-                const p = document.getElementById('pickup-input').value;
-                const d = document.getElementById('dropoff-input').value;
+                const p = pInput.value;
+                const d = dInput.value;
                 if (p && d) {
                     const svc = new google.maps.DistanceMatrixService();
                     svc.getDistanceMatrix({ origins: [p], destinations: [d], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (res, stat) => {
@@ -226,7 +174,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             });
-        });
+        };
+        setupAutocomplete(pInput);
+        setupAutocomplete(dInput);
     }
-    if (typeof google !== 'undefined') initMaps();
+
+    // Check if Google Maps is already loaded, otherwise wait for it
+    if (typeof google !== 'undefined' && google.maps) {
+        initMaps();
+    } else {
+        window.addEventListener('load', initMaps);
+    }
 });
