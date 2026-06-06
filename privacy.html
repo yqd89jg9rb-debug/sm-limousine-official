@@ -1,1 +1,88 @@
-$(cat /root/workspace/privacy_b64.txt)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Privacy Policy | SM LIMOUSINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #000000; --silver: #C0C0C0; --white: #ffffff; --gold: #D4AF37;
+            --header-h: 80px; --font-main: 'Inter', sans-serif;
+        }
+        html, body { background: var(--black); color: var(--white); font-family: var(--font-main); line-height: 1.6; overflow-x: hidden; width: 100%; }
+        
+        .header { position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h); background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); z-index: 2000; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header__inner { max-width: 1200px; margin: 0 auto; height: 100%; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
+        .header__logo-centered img { height: 38px; width: auto; }
+        .header__phone { font-size: 0.9rem; font-weight: 800; color: #fff; text-decoration: none; }
+
+        .policy-page { padding: calc(var(--header-h) + 60px) 20px 100px; max-width: 900px; margin: 0 auto; }
+        .policy__title { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--silver); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+        .policy__updated { font-size: 0.9rem; color: #555; text-align: center; margin-bottom: 60px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .policy-section { margin-bottom: 40px; }
+        .policy-section h2 { font-size: 1.4rem; color: var(--gold); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        .policy-section p { color: #888; margin-bottom: 15px; }
+        .policy-section ul { list-style: none; padding-left: 0; }
+        .policy-section li { color: #888; margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .policy-section li::before { content: '•'; color: var(--gold); position: absolute; left: 0; font-weight: bold; }
+        .policy-section strong { color: var(--white); }
+
+        .elite-footer { background: #000; padding: 100px 20px 50px; border-top: 1px solid #111; text-align: center; }
+        .footer-logo { height: 45px; width: auto; margin-bottom: 40px; }
+        .footer__legal { display: flex; gap: 30px; justify-content: center; margin-bottom: 30px; }
+        .footer__legal a { color: #444; text-decoration: none; font-size: 0.85rem; }
+        .elite-footer__copyright { color: #222; font-size: 0.8rem; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            .policy__title { font-size: 2rem; }
+            .header__phone { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo-centered">
+                <a href="index.html">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
+                </a>
+            </div>
+            <a href="tel:+18773376546" class="header__phone">+1 (877) 337-6546</a>
+        </div>
+    </header>
+
+    <main class="policy-page">
+        <h1 class="policy__title">Privacy Policy</h1>
+        <p class="policy__updated">Last updated: May 23, 2026</p>
+
+        <section class="policy-section">
+            <h2>1. Information Collection</h2>
+            <p>We collect personal information necessary to provide transportation services, including names, contact details, and payment information.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>2. No-Sharing Policy</h2>
+            <p><strong>Mobile information will not be shared with third parties/affiliates for marketing/promotional purposes.</strong> All other categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>3. SMS Consent</h2>
+            <p>By providing your phone number, you consent to receive booking confirmations and dispatch alerts via SMS. You can opt-out at any time by replying STOP.</p>
+        </section>
+    </main>
+
+    <footer class="elite-footer">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="footer-logo">
+        <div class="footer__legal">
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+        </div>
+        <p class="elite-footer__copyright">© 2026 SM LIMOUSINE, INC. ALL RIGHTS RESERVED.</p>
+    </footer>
+</body>
+</html>
