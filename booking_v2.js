@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pax: 6, 
             bag: 5, 
             sub: 'Chevrolet Suburban or similar.', 
-            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/34b6026b808be6c4630a2e17a7b5893908500d4101e251642f21d46bc1f36708.png' 
+            img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b2d3212f4161a8074ddcafdd0eeff6fb866a11368e5ed33867391a2585970656.png' 
         },
         { 
             key: 'denali',   
