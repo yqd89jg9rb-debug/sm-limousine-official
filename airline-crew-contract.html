@@ -3,120 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3-Year Airline Crew Contract - Proposed Rates | SM LIMOUSINE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <title>3-Year Airline Crew Contract Proposal | SM LIMOUSINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --silver: #C0C0C0; --bg: #000; --elite-blue: #11142d; }
-        body { margin: 0; padding: 40px 20px; background: #080808; color: #fff; font-family: 'Inter', sans-serif; line-height: 1.6; }
-        .document { max-width: 850px; margin: 0 auto; background: #000; border: 1px solid #222; border-radius: 24px; padding: 60px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; }
-        .accent-top { position: absolute; top: 0; left: 0; right: 0; height: 10px; background: linear-gradient(90deg, var(--silver), #444, var(--silver)); }
+        :root { --gold: #D4AF37; --silver: #C0C0C0; --bg: #000; --card-bg: #0c0c0c; --border: #222; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: #ccc; font-family: 'Inter', sans-serif; line-height: 1.6; padding: 40px 15px; }
         
+        .container { max-width: 700px; margin: 0 auto; background: #000; border: 1px solid var(--border); border-radius: 28px; padding: 50px 30px; position: relative; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        .accent-top { position: absolute; top: 0; left: 0; right: 0; height: 10px; background: linear-gradient(90deg, var(--silver), #555, var(--silver)); }
+
         header { text-align: center; margin-bottom: 50px; }
-        .logo { height: 70px; margin-bottom: 20px; }
-        .brand-name { font-family: 'Playfair Display', serif; font-size: 2.2rem; letter-spacing: 3px; text-transform: uppercase; color: #fff; }
-        .doc-title { font-size: 1rem; color: var(--silver); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
-        .contract-term { color: var(--gold); font-size: 0.85rem; font-weight: 700; margin-top: 5px; }
+        .logo { height: 65px; margin-bottom: 20px; }
+        .brand-name { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #fff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+        .doc-title { font-size: 0.9rem; color: var(--silver); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; }
+        .contract-badge { display: inline-block; background: var(--gold); color: #000; padding: 6px 15px; border-radius: 50px; font-weight: 800; font-size: 0.7rem; margin-top: 15px; text-transform: uppercase; }
 
-        .program-overview { background: #0c0c0c; border-radius: 16px; padding: 30px; margin-top: 40px; border: 1px solid #1a1a1a; }
-        .program-overview h4 { margin: 0 0 15px 0; font-size: 0.9rem; text-transform: uppercase; color: var(--gold); }
-        .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem; color: #888; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 50px; }
-        th { text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--gold); padding: 15px; border-bottom: 2px solid #222; }
-        td { padding: 25px 15px; border-bottom: 1px solid #111; }
+        .section-header { color: var(--gold); font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-left: 3px solid var(--gold); padding-left: 15px; }
         
-        .v-name { font-weight: 800; font-size: 1.1rem; color: #fff; display: block; }
-        .v-desc { font-size: 0.8rem; color: #666; }
-        .price-val { font-size: 1.4rem; font-weight: 900; color: #fff; text-align: right; }
-        .price-label { font-size: 0.7rem; color: #555; text-transform: uppercase; display: block; text-align: right; }
+        /* PROGRAM OVERVIEW - RE-STACKED FOR MOBILE */
+        .overview-box { background: var(--card-bg); border-radius: 20px; padding: 25px; border: 1px solid #1a1a1a; margin-bottom: 40px; }
+        .overview-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.95rem; }
+        .overview-item:last-child { margin-bottom: 0; }
+        .overview-item i { color: var(--gold); font-style: normal; font-weight: 900; }
 
-        .terms-box { margin-top: 50px; padding-top: 30px; border-top: 1px solid #222; }
-        .terms-box h4 { color: var(--gold); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 20px; }
-        .terms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .term-item { font-size: 0.85rem; color: #888; }
-        .term-item b { color: #fff; }
+        /* VEHICLE CARDS - REPLACES TABLE FOR MOBILE */
+        .vehicle-card { background: var(--card-bg); border: 1px solid #1a1a1a; border-radius: 24px; padding: 25px; margin-bottom: 25px; transition: 0.3s; }
+        .v-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; }
+        .v-name { font-weight: 800; font-size: 1.25rem; color: #fff; display: block; }
+        .v-pax { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .price-box { background: #000; border: 1px solid #222; border-radius: 16px; padding: 15px; text-align: center; }
+        .price-label { display: block; font-size: 0.65rem; color: #555; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+        .price-value { font-size: 1.4rem; font-weight: 800; color: #fff; }
 
-        footer { margin-top: 70px; text-align: center; border-top: 1px solid #222; padding-top: 40px; }
-        .footer-info { font-size: 0.9rem; color: #666; }
-        .footer-info b { color: #fff; }
+        /* TERMS */
+        .terms-box { margin-top: 40px; }
+        .term-row { display: flex; gap: 15px; margin-bottom: 20px; }
+        .term-row b { color: #fff; font-size: 0.9rem; display: block; margin-bottom: 3px; }
+        .term-row p { font-size: 0.85rem; color: #888; }
+
+        footer { margin-top: 60px; text-align: center; border-top: 1px solid #1a1a1a; padding-top: 40px; }
+        .footer-text { font-size: 0.9rem; color: #555; margin-bottom: 20px; }
+        .footer-text b { color: #fff; }
+
+        @media (max-width: 480px) {
+            .container { padding: 40px 20px; border-radius: 0; border: none; }
+            .brand-name { font-size: 1.8rem; }
+            .v-name { font-size: 1.1rem; }
+            .price-value { font-size: 1.2rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="document">
+    <div class="container">
         <div class="accent-top"></div>
+        
         <header>
             <img src="sm_logo_silver.png" alt="SM LIMOUSINE" class="logo">
-            <div class="brand-name">SM LIMOUSINE</div>
-            <div class="doc-title">Airline Crew Transportation Proposal</div>
-            <div class="contract-term">3-YEAR PREFERRED VENDOR PARTNERSHIP</div>
+            <h1 class="brand-name">SM LIMOUSINE</h1>
+            <p class="doc-title">Airline Crew Transportation</p>
+            <span class="contract-badge">3-Year Preferred Partnership Proposal</span>
         </header>
 
-        <div class="program-overview">
-            <h4>Program Overview</h4>
-            <div class="overview-grid">
-                <div>• Location: DFW ⇄ Hotels (10-20 Miles)</div>
-                <div>• Volume: 3–12 Trips Daily (Estimated)</div>
-                <div>• Term: 3-Year Strategic Commitment</div>
-                <div>• Priority: 24/7 Dedicated Dispatch</div>
+        <div class="section-header">Program Overview</div>
+        <div class="overview-box">
+            <div class="overview-item"><i>•</i> <span><b>Location:</b> DFW ⇄ Hotels (10-20 Mi Radius)</span></div>
+            <div class="overview-item"><i>•</i> <span><b>Est. Volume:</b> 3–12 Trips Daily</span></div>
+            <div class="overview-item"><i>•</i> <span><b>Service Term:</b> 3-Year Strategic Commitment</span></div>
+            <div class="overview-item"><i>•</i> <span><b>Operations:</b> 24/7 Dedicated Dispatch</span></div>
+        </div>
+
+        <div class="section-header">Proposed Flat Rates</div>
+
+        <!-- SUV CARD -->
+        <div class="vehicle-card">
+            <div class="v-header">
+                <div>
+                    <span class="v-name">Executive SUV</span>
+                    <span class="v-pax">Up to 6 Passengers / 6 Bags</span>
+                </div>
+            </div>
+            <div class="price-grid">
+                <div class="price-box">
+                    <span class="price-label">10-Mile Radius</span>
+                    <span class="price-value">$89.00</span>
+                </div>
+                <div class="price-box">
+                    <span class="price-label">20-Mile Radius</span>
+                    <span class="price-value">$105.00</span>
+                </div>
             </div>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Vehicle Type</th>
-                    <th style="text-align:right;">Flat Rate (10 Mi)</th>
-                    <th style="text-align:right;">Flat Rate (20 Mi)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <span class="v-name">Executive SUV</span>
-                        <span class="v-desc">GMC Yukon / Suburban (Up to 6 Pax)</span>
-                    </td>
-                    <td class="price-col">
-                        <div class="price-val">$89.00</div>
-                        <span class="price-label">Per Transfer</span>
-                    </td>
-                    <td class="price-col">
-                        <div class="price-val">$105.00</div>
-                        <span class="price-label">Per Transfer</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="v-name">Mini Bus</span>
-                        <span class="v-desc">Premium Coach (32 Passengers)</span>
-                    </td>
-                    <td class="price-col">
-                        <div class="price-val">$220.00</div>
-                        <span class="price-label">Per Transfer</span>
-                    </td>
-                    <td class="price-col">
-                        <div class="price-val">$240.00</div>
-                        <span class="price-label">Per Transfer</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- MINI BUS CARD -->
+        <div class="vehicle-card">
+            <div class="v-header">
+                <div>
+                    <span class="v-name">Mini Bus</span>
+                    <span class="v-pax">32 Passenger Premium Coach</span>
+                </div>
+            </div>
+            <div class="price-grid">
+                <div class="price-box">
+                    <span class="price-label">10-Mile Radius</span>
+                    <span class="price-value">$220.00</span>
+                </div>
+                <div class="price-box">
+                    <span class="price-label">20-Mile Radius</span>
+                    <span class="price-value">$240.00</span>
+                </div>
+            </div>
+        </div>
 
+        <div class="section-header">Operational Policy</div>
         <div class="terms-box">
-            <h4>Operational Commitment & Policy</h4>
-            <div class="terms-grid">
-                <div class="term-item"><b>Wait Time:</b> 45-min Domestic / 60-min Int'l grace period included.</div>
-                <div class="term-item"><b>Cancellations:</b> 2-hour notice required for all crew transfers.</div>
-                <div class="term-item"><b>Dispatch:</b> Real-time flight monitoring and manifest management.</div>
-                <div class="term-item"><b>Billing:</b> Net 45 monthly invoicing per agreement.</div>
+            <div class="term-row">
+                <div>
+                    <b>Wait Time Allowance</b>
+                    <p>45-min Domestic / 60-min Int'l grace period included for all crew arrivals.</p>
+                </div>
+            </div>
+            <div class="term-row">
+                <div>
+                    <b>Flight Monitoring</b>
+                    <p>24/7 real-time tracking at AFW and DFW to ensure zero-minute wait times.</p>
+                </div>
+            </div>
+            <div class="term-row">
+                <div>
+                    <b>Payment Terms</b>
+                    <p>Net 45 monthly invoicing following verified service delivery.</p>
+                </div>
             </div>
         </div>
 
         <footer>
-            <div class="footer-info">
+            <p class="footer-text">
                 <b>Direct:</b> 817.723.4592 &nbsp;|&nbsp; <b>Toll-Free:</b> 877.337.6546<br>
                 <b>Email:</b> reservation@sm-limo.com &nbsp;|&nbsp; <b>Web:</b> www.sm-limo.com
-            </div>
+            </p>
+            <p style="font-size: 0.7rem; color: #333;">© 2026 SM LIMOUSINE. ALL RIGHTS RESERVED.</p>
         </footer>
     </div>
 
