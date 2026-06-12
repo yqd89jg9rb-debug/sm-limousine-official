@@ -1,5 +1,39 @@
 const twilio = require('twilio');
 const nodemailer = require('nodemailer');
+const https = require('https');
+
+// Helper to send SMS via 800.com API
+const send800SMS = (recipient, message) => {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify({
+            recipient: recipient,
+            message: message,
+            sender: "+18773376546"
+        });
+
+        const options = {
+            hostname: 'api.800.com',
+            port: 443,
+            path: '/v1/messages',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer 395150|B10xGdZ5n8zYn3ktWwVpsoH8YAmiQsnBy4wk5s2t3ff0e16d',
+                'Content-Length': data.length
+            }
+        };
+
+        const req = https.request(options, (res) => {
+            let body = '';
+            res.on('data', (chunk) => body += chunk);
+            res.on('end', () => resolve(body));
+        });
+
+        req.on('error', (e) => reject(e));
+        req.write(data);
+        req.end();
+    });
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
@@ -41,8 +75,7 @@ exports.handler = async (event) => {
         bookingSummary = `💰 PAYMENT RECEIVED\n\nClient: ${name}\nEmail: ${email}\nTotal: $${total}\n\nStatus: Live Stripe Payment Verified.`;
     } else if (data.type === 'MARKETING_SMS') {
         const { to, message } = data;
-        const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
-        await client.messages.create({ body: message, from: process.env.TWILIO_FROM, to: to });
+        await send800SMS(to, message);
         return { statusCode: 200, body: JSON.stringify({ success: true }) };
     } else {
         const { name, email, vehicle, total, pickup, dropoff, date, time, passengers, luggage } = data;
@@ -66,25 +99,14 @@ exports.handler = async (event) => {
       text: bookingSummary
     }).catch(e => console.error('Email Error:', e.message)));
 
-    // 2. SMS Tasks (Individual handling to ensure one failure doesn't block the other)
+    // 2. SMS Tasks via 800.com (only if staff notification)
     if (isStaffNotification) {
-      const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
       const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY].filter(Boolean);
-      
       recipients.forEach(phone => {
-        tasks.push(
-          client.messages.create({
-            body: bookingSummary,
-            from: process.env.TWILIO_FROM,
-            to: phone
-          })
-          .then(msg => console.log(`SMS Sent to ${phone}: ${msg.sid}`))
-          .catch(err => console.error(`SMS Error for ${phone}:`, err.message))
-        );
+        tasks.push(send800SMS(phone, bookingSummary).catch(err => console.error(`SMS Error for ${phone}:`, err.message)));
       });
     }
 
-    // Wait for all tasks to complete or timeout
     await Promise.all(tasks);
 
     return {
