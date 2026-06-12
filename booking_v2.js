@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Booking Engine (v22.7 - FULL FLEET RESTORE)
+   SM LIMOUSINE — Elite Booking Engine (v22.8 - GOOGLE MAPS FIX)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.bl-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             bookingData.tripType = tab.dataset.trip;
-            document.getElementById('hourly-field').style.display = (tab.dataset.trip === 'hourly') ? 'block' : 'none';
+            const hField = document.getElementById('hourly-field');
+            if (hField) hField.style.display = (tab.dataset.trip === 'hourly') ? 'block' : 'none';
         });
     });
 
@@ -217,10 +218,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- GOOGLE MAPS POLLING ENGINE ---
     function initMaps() {
+        if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
+            console.log('Waiting for Google Maps...');
+            setTimeout(initMaps, 500);
+            return;
+        }
+
         const pInput = document.getElementById('pickup-input');
         const dInput = document.getElementById('dropoff-input');
         if (!pInput || !dInput) return;
+
         const setupAutocomplete = (input) => {
             const autocomplete = new google.maps.places.Autocomplete(input, { componentRestrictions: { country: "us" } });
             autocomplete.addListener('place_changed', () => {
@@ -231,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     svc.getDistanceMatrix({ origins: [p], destinations: [d], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (res, stat) => {
                         if (stat === 'OK' && res.rows[0].elements[0].status === 'OK') {
                             bookingData.miles = res.rows[0].elements[0].distance.value / 1609.34;
+                            console.log('Trip Miles:', bookingData.miles);
                         }
                     });
                 }
@@ -238,11 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         setupAutocomplete(pInput);
         setupAutocomplete(dInput);
+        console.log('Google Maps Autocomplete Active.');
     }
 
-    if (typeof google !== 'undefined' && google.maps) {
-        initMaps();
-    } else {
-        window.addEventListener('load', initMaps);
-    }
+    initMaps();
 });
