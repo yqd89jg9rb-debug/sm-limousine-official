@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const VEHICLE_RATES = {
         escalade:   { name: '2026 Cadillac Escalade', base: 127.50, perMile: 6.63, hourly: 157.25 },
         denali:     { name: 'GMC Denali',             base: 96.90, perMile: 5.61, hourly: 119.00 },
-        suburban:   { name: 'Chevrolet Suburban',     base: 102, perMile: 6.00, hourly: 125 },
+        suburban:   { name: 'Chevrolet Suburban',     base: 86.70, perMile: 5.10, hourly: 106.25 },
         sprinter:   { name: 'Mercedes Sprinter',      base: 270, perMile: 12.00, hourly: 225 },
         xt6:        { name: 'Cadillac XT6',           base: 66.30, perMile: 4.08, hourly: 80.75 },
         motorcoach: { name: 'Motor Coach',            base: 600, perMile: 30.00, hourly: 450 }
