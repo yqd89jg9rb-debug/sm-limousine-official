@@ -21,10 +21,15 @@
         .field { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
         input, .stripe-input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
+        input:focus { border-color: var(--gold); outline: none; }
         
         .row { display: flex; gap: 15px; }
         .row .field { flex: 1; }
         
+        .tip-selection { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tip-btn { flex: 1; padding: 10px; background: #111; border: 1px solid #333; border-radius: 8px; color: #888; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .tip-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
         .btn-pay { width: 100%; padding: 20px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
         
@@ -46,27 +51,38 @@
         </div>
 
         <div class="amount-display">
-            <div class="amount-label">Payment Amount</div>
-            <div class="amount-value" id="disp-amount">$0.00</div>
+            <div class="amount-label">Total Amount</div>
+            <div class="amount-value" id="disp-total">$0.00</div>
+            <div style="font-size: 0.7rem; color: #666; margin-top: 5px;" id="disp-breakdown">Base: $0.00 | Tip: $0.00</div>
         </div>
 
         <form id="payment-form">
+            <div class="field">
+                <label>Add a Tip for the Driver (Optional)</label>
+                <div class="tip-selection">
+                    <button type="button" class="tip-btn" onclick="selectTip(0.15)">15%</button>
+                    <button type="button" class="tip-btn" onclick="selectTip(0.20)">20%</button>
+                    <button type="button" class="tip-btn" onclick="selectTip(0.25)">25%</button>
+                    <button type="button" class="tip-btn" onclick="selectTip('custom')">Custom</button>
+                </div>
+                <input type="number" id="custom-tip" placeholder="Enter tip amount $" style="display:none; margin-top: 10px;" oninput="updateTotal()">
+            </div>
+
             <div class="field"><label>Email Address</label><input type="email" id="pay-email" placeholder="your@email.com" required></div>
             <div class="field"><label>Name on Card</label><input type="text" id="pay-name" placeholder="Full Name" required></div>
             
-            <!-- Two-line Card Information -->
             <div class="field">
                 <label>Card Number</label>
-                <div id="card-number" class="stripe-input"></div>
+                <div id="card-number" class="stripe-input" style="padding:14px; background:#111; border:1px solid #333; border-radius:10px;"></div>
             </div>
             <div class="row">
                 <div class="field">
                     <label>Expiry (MM/YY)</label>
-                    <div id="card-expiry" class="stripe-input"></div>
+                    <div id="card-expiry" class="stripe-input" style="padding:14px; background:#111; border:1px solid #333; border-radius:10px;"></div>
                 </div>
                 <div class="field">
                     <label>CVC (Code)</label>
-                    <div id="card-cvc" class="stripe-input"></div>
+                    <div id="card-cvc" class="stripe-input" style="padding:14px; background:#111; border:1px solid #333; border-radius:10px;"></div>
                 </div>
             </div>
             <div id="card-errors" role="alert"></div>
@@ -110,11 +126,40 @@
         cardCvc.mount('#card-cvc');
 
         const p = new URLSearchParams(window.location.search);
-        const amount = p.get('a') || '0.00';
+        const baseAmount = parseFloat(p.get('a')) || 0;
         const clientName = p.get('n') || '';
+        let currentTip = 0;
+        let finalTotal = baseAmount;
         
-        document.getElementById('disp-amount').innerText = '$' + amount;
         if(clientName) document.getElementById('pay-name').value = clientName;
+
+        function selectTip(val) {
+            const btns = document.querySelectorAll('.tip-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            const customInput = document.getElementById('custom-tip');
+            
+            if(val === 'custom') {
+                customInput.style.display = 'block';
+                event.target.classList.add('active');
+            } else {
+                customInput.style.display = 'none';
+                currentTip = baseAmount * val;
+                event.target.classList.add('active');
+                updateTotal();
+            }
+        }
+
+        function updateTotal() {
+            const customInput = document.getElementById('custom-tip');
+            if(customInput.style.display === 'block') {
+                currentTip = parseFloat(customInput.value) || 0;
+            }
+            finalTotal = baseAmount + currentTip;
+            document.getElementById('disp-total').innerText = '$' + finalTotal.toFixed(2);
+            document.getElementById('disp-breakdown').innerText = `Base: $${baseAmount.toFixed(2)} | Tip: $${currentTip.toFixed(2)}`;
+        }
+
+        updateTotal();
 
         const form = document.getElementById('payment-form');
         form.addEventListener('submit', async (event) => {
@@ -142,9 +187,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         token: tokenId,
-                        amount: amount,
+                        amount: finalTotal.toFixed(2),
                         email: document.getElementById('pay-email').value,
-                        description: 'Invoice Payment: ' + document.getElementById('pay-name').value
+                        description: 'Payment from ' + document.getElementById('pay-name').value + ' (Base: $' + baseAmount.toFixed(2) + ', Tip: $' + currentTip.toFixed(2) + ')'
                     })
                 });
                 
@@ -158,8 +203,8 @@
                         type: 'PAYMENT_RECEIVED',
                         name: document.getElementById('pay-name').value,
                         email: document.getElementById('pay-email').value,
-                        total: amount,
-                        vehicle: 'Live Stripe Payment',
+                        total: finalTotal.toFixed(2),
+                        vehicle: 'Live Stripe Payment (incl. Tip)',
                         pickup: 'N/A',
                         dropoff: 'N/A',
                         date: new Date().toLocaleDateString(),
