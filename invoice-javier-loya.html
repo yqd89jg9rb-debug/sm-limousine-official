@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Invoice | Javier Loya | SM LIMOUSINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --silver: #C0C0C0; --bg: #000; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .invoice-card { background: #0c0c0c; border: 1px solid #222; border-radius: 24px; width: 100%; max-width: 700px; padding: 50px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+        .accent-top { position: absolute; top: 0; left: 0; right: 0; height: 10px; background: linear-gradient(90deg, var(--silver), var(--gold), var(--silver)); }
+        .header { text-align: center; border-bottom: 1px solid #222; padding-bottom: 30px; margin-bottom: 30px; }
+        .logo { height: 60px; margin-bottom: 15px; }
+        .title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--silver); letter-spacing: 2px; text-transform: uppercase; }
+        
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .detail-item label { display: block; font-size: 0.75rem; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; }
+        .detail-item span { font-size: 1rem; color: #fff; font-weight: 600; line-height: 1.4; }
+        
+        .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        .summary-table th { text-align: left; font-size: 0.8rem; color: #666; padding-bottom: 15px; border-bottom: 2px solid #222; text-transform: uppercase; letter-spacing: 1px; }
+        .summary-table td { padding: 25px 0; font-size: 1rem; border-bottom: 1px solid #111; }
+        .total-row td { border-bottom: none; padding-top: 30px; }
+        .total-label { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); }
+        .total-amount { font-size: 2.5rem; font-weight: 900; color: #fff; text-align: right; }
+
+        .btn-pay { display: block; width: 100%; padding: 22px; background: var(--gold); color: #000; text-align: center; text-decoration: none; border-radius: 16px; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
+        .btn-download { display: block; width: 100%; padding: 18px; background: transparent; border: 1px solid #333; color: #888; text-align: center; text-decoration: none; border-radius: 16px; font-weight: 600; font-size: 0.9rem; }
+        
+        .footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #444; border-top: 1px solid #111; padding-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="invoice-card">
+        <div class="accent-top"></div>
+        <div class="header">
+            <img src="sm_logo_silver.png" alt="SM LIMOUSINE" class="logo">
+            <div class="title">SM LIMOUSINE</div>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">Elite Private Aviation Transfer | Invoice #2616</p>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <label>Client</label>
+                <span><b>Javier Loya</b><br>Attn: Stefani Palomino (EA)</span>
+            </div>
+            <div class="detail-item" style="text-align:right;">
+                <label>Service Date</label>
+                <span><b>FIFA Event Window 2026</b></span>
+            </div>
+            <div class="detail-item">
+                <label>Flight Details (KDAL)</label>
+                <span>Tail Number: <b>N528TX</b><br>Pickup: 10:00 AM</span>
+            </div>
+            <div class="detail-item" style="text-align:right;">
+                <label>Vehicle Type</label>
+                <span><b>Luxury Sprinter Van</b><br>(14 Passenger)</span>
+            </div>
+        </div>
+
+        <div style="background:#080808; padding:20px; border-radius:15px; border:1px solid #1a1a1a; margin-bottom:40px;">
+            <label style="display:block; font-size:0.7rem; color:#D4AF37; text-transform:uppercase; font-weight:800; margin-bottom:10px;">Itinerary Details</label>
+            <p style="font-size:0.9rem; color:#aaa; margin-bottom:10px;"><b>Pickup:</b> KDAL Love Field (7363 Herb Kelleher Way)</p>
+            <p style="font-size:0.9rem; color:#aaa; margin-bottom:10px;"><b>Stops:</b> Texas Live! (1650 E. Randol Mill Road)</p>
+            <p style="font-size:0.9rem; color:#aaa;"><b>Return:</b> Final Drop-off at KDAL by 8:00 PM</p>
+        </div>
+
+        <table class="summary-table">
+            <thead><tr><th>Description</th><th style="text-align:right;">Amount</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <b>Elite FIFA Chauffeur Service</b><br>
+                        <span style="color:#666; font-size:0.8rem;">10-Hour Daily Committed Reservation</span>
+                    </td>
+                    <td style="text-align:right; font-weight:800;">$1,200.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td class="total-label">Grand Total</td>
+                    <td class="total-amount">$1,200.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="https://sm-limo.com/pay.html?a=1200&n=Javier%20Loya" class="btn-pay">Secure & Confirm Reservation</a>
+        <a href="javascript:window.print()" class="btn-download">Download PDF Invoice</a>
+
+        <div class="footer">
+            <b>SM LIMOUSINE | Private Aviation Logistics</b><br>
+            3500 Oak Lawn Ave, Dallas, TX 75219<br>
+            817-723-4592 | reservation@sm-limo.com
+        </div>
+    </div>
+</body>
+</html>
