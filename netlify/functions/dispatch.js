@@ -2,6 +2,10 @@ const twilio = require('twilio');
 const nodemailer = require('nodemailer');
 const https = require('https');
 
+const TWILIO_SID = process.env.TWILIO_SID || process.env.TWILIO_ACCOUNT_SID;
+const TWILIO_TOKEN = process.env.TWILIO_TOKEN || process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_FROM = process.env.TWILIO_FROM || process.env.TWILIO_PHONE_NUMBER;
+
 // Helper to send SMS via 800.com API
 const send800SMS = (recipient, message) => {
     return new Promise((resolve, reject) => {
@@ -27,12 +31,8 @@ const send800SMS = (recipient, message) => {
             let body = '';
             res.on('data', (chunk) => body += chunk);
             res.on('end', () => {
-                console.log(`800.com Response (${res.statusCode}): ${body}`);
-                if (res.statusCode >= 200 && res.statusCode < 300) {
-                    resolve(body);
-                } else {
-                    reject(new Error(`800.com API Error: ${res.statusCode} - ${body}`));
-                }
+                if (res.statusCode >= 200 && res.statusCode < 300) resolve(body);
+                else reject(new Error(`800.com Error: ${res.statusCode}`));
             });
         });
 
@@ -106,11 +106,16 @@ exports.handler = async (event) => {
       text: bookingSummary
     }).catch(e => console.error('Email Error:', e.message)));
 
-    // 2. SMS Tasks via 800.com (only if staff notification)
-    if (isStaffNotification) {
+    // 2. SMS Tasks (Using Twilio as stable staff notification channel)
+    if (isStaffNotification && TWILIO_SID && TWILIO_TOKEN) {
+      const client = twilio(TWILIO_SID, TWILIO_TOKEN);
       const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY].filter(Boolean);
       recipients.forEach(phone => {
-        tasks.push(send800SMS(phone, bookingSummary).catch(err => console.error(`SMS Error for ${phone}:`, err.message)));
+        tasks.push(client.messages.create({
+          body: bookingSummary,
+          from: TWILIO_FROM,
+          to: phone
+        }).catch(err => console.error(`Twilio Error for ${phone}:`, err.message)));
       });
     }
 
@@ -123,7 +128,6 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error('Global Function Error:', error.message);
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
