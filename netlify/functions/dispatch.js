@@ -18,7 +18,7 @@ const send800SMS = (recipient, message) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer 395150|B10xGdZ5n8zYn3ktWwVpsoH8YAmiQsnBy4wk5s2t3ff0e16d',
+                'Authorization': 'Bearer 398117|WhaIqFLh8V6BV1hfC2CF6dHzhDYb8ZvrPBxcyF4lcd8e884b',
                 'Content-Length': data.length
             }
         };
