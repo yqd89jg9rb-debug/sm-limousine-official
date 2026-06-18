@@ -50,6 +50,7 @@
                 <span class="star" data-value="5">★</span>
             </div>
             
+            <input type="text" id="pax-name" class="st-input" placeholder="Your Name (Optional)">
             <textarea id="comment" class="st-input" rows="4" placeholder="Tell us about your experience..."></textarea>
             
             <button id="submitBtn" class="submit-btn">Submit Feedback</button>
@@ -62,7 +63,12 @@
         const stars = document.querySelectorAll('.star');
         const p = new URLSearchParams(window.location.search);
         const bookingId = p.get('id') || 'Unknown';
-        const passenger = p.get('name') || 'Guest';
+        const urlName = p.get('name') || '';
+
+        // Pre-fill name if it's in the URL
+        if (urlName) {
+            document.getElementById('pax-name').value = urlName.replace(/_/g, ' ');
+        }
 
         stars.forEach(s => {
             s.addEventListener('click', () => {
@@ -78,6 +84,8 @@
             
             const btn = document.getElementById('submitBtn');
             const comment = document.getElementById('comment').value;
+            const inputName = document.getElementById('pax-name').value.trim();
+            const finalName = inputName || 'Anonymous Guest';
             
             btn.disabled = true;
             btn.textContent = 'Sending...';
@@ -88,7 +96,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         type: 'FEEDBACK',
-                        name: passenger,
+                        name: finalName,
                         bookingId: bookingId,
                         rating: selectedRating,
                         comment: comment,
