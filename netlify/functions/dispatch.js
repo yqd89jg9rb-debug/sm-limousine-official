@@ -26,7 +26,14 @@ const send800SMS = (recipient, message) => {
         const req = https.request(options, (res) => {
             let body = '';
             res.on('data', (chunk) => body += chunk);
-            res.on('end', () => resolve(body));
+            res.on('end', () => {
+                console.log(`800.com Response (${res.statusCode}): ${body}`);
+                if (res.statusCode >= 200 && res.statusCode < 300) {
+                    resolve(body);
+                } else {
+                    reject(new Error(`800.com API Error: ${res.statusCode} - ${body}`));
+                }
+            });
         });
 
         req.on('error', (e) => reject(e));
