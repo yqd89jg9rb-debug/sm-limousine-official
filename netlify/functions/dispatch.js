@@ -6,13 +6,13 @@ const TWILIO_SID = process.env.TWILIO_SID || process.env.TWILIO_ACCOUNT_SID;
 const TWILIO_TOKEN = process.env.TWILIO_TOKEN || process.env.TWILIO_AUTH_TOKEN;
 const TWILIO_FROM = process.env.TWILIO_FROM || process.env.TWILIO_PHONE_NUMBER;
 
-// Helper to send SMS via 800.com API
+// Helper to send SMS via 800.com API (Optimized with correct field names: to/from/text)
 const send800SMS = (recipient, message) => {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify({
-            recipient: recipient,
-            message: message,
-            sender: "+18773376546"
+            to: recipient,
+            text: message,
+            from: "+18773376546"
         });
 
         const options = {
@@ -106,7 +106,7 @@ exports.handler = async (event) => {
       text: bookingSummary
     }).catch(e => console.error('Email Error:', e.message)));
 
-    // 2. SMS Tasks (Using Twilio as stable staff notification channel)
+    // 2. SMS Tasks (Using Twilio for staff alerts for stability)
     if (isStaffNotification && TWILIO_SID && TWILIO_TOKEN) {
       const client = twilio(TWILIO_SID, TWILIO_TOKEN);
       const recipients = [DISPATCH_TO_PRIMARY, DISPATCH_TO_SECONDARY].filter(Boolean);
