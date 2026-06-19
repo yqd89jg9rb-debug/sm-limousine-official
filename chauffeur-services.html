@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chauffeur Services | SM LIMOUSINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=master_locked_3.0">
+    <style>
+        .service-hero { height: 40vh; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/services/chauffeur.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; }
+        .service-hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .service-content { padding: 80px 20px; background: #fff; }
+        .service-content .container { max-width: 800px; }
+        .service-description { font-size: 1.1rem; color: #444; line-height: 1.8; margin-bottom: 40px; }
+        .service-features { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 50px; }
+        .feature-item { display: flex; gap: 15px; align-items: flex-start; }
+        .feature-item i { color: var(--maroon); font-size: 1.2rem; margin-top: 5px; }
+        .feature-item h4 { font-weight: 800; color: #1a1a1a; margin-bottom: 5px; }
+        .feature-item p { font-size: 0.9rem; color: #777; }
+        .service-cta-btn { display: block; width: 100%; max-width: 300px; margin: 0 auto; padding: 20px; background: var(--maroon); color: #fff; text-align: center; text-decoration: none; border-radius: 16px; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; transition: 0.3s; }
+        .service-cta-btn:hover { background: #451a31; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(93, 43, 69, 0.2); }
+        @media (max-width: 768px) {
+            .service-hero h1 { font-size: 2.2rem; }
+            .service-features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="bl-body">
+    <header class="header">
+        <div class="header__container container">
+            <a href="/" class="header__logo">
+                <img src="sm_logo_silver.png" alt="SM" style="height: 45px;">
+                <span class="brand-name-text">SM LIMOUSINE</span>
+            </a>
+            <nav class="header__nav" id="main-nav">
+                <a href="/">Home</a>
+                <a href="/#fleet">Our Fleet</a>
+                <a href="/#destinations">Destinations</a>
+                <a href="tel:+18177234592" class="nav-cta">Call Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="service-hero">
+        <div class="container">
+            <h1>Chauffeur Services</h1>
+        </div>
+    </section>
+
+    <section class="service-content">
+        <div class="container">
+            <div class="service-description">
+                Your own private personal chauffeur for any occasion. Whether it is a multi-stop business itinerary or a special evening out, our world-class drivers provide an elite level of service and discretion.
+            </div>
+
+            <div class="service-features">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>Professional Chauffeurs</h4>
+                        <p>Trained in elite etiquette and high-stakes executive service.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>2026 Elite Fleet</h4>
+                        <p>Brand new Cadillac Escalades and GMC Denalis for ultimate comfort.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>Flight Tracking</h4>
+                        <p>Real-time monitoring to ensure zero-minute wait times at the terminal.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>24/7 Dispatch</h4>
+                        <p>Always available to handle last-minute changes and updates.</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/book.html" class="service-cta-btn">Book This Service</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__social-row">
+                <a href="https://www.facebook.com/share/1DBJ281rsN/?mibextid=wwXIfr" target="_blank" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/limousinesm" target="_blank" class="social-btn ig"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@smlimo2026" target="_blank" class="social-btn tt"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p>&copy; 2026 SM LIMOUSINE. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
