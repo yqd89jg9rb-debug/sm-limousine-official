@@ -1,6 +1,6 @@
 {
   "name": "sm-limousine-official",
-  "version": "22.8.0-LOCKED",
+  "version": "23.0.0-LOCKED",
   "description": "SM LIMOUSINE - Dispatch Engine with Email + SMS",
   "main": "index.html",
   "dependencies": {
