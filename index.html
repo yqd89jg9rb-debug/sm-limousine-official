@@ -147,55 +147,87 @@
         </div>
     </div>
 
-    <!-- OUR SERVICES SECTION -->
-    <section class="services-section" id="services">
+    <!-- OUR SERVICES SECTION (RESTORED & POLISHED) -->
+    <section class="services-section" id="services" style="padding: 80px 0; background: #fff;">
         <div class="container">
-            <h2 class="section-title" style="text-align:left; margin-bottom: 10px;">Our Services</h2>
-            <p class="section-subtitle" style="text-align:left; margin-bottom: 40px; color: #666; max-width: 600px;">From airport rides to charter buses — we’ve got every trip covered with comfort and style.</p>
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h2 class="section-title" style="margin-bottom: 15px; font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #1a1a1a;">Our Services</h2>
+                <div style="width: 60px; height: 3px; background: var(--maroon); margin: 0 auto 20px;"></div>
+                <p style="color: #888; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">From airport rides to charter buses — we’ve got every trip covered with world-class comfort.</p>
+            </div>
             
             <div class="services-scroll-container">
                 <!-- 1. Airport Transfers -->
                 <div class="service-card">
-                    <img src="images/services/airport.jpg" alt="Airport Transfers" class="service-card__img">
-                    <h3 class="service-card__title">Airport Transfers</h3>
-                    <p class="service-card__text">Business and leisure rides to and from the airport.</p>
-                    <a href="#booking" class="service-card__link">View</a>
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/airport.jpg" alt="Airport Transfers" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Airport Transfers</h3>
+                        <p class="service-card__text">Elite business and leisure travel to DFW and Love Field terminals.</p>
+                        <button onclick="scrollToBooking()" class="service-card__btn">View Service</button>
+                    </div>
                 </div>
 
                 <!-- 2. Corporate Travel -->
                 <div class="service-card">
-                    <img src="images/services/corporate.jpg" alt="Corporate Travel" class="service-card__img">
-                    <h3 class="service-card__title">Corporate Travel</h3>
-                    <p class="service-card__text">Business rides for meetings, events, and teams.</p>
-                    <a href="#booking" class="service-card__link">View</a>
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/corporate.jpg" alt="Corporate Travel" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Corporate Travel</h3>
+                        <p class="service-card__text">Reliable, high-precision transportation for meetings and executive events.</p>
+                        <button onclick="scrollToBooking()" class="service-card__btn">View Service</button>
+                    </div>
                 </div>
 
                 <!-- 3. Chauffeur Services -->
                 <div class="service-card">
-                    <img src="images/services/chauffeur.jpg" alt="Chauffeur Services" class="service-card__img">
-                    <h3 class="service-card__title">Chauffeur Services</h3>
-                    <p class="service-card__text">Personal driver with a luxury car for any special trip.</p>
-                    <a href="#booking" class="service-card__link">View</a>
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/chauffeur.jpg" alt="Chauffeur Services" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Chauffeur Services</h3>
+                        <p class="service-card__text">Private personal chauffeurs for any occasion or multi-stop itinerary.</p>
+                        <button onclick="scrollToBooking()" class="service-card__btn">View Service</button>
+                    </div>
                 </div>
 
                 <!-- 4. Van Service -->
                 <div class="service-card">
-                    <img src="images/services/van.jpg" alt="Van Service" class="service-card__img">
-                    <h3 class="service-card__title">Van Service</h3>
-                    <p class="service-card__text">Group van rides for tours, teams, and airport travel.</p>
-                    <a href="#booking" class="service-card__link">View</a>
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/van.jpg" alt="Van Service" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Van Service</h3>
+                        <p class="service-card__text">Premium 14-passenger Sprinter group travel and site visits.</p>
+                        <button onclick="scrollToBooking()" class="service-card__btn">View Service</button>
+                    </div>
                 </div>
 
                 <!-- 5. Charter Bus Service -->
                 <div class="service-card">
-                    <img src="images/services/charter.jpg" alt="Charter Bus Service" class="service-card__img">
-                    <h3 class="service-card__title">Charter Bus Service</h3>
-                    <p class="service-card__text">Rent a bus for events, group trips, or daily shuttles.</p>
-                    <a href="#booking" class="service-card__link">View</a>
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/charter.jpg" alt="Charter Bus Service" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Charter Bus Service</h3>
+                        <p class="service-card__text">Luxury 32-56 passenger coaches for high-capacity group logistics.</p>
+                        <button onclick="scrollToBooking()" class="service-card__btn">View Service</button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        function scrollToBooking() {
+            const booking = document.getElementById('booking');
+            if (booking) {
+                booking.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
     <section class="fleet section" id="fleet" style="background:#fff; padding:80px 0;">
         <div class="container">
             <h2 class="section-title" style="text-align:center; font-family:"Playfair Display", serif; font-size:2.5rem; margin-bottom:50px;">Premium Vehicles for Every Occasion</h2>
