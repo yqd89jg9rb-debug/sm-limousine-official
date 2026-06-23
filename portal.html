@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Affiliate Portal | SM LIMOUSINE</title>
+    <meta name="description" content="Dedicated Virtual Transportation Partner (VTP) portal for SM LIMOUSINE affiliates.">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .portal-hero {
+            padding-top: calc(var(--header-h) + 60px);
+            padding-bottom: 80px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.95)), 
+                        url('https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f501cb35cd4b02636a1cac09fe452771b6a2c22641f5aa86e3205d0107514c75.png') center/cover no-repeat;
+            text-align: center;
+        }
+        .portal-container {
+            max-width: 1000px;
+            margin: -40px auto 100px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+        .portal-header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
+        }
+        .portal-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--silver);
+            margin-bottom: 10px;
+        }
+        .portal-header p {
+            color: #888;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .ores-embed-wrap {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 600px;
+        }
+        .partner-brief {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+        .brief-card {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .brief-card h3 {
+            color: var(--gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .brief-card p {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+        @media (max-width: 768px) {
+            .partner-brief { grid-template-columns: 1fr; }
+            .portal-container { padding: 20px; margin-top: -20px; }
+            .portal-header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo-centered">
+                <a href="/"><img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE"></a>
+            </div>
+            <div class="header__actions">
+                <a href="tel:+18177234592" class="header__phone">+1 (817) 723-4592</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="portal-hero">
+        <div class="portal-hero__content">
+            <h2 class="hero__tagline" style="font-size: 2rem;">World-Class Ground Logistics</h2>
+            <p class="hero__subtitle" style="color: #fff; font-weight: 600;">Dedicated Affiliate Booking Terminal</p>
+        </div>
+    </section>
+
+    <div class="portal-container">
+        <div class="portal-header">
+            <h1>Partner Portal</h1>
+            <p>SM LIMOUSINE | Global Affiliate Network</p>
+        </div>
+
+        <div class="partner-brief">
+            <div class="brief-card">
+                <h3>Priority Dispatch</h3>
+                <p>All portal bookings are instantly flagged for "Executive Priority" in our dispatch system (Limo Anywhere / G-Net).</p>
+            </div>
+            <div class="brief-card">
+                <h3>Real-Time Updates</h3>
+                <p>Track your driver status, vehicle location, and passenger POB status in real-time through the terminal below.</p>
+            </div>
+        </div>
+
+        <div class="ores-embed-wrap">
+            <!-- Limo Anywhere ORES 4 Embed -->
+            <a href="https://book.mylimobiz.com/v4/smlimo" data-ores-widget="website" data-ores-alias="smlimo">Online Reservations</a>
+            <script type="text/javascript" src="https://book.mylimobiz.com/v4/widgets/widget-loader.js"></script>
+        </div>
+    </div>
+
+    <footer class="elite-footer" style="margin-top: 0;">
+        <div class="elite-footer__top">
+            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" height="32">
+            <a href="mailto:reservation@sm-limo.com" class="elite-footer__contact-btn">Partner Support</a>
+        </div>
+        <div class="elite-footer__bottom">
+            <p class="elite-footer__copyright">© 2026 SM LIMOUSINE, Inc. | Affiliate Confidential</p>
+        </div>
+    </footer>
+</body>
+</html>
