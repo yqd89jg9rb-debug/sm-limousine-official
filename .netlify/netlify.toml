@@ -1,0 +1,100 @@
+functionsDirectory = "/root/workspace/black-car-service/netlify/functions"
+functionsDirectoryOrigin = "config-v1"
+headersOrigin = "config"
+redirectsOrigin = "config"
+plugins = []
+
+[build]
+publish = "/root/workspace/black-car-service"
+publishOrigin = "config"
+functions = "/root/workspace/black-car-service/netlify/functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions."*"]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "SAMEORIGIN"
+X-XSS-Protection = "1; mode=block"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+for = "/images/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+Access-Control-Allow-Origin = "*"
+
+[[headers]]
+for = "/*.jpg"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+Access-Control-Allow-Origin = "*"
+
+[[headers]]
+for = "/*.png"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+Access-Control-Allow-Origin = "*"
+
+[[headers]]
+for = "/index.html"
+
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/styles.css"
+
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/script.js"
+
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[redirects]]
+from = "/privacy"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/terms"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]

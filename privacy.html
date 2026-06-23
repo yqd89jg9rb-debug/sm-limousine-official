@@ -2,321 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Privacy Policy | SM LIMOUSINE</title>
-    <meta name="description" content="SM LIMOUSINE Privacy Policy — how we collect, use, and protect your personal data.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .policy {
-            padding: calc(var(--header-h) + 60px) 0 100px;
-            background: var(--black);
-            min-height: 100vh;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #000000; --silver: #C0C0C0; --white: #ffffff; --gold: #D4AF37;
+            --header-h: 80px; --font-main: 'Inter', sans-serif;
         }
-        .policy__header {
-            text-align: center;
-            margin-bottom: 56px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid rgba(192, 192, 192, 0.1);
-        }
-        .policy__title {
-            font-family: var(--font-serif);
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 600;
-            color: var(--silver-light);
-            margin-bottom: 12px;
-        }
-        .policy__updated {
-            font-size: 0.85rem;
-            color: var(--silver-muted);
-            letter-spacing: 0.04em;
-        }
-        .policy__content {
-            max-width: 780px;
-            margin: 0 auto;
-        }
-        .policy__section {
-            margin-bottom: 40px;
-        }
-        .policy__section-title {
-            font-family: var(--font-serif);
-            font-size: 1.35rem;
-            font-weight: 600;
-            color: var(--silver-light);
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(192, 192, 192, 0.08);
-        }
-        .policy__text {
-            font-size: 0.95rem;
-            font-weight: 300;
-            color: var(--silver-dark);
-            line-height: 1.8;
-            margin-bottom: 12px;
-        }
-        .policy__text a {
-            color: var(--silver-light);
-            border-bottom: 1px solid rgba(192, 192, 192, 0.3);
-            transition: border-color var(--transition);
-        }
-        .policy__text a:hover {
-            border-color: var(--silver-light);
-        }
-        .policy__list {
-            list-style: none;
-            padding: 0;
-            margin: 12px 0;
-        }
-        .policy__list li {
-            font-size: 0.95rem;
-            font-weight: 300;
-            color: var(--silver-dark);
-            line-height: 1.8;
-            padding-left: 24px;
-            position: relative;
-            margin-bottom: 6px;
-        }
-        .policy__list li::before {
-            content: '';
-            position: absolute;
-            left: 8px;
-            top: 11px;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--silver-dark);
-        }
-        .policy__contact-box {
-            background: var(--black-card);
-            border: 1px solid rgba(192, 192, 192, 0.1);
-            border-radius: var(--radius);
-            padding: 28px 32px;
-            margin-top: 16px;
-        }
-        .policy__contact-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 0.95rem;
-            color: var(--silver-dark);
-            font-weight: 300;
-        }
-        .policy__contact-item:last-child {
-            margin-bottom: 0;
-        }
-        .policy__contact-item svg {
-            stroke: var(--silver);
-            flex-shrink: 0;
-        }
-        .policy__contact-item a {
-            color: var(--silver-light);
-            border-bottom: 1px solid rgba(192, 192, 192, 0.3);
-        }
-        .policy__contact-item a:hover {
-            border-color: var(--silver-light);
-        }
-        .policy__back {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 48px;
-            padding: 12px 28px;
-            background: transparent;
-            border: 1px solid var(--silver-dark);
-            color: var(--silver-light);
-            font-size: 0.9rem;
-            font-weight: 500;
-            border-radius: var(--radius-sm);
-            transition: all var(--transition);
-        }
-        .policy__back:hover {
-            background: var(--silver);
-            color: var(--black);
-            border-color: var(--silver);
+        html, body { background: var(--black); color: var(--white); font-family: var(--font-main); line-height: 1.6; overflow-x: hidden; width: 100%; }
+        
+        .header { position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h); background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); z-index: 2000; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header__inner { max-width: 1200px; margin: 0 auto; height: 100%; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
+        .header__logo-centered img { height: 38px; width: auto; }
+        .header__phone { font-size: 0.9rem; font-weight: 800; color: #fff; text-decoration: none; }
+
+        .policy-page { padding: calc(var(--header-h) + 60px) 20px 100px; max-width: 900px; margin: 0 auto; }
+        .policy__title { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--silver); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+        .policy__updated { font-size: 0.9rem; color: #555; text-align: center; margin-bottom: 60px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .policy-section { margin-bottom: 40px; }
+        .policy-section h2 { font-size: 1.4rem; color: var(--gold); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        .policy-section p { color: #888; margin-bottom: 15px; }
+        .policy-section ul { list-style: none; padding-left: 0; }
+        .policy-section li { color: #888; margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .policy-section li::before { content: '•'; color: var(--gold); position: absolute; left: 0; font-weight: bold; }
+        .policy-section strong { color: var(--white); }
+
+        .elite-footer { background: #000; padding: 100px 20px 50px; border-top: 1px solid #111; text-align: center; }
+        .footer-logo { height: 45px; width: auto; margin-bottom: 40px; }
+        .footer__legal { display: flex; gap: 30px; justify-content: center; margin-bottom: 30px; }
+        .footer__legal a { color: #444; text-decoration: none; font-size: 0.85rem; }
+        .elite-footer__copyright { color: #222; font-size: 0.8rem; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            .policy__title { font-size: 2rem; }
+            .header__phone { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- ===== HEADER ===== -->
-    <header class="header header--scrolled" id="header">
+    <header class="header">
         <div class="header__inner">
-            <a href="index.html" class="header__logo">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="header__logo-img">
-            </a>
-            <nav class="header__nav" id="mainNav">
-                <a href="index.html#fleet" class="header__link">Fleet</a>
-                <a href="index.html#services" class="header__link">Services</a>
-                <a href="index.html#testimonials" class="header__link">Testimonials</a>
-                <a href="index.html#contact" class="header__link">Contact</a>
-            </nav>
-            <a href="tel:+18177234592" class="header__cta">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                Book Now
-            </a>
-            <button class="header__burger" id="burgerBtn" aria-label="Open menu">
-                <span></span><span></span><span></span>
-            </button>
+            <div class="header__logo-centered">
+                <a href="index.html">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
+                </a>
+            </div>
+            <a href="tel:+18773376546" class="header__phone">+1 (877) 337-6546</a>
         </div>
     </header>
 
-    <!-- ===== PRIVACY POLICY ===== -->
-    <main class="policy">
-        <div class="container">
-            <div class="policy__header">
-                <h1 class="policy__title">Privacy Policy</h1>
-                <p class="policy__updated">Last updated: May 11, 2026</p>
-            </div>
+    <main class="policy-page">
+        <h1 class="policy__title">Privacy Policy</h1>
+        <p class="policy__updated">Last updated: May 23, 2026</p>
 
-            <div class="policy__content">
-                <!-- Introduction -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">Introduction</h2>
-                    <p class="policy__text">
-                        Welcome to SM LIMOUSINE. We value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard the information you provide when using our premium chauffeur and transportation services.
-                    </p>
-                    <p class="policy__text">
-                        By using our services or submitting information through our website, you consent to the practices described in this policy.
-                    </p>
-                </div>
+        <section class="policy-section">
+            <h2>1. Information Collection</h2>
+            <p>We collect personal information necessary to provide transportation services, including names, contact details, and payment information.</p>
+        </section>
 
-                <!-- SMS Disclosure -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">SMS Disclosure</h2>
-                    <p class="policy__text">
-                        Mobile information will not be shared with third parties/affiliates for marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
-                    </p>
-                </div>
+        <section class="policy-section">
+            <h2>2. No-Sharing Policy</h2>
+            <p><strong>Mobile information will not be shared with third parties/affiliates for marketing/promotional purposes.</strong> All other categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</p>
+        </section>
 
-                <!-- Information Collection -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">Information We Collect</h2>
-                    <p class="policy__text">
-                        We collect personal information solely for the purpose of providing our chauffeur and transportation services. This may include:
-                    </p>
-                    <ul class="policy__list">
-                        <li>Your name and contact details (phone number, email address)</li>
-                        <li>Pickup and destination locations</li>
-                        <li>Flight details (airline, flight number, arrival/departure times)</li>
-                        <li>Booking preferences (vehicle type, number of passengers, special requests)</li>
-                        <li>Payment information necessary to process transactions</li>
-                    </ul>
-                    <p class="policy__text">
-                        We collect this information when you make a reservation through our website, by phone, by email, or through a third-party booking platform.
-                    </p>
-                </div>
-
-                <!-- Data Usage -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">How We Use Your Information</h2>
-                    <p class="policy__text">
-                        Your information is used exclusively to deliver and improve our services:
-                    </p>
-                    <ul class="policy__list">
-                        <li>Managing and confirming your bookings</li>
-                        <li>Communicating ride status, driver details, and pickup updates</li>
-                        <li>Processing payments and issuing receipts</li>
-                        <li>Improving service quality and customer experience</li>
-                        <li>Responding to your inquiries and support requests</li>
-                    </ul>
-                    <p class="policy__text">
-                        We do not sell, rent, or share your personal data with third parties for marketing purposes. Your information may be shared only with our trusted drivers and operational partners as necessary to fulfill your booking.
-                    </p>
-                </div>
-
-                <!-- Security -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">Data Security</h2>
-                    <p class="policy__text">
-                        We implement industry-standard security measures to protect your personal data from unauthorized access, alteration, disclosure, or destruction. These measures include encrypted data transmission, secure storage systems, and restricted access protocols.
-                    </p>
-                    <p class="policy__text">
-                        While we strive to protect your personal information, no method of electronic transmission or storage is 100% secure. We continuously review and update our security practices to maintain the highest level of data protection.
-                    </p>
-                </div>
-
-                <!-- Data Retention -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">Data Retention</h2>
-                    <p class="policy__text">
-                        We retain your personal information only for as long as necessary to fulfill the purposes outlined in this policy, comply with legal obligations, resolve disputes, and enforce our agreements. Booking records are retained for a reasonable period to support repeat customers and handle any service inquiries.
-                    </p>
-                </div>
-
-                <!-- Your Rights -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">Your Rights</h2>
-                    <p class="policy__text">
-                        You have the right to:
-                    </p>
-                    <ul class="policy__list">
-                        <li>Request access to the personal data we hold about you</li>
-                        <li>Request correction of any inaccurate or incomplete information</li>
-                        <li>Request deletion of your personal data, subject to legal retention requirements</li>
-                        <li>Opt out of any non-essential communications</li>
-                    </ul>
-                    <p class="policy__text">
-                        To exercise any of these rights, please contact us using the information provided below.
-                    </p>
-                </div>
-
-                <!-- Contact -->
-                <div class="policy__section">
-                    <h2 class="policy__section-title">Contact Us</h2>
-                    <p class="policy__text">
-                        For any privacy concerns, questions about this policy, or requests regarding your personal data, please reach out to us:
-                    </p>
-                    <div class="policy__contact-box">
-                        <div class="policy__contact-item">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            <a href="mailto:smlimousine2026@gmail.com">smlimousine2026@gmail.com</a>
-                        </div>
-                        <div class="policy__contact-item">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                            <a href="tel:+18177234592">+1 (817) 723-4592</a>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="index.html" class="policy__back">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                    Back to Home
-                </a>
-            </div>
-        </div>
+        <section class="policy-section">
+            <h2>3. SMS Consent</h2>
+            <p>By providing your phone number, you consent to receive booking confirmations and dispatch alerts via SMS. You can opt-out at any time by replying STOP.</p>
+        </section>
     </main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__bottom" style="border-top: 1px solid rgba(192,192,192,0.08); padding: 24px 0;">
-                <p>&copy; 2026 <span class="brand-name">SM LIMOUSINE</span>. All rights reserved.</p>
-                <div class="footer__bottom-links">
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
-                </div>
-            </div>
+    <footer class="elite-footer">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="footer-logo">
+        <div class="footer__legal">
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
         </div>
+        <p class="elite-footer__copyright">© 2026 SM LIMOUSINE, INC. ALL RIGHTS RESERVED.</p>
     </footer>
-
-    <script>
-        // Mobile burger menu
-        const burgerBtn = document.getElementById('burgerBtn');
-        const mainNav = document.getElementById('mainNav');
-        if (burgerBtn && mainNav) {
-            burgerBtn.addEventListener('click', () => {
-                burgerBtn.classList.toggle('open');
-                mainNav.classList.toggle('open');
-            });
-            mainNav.querySelectorAll('.header__link').forEach(link => {
-                link.addEventListener('click', () => {
-                    burgerBtn.classList.remove('open');
-                    mainNav.classList.remove('open');
-                });
-            });
-        }
-    </script>
 </body>
 </html>

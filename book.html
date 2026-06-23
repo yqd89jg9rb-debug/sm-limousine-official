@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Secure Booking | SM LIMOUSINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=master_locked_3.0">
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
+</head>
+<body class="bl-body">
+
+    <header class="header">
+        <div class="header__container container">
+            <a href="/" class="header__logo">
+                <img src="sm_logo_silver.png" alt="SM" style="height: 45px;">
+                <span class="brand-name-text">SM LIMOUSINE</span>
+            </a>
+            <nav class="header__nav" id="main-nav">
+                <a href="/#booking">Book Now</a>
+                <a href="/#fleet">Our Fleet</a>
+                <a href="/#destinations">Destinations</a>
+                <a href="tel:+18177234592" class="nav-cta">Call Now</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="bl-container" style="padding-top: 30px;">
+        
+        <h1 class="hero-title-sm2" style="margin-top: 20px;">Secure Reservation</h1>
+
+        <!-- STEP 1: SEARCH & ADD-ONS -->
+        <div id="bl-step-1" class="bl-step">
+            <div class="bl-search-card">
+                <div class="bl-tabs">
+                    <div class="bl-tab active" data-trip="oneway">One-way</div>
+                    <div class="bl-tab" data-trip="roundtrip">Roundtrip</div>
+                    <div class="bl-tab" data-trip="hourly">Hourly</div>
+                </div>
+
+                <div class="bl-input-group">
+                    <div class="bl-input-item">
+                        <label>From *</label>
+                        <input type="text" id="pickup-input" data-field="pickup" placeholder="Pickup location">
+                    </div>
+                    <div class="bl-input-item">
+                        <label>Dropoff *</label>
+                        <input type="text" id="dropoff-input" data-field="dropoff" placeholder="Dropoff location">
+                    </div>
+                </div>
+
+                <div id="hourly-field" style="display:none; margin-bottom: 20px;">
+                    <div class="bl-input-item" style="background:#f8f9fc; padding:15px; border-radius:16px;">
+                        <label>Duration (Hours)</label>
+                        <select id="trip-hours" style="width:100%; border:none; background:transparent; font-size:1rem; font-weight:600;">
+                            <option value="3">3 Hours (Min)</option>
+                            <option value="4">4 Hours</option>
+                            <option value="5">5 Hours</option>
+                            <option value="8">8 Hours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 style="font-weight: 800; margin-bottom: 20px;">Passengers & add-ons</h3>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>👥 Passengers</span>
+                    </div>
+                    <div class="bl-stepper">
+                        <button class="bl-step-btn" onclick="updateStep('pax', -1)">-</button>
+                        <span class="bl-step-val" id="pax-val">1</span>
+                        <button class="bl-step-btn plus" onclick="updateStep('pax', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>💼 Luggage</span>
+                    </div>
+                    <div class="bl-stepper">
+                        <button class="bl-step-btn" onclick="updateStep('luggage', -1)">-</button>
+                        <span class="bl-step-val" id="luggage-val">0</span>
+                        <button class="bl-step-btn plus" onclick="updateStep('luggage', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>💁‍♂️ Meet & greet service</span>
+                    </div>
+                    <div class="bl-toggle" id="meet-greet" onclick="toggleAddon('meet-greet')"></div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>👶 Traveling with a child</span>
+                    </div>
+                    <div class="bl-toggle" id="child-seat" onclick="toggleAddon('child-seat')"></div>
+                </div>
+
+                <button class="bl-confirm-btn" onclick="goToStep(2)">Confirm</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: VEHICLE SELECTION -->
+        <div id="bl-step-2" class="bl-step" style="display:none;">
+            <div id="bl-fleet-list">
+                <!-- Fleet Cards Rendered by JS -->
+            </div>
+            <div style="height: 100px;"></div>
+            <button class="bl-continue-btn" id="bl-continue-btn" onclick="goToStep(3)">Continue</button>
+        </div>
+
+        <!-- STEP 3: CONTACT & PAYMENT -->
+        <div id="bl-step-3" class="bl-step" style="display:none;">
+            <div class="bl-search-card">
+                <h2 style="font-weight:900; margin-bottom:20px;">Contact Details</h2>
+                <div class="bl-input-group">
+                    <div class="bl-input-item"><label>Full Name</label><input type="text" id="pay-name" placeholder="John Doe"></div>
+                    <div class="bl-input-item"><label>Email</label><input type="email" id="pay-email" placeholder="john@example.com"></div>
+                    <div class="bl-input-item"><label>Phone</label><input type="tel" id="pay-phone" placeholder="+1 214-000-0000"></div>
+                </div>
+                
+                <div style="background:#f8f9fc; padding:20px; border-radius:16px; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:#888;">Vehicle:</span>
+                        <b id="summary-v-name">---</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#888;">Total:</span>
+                        <b id="summary-total" style="font-size:1.4rem; color:#5d2b45;">$0.00</b>
+                    </div>
+                </div>
+
+                <button class="bl-confirm-btn" onclick="handleFinalReservation()">Proceed to Payment</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PAYMENT OVERLAY -->
+    <div class="payment-overlay" id="paymentOverlay">
+        <div class="payment-modal" id="paymentModal">
+            <button class="payment-modal__close" id="paymentClose">&times;</button>
+            <div class="payment-modal__header">
+                <div class="payment-modal__brand"><img src="sm_logo_silver.png" alt="SM" style="height:36px;"></div>
+                <div class="payment-modal__secure">Secure Payment</div>
+            </div>
+            <div class="payment-modal__summary">
+                <div class="payment-modal__line"><span>Vehicle</span><span id="pay-summary-vehicle">—</span></div>
+                <div class="payment-modal__divider"></div>
+                <div class="payment-modal__line payment-modal__line--total"><span>Total</span><span id="pay-summary-total">$0.00</span></div>
+            </div>
+            <div class="payment-modal__form">
+                <div class="payment-modal__field"><label>Email</label><input type="email" id="pay-card-email"></div>
+                <div class="payment-modal__field"><label>Name on Card</label><input type="text" id="pay-card-name"></div>
+                <div class="payment-modal__field"><label>Card Number</label><div id="card-number" class="stripe-input"></div></div>
+                <div class="payment-modal__row" style="display:flex; gap:15px; margin-bottom:15px;">
+                    <div class="payment-modal__field" style="flex:1;"><label>Expiry</label><div id="card-expiry" class="stripe-input"></div></div>
+                    <div class="payment-modal__field" style="flex:1;"><label>CVC</label><div id="card-cvc" class="stripe-input"></div></div>
+                </div>
+                <button class="payment-modal__pay-btn" id="pay-modal-submit-btn">Pay Now</button>
+            </div>
+            <div id="paymentSuccess" style="display:none; text-align:center; padding:40px;">
+                <h2 style="color:#fff;">Confirmed!</h2>
+                <p id="confirmationId" style="color:#D4AF37;"></p>
+                <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="booking_v2.js?v=master_final_3.0"></script>
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('main-nav');
+            nav.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing SMS Sender | SM LIMOUSINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background: #f8f9fc; 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            padding: 20px 10px; 
+            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .sender-card { 
+            background: #fff; 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08); 
+            width: 100%; 
+            max-width: 500px; 
+            box-sizing: border-box;
+        }
+        h1 { 
+            font-size: 1.6rem; 
+            margin-bottom: 10px; 
+            font-weight: 800; 
+            text-align: center;
+            color: #111;
+        }
+        p.subtitle { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 30px; }
+        .field { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            color: #555; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 16px; 
+            border: 1px solid #eee; 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-size: 1.05rem; 
+            background: #fbfbfb;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            background: #fff;
+            border-color: #000;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.02);
+        }
+        .template-box {
+            background: #f1f3f9;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        .template-box label { font-size: 0.7rem; color: #999; margin-bottom: 10px; }
+        .template-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #e0e6ed;
+            color: #444;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .template-btn:hover { background: #d0d7e0; }
+
+        button.send-btn { 
+            width: 100%; 
+            padding: 20px; 
+            background: #000; 
+            color: #fff; 
+            border: none; 
+            border-radius: 14px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        button.send-btn:disabled { opacity: 0.5; }
+        
+        #status { 
+            margin-top: 20px; 
+            padding: 15px; 
+            border-radius: 12px; 
+            text-align: center;
+            display: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .success { background: #e6fcf5; color: #28a745; }
+        .error { background: #fff5f5; color: #fa5252; }
+    </style>
+</head>
+<body>
+    <div class="sender-card">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="sm_logo_silver.png" style="height:50px;">
+        </div>
+        <h1>Marketing SMS Sender</h1>
+        <p class="subtitle">Direct-to-Client Twilio Engine</p>
+        
+        <div class="field">
+            <label>Recipient Phone Number</label>
+            <input type="tel" id="phone" placeholder="+1 214-000-0000">
+        </div>
+
+        <div class="template-box">
+            <label>Master Templates (Click to Load):</label>
+            <div class="template-btn" onclick="loadTemplate(1)">Elite Fleet</div>
+            <div class="template-btn" onclick="loadTemplate(2)">Executive</div>
+            <div class="template-btn" onclick="loadTemplate(3)">Personal VIP</div>
+            <div class="template-btn" onclick="loadTemplate(4)" style="background:#D4AF37; color:#000;">Direct Web</div>
+        </div>
+
+        <div class="field">
+            <label>Message</label>
+            <textarea id="message" rows="6" placeholder="Type your message here..."></textarea>
+        </div>
+        
+        <button class="send-btn" onclick="sendSMS()" id="sendBtn">Send Marketing Text</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const templates = {
+            1: "SM LIMOUSINE - Elite 2026 Fleet Update\n\nWe invite you to experience our new 2026 elite fleet, featuring the latest Cadillac Escalades and GMC Denalis. Book your priority reservation at: sm-limo.com/book.html\n\nSafe travels,\nSam Boulos, Owner",
+            2: "Hello, Sam Boulos here. As a valued past guest of SM LIMOUSINE, we’ve placed you on our priority list for the 2026 summer season. Our expanded fleet and enhanced precision dispatch are now live to ensure your DFW and Love Field transfers are seamless. Reserve at: sm-limo.com",
+            3: "Hi, it’s been a while since your last trip with us. We’ve been busy upgrading SM LIMOUSINE to a world-class standard, including brand new 2026 models and a streamlined booking portal at sm-limo.com/book.html. I’d love to handle your next trip personally. – Sam Boulos",
+            4: "SM LIMOUSINE - The 2026 Elite Fleet is now live. View our new Cadillac Escalades and book your next world-class journey at: www.sm-limo.com\n\n– Sam Boulos"
+        };
+
+        function loadTemplate(id) {
+            document.getElementById('message').value = templates[id];
+        }
+
+        async function sendSMS() {
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const btn = document.getElementById('sendBtn');
+            const status = document.getElementById('status');
+
+            if(!phone || !message) { alert("Please enter a Phone Number and Message."); return; }
+
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+            status.style.display = "none";
+
+            try {
+                const response = await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'MARKETING_SMS',
+                        to: phone,
+                        message: message
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if(data.success) {
+                    status.className = "success";
+                    status.innerText = "Marketing Text Sent Successfully!";
+                    status.style.display = "block";
+                    btn.innerText = "Send Another";
+                    document.getElementById('phone').value = "";
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch(e) {
+                status.className = "error";
+                status.innerText = "Error: " + e.message;
+                status.style.display = "block";
+                btn.disabled = false;
+                btn.innerText = "Try Again";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Secure Payment | SM LIMOUSINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root { --gold: #D4AF37; --silver: #C0C0C0; --bg: #000; --primary: #11142d; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .payment-card { background: #0c0c0c; border: 1px solid #222; border-radius: 24px; width: 100%; max-width: 450px; padding: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { height: 50px; margin-bottom: 10px; }
+        .secure-badge { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 10px; }
+        
+        .amount-display { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 30px; border: 1px solid #111; }
+        .amount-label { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .amount-value { font-size: 2.2rem; font-weight: 800; color: #fff; }
+        
+        .field { margin-bottom: 20px; }
+        label { display: block; font-size: 0.7rem; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        input, .stripe-input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1rem; box-sizing: border-box; }
+        input:focus { border-color: var(--gold); outline: none; }
+        
+        .row { display: flex; gap: 15px; }
+        .row .field { flex: 1; }
+        
+        .tip-selection { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tip-btn { flex: 1; padding: 10px; background: #111; border: 1px solid #333; border-radius: 8px; color: #888; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .tip-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+        .btn-pay { width: 100%; padding: 20px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .success-screen { display: none; flex-direction: column; align-items: center; text-align: center; padding: 40px 0; }
+        .check-circle { width: 70px; height: 70px; background: #28a745; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 25px; }
+        
+        .footer { text-align: center; margin-top: 30px; font-size: 0.7rem; color: #444; }
+        #card-errors { color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="payment-card" id="main-card">
+        <div class="header">
+            <img src="sm_logo_silver.png" alt="SM LIMOUSINE" class="logo">
+            <div class="secure-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Secure Payment Portal
+            </div>
+        </div>
+
+        <div class="amount-display">
+            <div class="amount-label">Total Amount</div>
+            <div class="amount-value" id="disp-total">$0.00</div>
+            <div style="font-size: 0.7rem; color: #666; margin-top: 5px;" id="disp-breakdown">Base: $0.00 | Tip: $0.00</div>
+        </div>
+
+        <form id="payment-form">
+            <div class="field">
+                <label>Add a Tip for the Driver (Optional)</label>
+                <div class="tip-selection">
+                    <button type="button" class="tip-btn" onclick="selectTip(0.15)">15%</button>
+                    <button type="button" class="tip-btn" onclick="selectTip(0.20)">20%</button>
+                    <button type="button" class="tip-btn" onclick="selectTip(0.25)">25%</button>
+                    <button type="button" class="tip-btn" onclick="selectTip('custom')">Custom</button>
+                </div>
+                <input type="number" id="custom-tip" placeholder="Enter tip amount $" style="display:none; margin-top: 10px;" oninput="updateTotal()">
+            </div>
+
+            <div class="field"><label>Email Address</label><input type="email" id="pay-email" placeholder="your@email.com" required></div>
+            <div class="field"><label>Name on Card</label><input type="text" id="pay-name" placeholder="Full Name" required></div>
+            
+            <div class="field">
+                <label>Card Number</label>
+                <div id="card-number" class="stripe-input" style="padding:14px; background:#111; border:1px solid #333; border-radius:10px;"></div>
+            </div>
+            <div class="row">
+                <div class="field">
+                    <label>Expiry (MM/YY)</label>
+                    <div id="card-expiry" class="stripe-input" style="padding:14px; background:#111; border:1px solid #333; border-radius:10px;"></div>
+                </div>
+                <div class="field">
+                    <label>CVC (Code)</label>
+                    <div id="card-cvc" class="stripe-input" style="padding:14px; background:#111; border:1px solid #333; border-radius:10px;"></div>
+                </div>
+            </div>
+            <div id="card-errors" role="alert"></div>
+            
+            <button class="btn-pay" id="payBtn">Complete Payment</button>
+        </form>
+
+        <div class="success-screen" id="success-screen">
+            <div class="check-circle">✓</div>
+            <h2 style="margin-bottom:10px;">Payment Received</h2>
+            <p style="color:#888; margin-bottom:20px;">Your transaction has been processed successfully. A receipt has been sent to your email.</p>
+            <p id="confId" style="font-family:monospace; color:var(--gold); font-weight:700; font-size:1.1rem;"></p>
+        </div>
+
+        <div class="footer">
+            Powered by <strong>Stripe</strong> &bull; Secure 256-bit Encryption
+        </div>
+    </div>
+
+    <script>
+        const stripe = Stripe('pk_live_51TQZ7FGTeUSAGumaBySxRKK4Nq2LviyICLrkgY4aRJwR2ZEqJucrcftzDt0NP0gzYL4CrZVFulJlMe6q8qIyz7gp00Tg6GQXrd');
+        const elements = stripe.elements();
+        
+        const style = {
+            base: {
+                color: '#fff',
+                fontFamily: 'Inter, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': { color: '#666' }
+            },
+            invalid: { color: '#fa755a', iconColor: '#fa755a' }
+        };
+
+        const cardNumber = elements.create('cardNumber', {style: style});
+        const cardExpiry = elements.create('cardExpiry', {style: style});
+        const cardCvc = elements.create('cardCvc', {style: style});
+
+        cardNumber.mount('#card-number');
+        cardExpiry.mount('#card-expiry');
+        cardCvc.mount('#card-cvc');
+
+        const p = new URLSearchParams(window.location.search);
+        const baseAmount = parseFloat(p.get('a')) || 0;
+        const clientName = p.get('n') || '';
+        let currentTip = 0;
+        let finalTotal = baseAmount;
+        
+        if(clientName) document.getElementById('pay-name').value = clientName;
+
+        function selectTip(val) {
+            const btns = document.querySelectorAll('.tip-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            const customInput = document.getElementById('custom-tip');
+            
+            if(val === 'custom') {
+                customInput.style.display = 'block';
+                event.target.classList.add('active');
+            } else {
+                customInput.style.display = 'none';
+                currentTip = baseAmount * val;
+                event.target.classList.add('active');
+                updateTotal();
+            }
+        }
+
+        function updateTotal() {
+            const customInput = document.getElementById('custom-tip');
+            if(customInput.style.display === 'block') {
+                currentTip = parseFloat(customInput.value) || 0;
+            }
+            finalTotal = baseAmount + currentTip;
+            document.getElementById('disp-total').innerText = '$' + finalTotal.toFixed(2);
+            document.getElementById('disp-breakdown').innerText = `Base: $${baseAmount.toFixed(2)} | Tip: $${currentTip.toFixed(2)}`;
+        }
+
+        updateTotal();
+
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const btn = document.getElementById('payBtn');
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            const {token, error} = await stripe.createToken(cardNumber);
+
+            if (error) {
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+                btn.disabled = false;
+                btn.innerText = "Complete Payment";
+            } else {
+                processCharge(token.id);
+            }
+        });
+
+        async function processCharge(tokenId) {
+            try {
+                const chargeRes = await fetch('/.netlify/functions/create-charge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: tokenId,
+                        amount: finalTotal.toFixed(2),
+                        email: document.getElementById('pay-email').value,
+                        description: 'Payment from ' + document.getElementById('pay-name').value + ' (Base: $' + baseAmount.toFixed(2) + ', Tip: $' + currentTip.toFixed(2) + ')'
+                    })
+                });
+                
+                const chargeData = await chargeRes.json();
+                if(!chargeData.success) throw new Error(chargeData.error || "Charge failed");
+
+                await fetch('/.netlify/functions/dispatch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'PAYMENT_RECEIVED',
+                        name: document.getElementById('pay-name').value,
+                        email: document.getElementById('pay-email').value,
+                        total: finalTotal.toFixed(2),
+                        vehicle: 'Live Stripe Payment (incl. Tip)',
+                        pickup: 'N/A',
+                        dropoff: 'N/A',
+                        date: new Date().toLocaleDateString(),
+                        time: new Date().toLocaleTimeString()
+                    })
+                });
+
+                document.getElementById('payment-form').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'flex';
+                document.getElementById('confId').innerText = 'STRIPE ID: ' + chargeData.chargeId;
+                
+            } catch(e) {
+                alert("Payment error: " + e.message);
+                const btn = document.getElementById('payBtn');
+                btn.disabled = false;
+                btn.innerText = "Complete Payment";
+            }
+        }
+    </script>
+</body>
+</html>

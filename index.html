@@ -1,116 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6L1PRDET8ZK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6L1PRDET8ZK');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SM LIMOUSINE | Premium Black Car & Chauffeur Service</title>
-    <meta name="description" content="SM LIMOUSINE – Premium black car and chauffeur service.">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
-    <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
+    <title>SM LIMOUSINE | Premium Chauffeur & Travel Service Worldwide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=master_final_2.0">
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
 </head>
-<body>
+<body class="bl-body">
+
     <header class="header">
-        <div class="header__inner">
-            <div class="header__logo-centered">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE">
-            </div>
-            <div class="header__actions">
-                <button class="header__burger" id="burgerBtn"><span></span><span></span><span></span></button>
-                <a href="tel:+18177234592" class="header__phone">+1 (817) 723-4592</a>
-            </div>
+        <div class="header__container container">
+            <a href="/" class="header__logo">
+                <img src="sm_logo_silver.png" alt="SM" style="height: 45px;">
+                <span class="brand-name-text">SM LIMOUSINE</span>
+            </a>
+            
+            <nav class="header__nav" id="main-nav">
+                <a href="#booking">Book Now</a>
+                <a href="#fleet">Our Fleet</a>
+                <a href="#destinations">Destinations</a>
+                <a href="tel:+18177234592" class="nav-cta">Call Now</a>
+            </nav>
+
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
-    <section class="hero" id="hero">
-        <div class="hero__bg"><div class="hero__overlay"></div></div>
-        <div class="hero__content">
-            <div class="hero__logo-wrap">
-                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM LIMOUSINE" class="hero__logo-img">
-            </div>
-            <h2 class="hero__tagline">Experience the Pinnacle of Luxury Travel</h2>
-            <p class="hero__subtitle">Elite chauffeur service for your every journey</p>
+    <div class="bl-container">
+        
+        <h1 class="hero-title-sm2">Book Your Chauffeur Service</h1>
 
-            <div class="booking-widget">
-                <div class="booking-widget__tabs">
-                    <button class="booking-widget__tab active" data-tab="oneway">One Way</button>
-                    <button class="booking-widget__tab" data-tab="roundtrip">Round Trip</button>
-                    <button class="booking-widget__tab" data-tab="hourly">Hourly</button>
+        <!-- STEP 1: SEARCH & ADD-ONS -->
+        <div id="bl-step-1" class="bl-step">
+            <div class="bl-search-card">
+                <div class="bl-tabs">
+                    <div class="bl-tab active" data-trip="oneway">One-way</div>
+                    <div class="bl-tab" data-trip="roundtrip">Roundtrip</div>
+                    <div class="bl-tab" data-trip="hourly">Hourly</div>
                 </div>
 
-                <!-- ONE WAY FORM -->
-                <form class="booking-widget__form active" id="form-oneway">
-                    <div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-oneway" placeholder="Enter Pickup Location" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><label class="field-label">Dropoff</label><input type="text" id="dropoff-oneway" placeholder="Enter Destination" required class="st-input address-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="booking-widget__field"><label class="field-label">Date</label><input type="date" required class="st-input"></div>
-                        <div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
+                <div class="bl-input-group">
+                    <div class="bl-input-item">
+                        <label>From *</label>
+                        <input type="text" id="pickup-input" data-field="pickup" placeholder="Pickup location">
                     </div>
-                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-oneway">Select number of people</span></div></div>
-                    <div class="price-preview" id="preview-oneway" style="display:none;"><span id="dist-val-oneway" class="clear-price">0 mi</span></div>
-                    <p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
-
-                <!-- ROUND TRIP FORM -->
-                <form class="booking-widget__form" id="form-roundtrip">
-                    <div class="leg-label">Departing Trip</div>
-                    <div class="booking-widget__field"><input type="text" id="pickup-roundtrip" placeholder="Pickup Location" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><input type="text" id="dropoff-roundtrip" placeholder="Destination" required class="st-input address-input"></div>
-                    <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
-                    
-                    <div class="leg-label" style="margin-top:10px;">Return Trip</div>
-                    <div class="booking-widget__field"><input type="text" id="return-pickup-roundtrip" placeholder="Return Pickup" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><input type="text" id="return-dropoff-roundtrip" placeholder="Return Destination" required class="st-input address-input"></div>
-                    <div class="booking-widget__row"><div class="booking-widget__field"><input type="date" required class="st-input"></div><div class="booking-widget__field"><input type="time" required class="st-input"></div></div>
-                    
-                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-roundtrip">Select number of people</span></div></div>
-                    <div class="price-preview" id="preview-roundtrip" style="display:none;"><span id="dist-val-roundtrip" class="clear-price">0 mi</span></div>
-                    <p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
-
-                <!-- HOURLY FORM -->
-                <form class="booking-widget__form" id="form-hourly">
-                    <div class="booking-widget__field"><label class="field-label">Pickup</label><input type="text" id="pickup-hourly" placeholder="Pickup Location" required class="st-input address-input"></div>
-                    <div class="booking-widget__field"><label class="field-label">Dropoff (Optional)</label><input type="text" id="dropoff-hourly" placeholder="End-of-Trip Destination" class="st-input address-input"></div>
-                    <div class="booking-widget__row">
-                        <div class="booking-widget__field"><label class="field-label">Date</label><input type="date" required class="st-input"></div>
-                        <div class="booking-widget__field"><label class="field-label">Time</label><input type="time" required class="st-input"></div>
+                    <div class="bl-input-item">
+                        <label>Dropoff *</label>
+                        <input type="text" id="dropoff-input" data-field="dropoff" placeholder="Dropoff location">
                     </div>
-                    <div class="booking-widget__field">
-                        <label class="field-label">Duration</label>
-                        <select data-field="hours" id="hours-val" class="st-input">
-                            <option value="3">3 Hours (Minimum)</option>
+                </div>
+
+                <div id="hourly-field" style="display:none; margin-bottom: 20px;">
+                    <div class="bl-input-item" style="background:#f8f9fc; padding:15px; border-radius:16px;">
+                        <label>Duration (Hours)</label>
+                        <select id="trip-hours" style="width:100%; border:none; background:transparent; font-size:1rem; font-weight:600;">
+                            <option value="3">3 Hours (Min)</option>
                             <option value="4">4 Hours</option>
                             <option value="5">5 Hours</option>
-                            <option value="6">6 Hours</option>
                             <option value="8">8 Hours</option>
-                            <option value="10">10 Hours</option>
                         </select>
                     </div>
-                    <div class="booking-widget__field"><div class="people-addon-trigger st-input" onclick="openAddonModal()"><span id="people-summary-hourly">Select number of people</span></div></div>
-                    <p style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;">By providing your phone number, you consent to receive booking updates and promotional alerts via SMS from SM LIMOUSINE. Msg & data rates may apply. Reply STOP to opt-out. <a href="/privacy" style="color: #888; text-decoration: underline;">Privacy Policy</a></p>
-                    <button type="submit" class="booking-widget__submit">Get a Quote</button>
-                </form>
+                </div>
+
+                <h3 style="font-weight: 800; margin-bottom: 20px;">Passengers & add-ons</h3>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>👥 Passengers</span>
+                    </div>
+                    <div class="bl-stepper">
+                        <button class="bl-step-btn" onclick="updateStep('pax', -1)">-</button>
+                        <span class="bl-step-val" id="pax-val">1</span>
+                        <button class="bl-step-btn plus" onclick="updateStep('pax', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>💼 Luggage</span>
+                    </div>
+                    <div class="bl-stepper">
+                        <button class="bl-step-btn" onclick="updateStep('luggage', -1)">-</button>
+                        <span class="bl-step-val" id="luggage-val">0</span>
+                        <button class="bl-step-btn plus" onclick="updateStep('luggage', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>💁‍♂️ Meet & greet service</span>
+                    </div>
+                    <div class="bl-toggle" id="meet-greet" onclick="toggleAddon('meet-greet')"></div>
+                </div>
+
+                <div class="bl-addon-row">
+                    <div class="bl-addon-label">
+                        <span>👶 Traveling with a child</span>
+                    </div>
+                    <div class="bl-toggle" id="child-seat" onclick="toggleAddon('child-seat')"></div>
+                </div>
+
+                <button class="bl-confirm-btn" onclick="goToStep(2)">Confirm</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: VEHICLE SELECTION -->
+        <div id="bl-step-2" class="bl-step" style="display:none;">
+            <div id="bl-fleet-list">
+                <!-- Fleet Cards Rendered by JS -->
+            </div>
+            <div style="height: 100px;"></div>
+            <button class="bl-continue-btn" id="bl-continue-btn" onclick="goToStep(3)">Continue</button>
+        </div>
+
+        <!-- STEP 3: CONTACT & PAYMENT -->
+        <div id="bl-step-3" class="bl-step" style="display:none;">
+            <div class="bl-search-card">
+                <h2 style="font-weight:900; margin-bottom:20px;">Contact Details</h2>
+                <div class="bl-input-group">
+                    <div class="bl-input-item"><label>Full Name</label><input type="text" id="pay-name" placeholder="John Doe"></div>
+                    <div class="bl-input-item"><label>Email</label><input type="email" id="pay-email" placeholder="john@example.com"></div>
+                    <div class="bl-input-item"><label>Phone</label><input type="tel" id="pay-phone" placeholder="+1 214-000-0000"></div>
+                </div>
+                
+                <div style="background:#f8f9fc; padding:20px; border-radius:16px; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:#888;">Vehicle:</span>
+                        <b id="summary-v-name">---</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#888;">Total:</span>
+                        <b id="summary-total" style="font-size:1.4rem; color:#5d2b45;">$0.00</b>
+                    </div>
+                </div>
+
+                <button class="bl-confirm-btn" onclick="handleFinalReservation()">Proceed to Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OUR SERVICES SECTION (RESTORED & POLISHED) -->
+    <section class="services-section" id="services" style="padding: 80px 0; background: #fff;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h2 class="section-title" style="margin-bottom: 15px; font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #1a1a1a;">Our Services</h2>
+                <div style="width: 60px; height: 3px; background: var(--maroon); margin: 0 auto 20px;"></div>
+                <p style="color: #888; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">From airport rides to charter buses — we’ve got every trip covered with world-class comfort.</p>
+            </div>
+            
+            <div class="services-scroll-container">
+                <!-- 1. Airport Transfers -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/airport.jpg?v=final" alt="Airport Transfers" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Airport Transfers</h3>
+                        <p class="service-card__text">Elite business and leisure travel to DFW and Love Field terminals.</p>
+                        <a href="airport-transfers.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 2. Corporate Travel -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/corporate.jpg?v=final" alt="Corporate Travel" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Corporate Travel</h3>
+                        <p class="service-card__text">Reliable, high-precision transportation for meetings and executive events.</p>
+                        <a href="corporate-travel.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 3. Chauffeur Services -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/chauffeur.jpg?v=final" alt="Chauffeur Services" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Chauffeur Services</h3>
+                        <p class="service-card__text">Private personal chauffeurs for any occasion or multi-stop itinerary.</p>
+                        <a href="chauffeur-services.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 4. Van Service -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/van.jpg?v=final" alt="Van Service" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Van Service</h3>
+                        <p class="service-card__text">Premium 14-passenger Sprinter group travel and site visits.</p>
+                        <a href="van-service.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 5. Charter Bus Service -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/charter.jpg?v=final" alt="Charter Bus Service" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Charter Bus Service</h3>
+                        <p class="service-card__text">Luxury 32-56 passenger coaches for high-capacity group logistics.</p>
+                        <a href="charter-bus.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+            </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Airport Transfers</h3>
+                        <p class="service-card__text">Elite business and leisure travel to DFW and Love Field terminals.</p>
+                        <a href="airport-transfers.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 2. Corporate Travel -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/corporate.jpg?v=final" alt="Corporate Travel" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Corporate Travel</h3>
+                        <p class="service-card__text">Reliable, high-precision transportation for meetings and executive events.</p>
+                        <a href="airport-transfers.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 3. Chauffeur Services -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/chauffeur.jpg?v=final" alt="Chauffeur Services" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Chauffeur Services</h3>
+                        <p class="service-card__text">Private personal chauffeurs for any occasion or multi-stop itinerary.</p>
+                        <a href="airport-transfers.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 4. Van Service -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/van.jpg?v=final" alt="Van Service" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Van Service</h3>
+                        <p class="service-card__text">Premium 14-passenger Sprinter group travel and site visits.</p>
+                        <a href="airport-transfers.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
+
+                <!-- 5. Charter Bus Service -->
+                <div class="service-card">
+                    <div class="service-card__img-wrap">
+                        <img src="images/services/charter.jpg?v=final" alt="Charter Bus Service" class="service-card__img">
+                    </div>
+                    <div class="service-card__body">
+                        <h3 class="service-card__title">Charter Bus Service</h3>
+                        <p class="service-card__text">Luxury 32-56 passenger coaches for high-capacity group logistics.</p>
+                        <a href="airport-transfers.html" class="service-card__btn">View Service</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
+<<<<<<< HEAD
     <section class="featured-hq">
         <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/f501cb35cd4b02636a1cac09fe452771b6a2c22641f5aa86e3205d0107514c75.png" alt="SM LIMOUSINE Fleet at 3500 Oak Lawn Avenue">
         <div class="hq-info">
@@ -161,47 +326,123 @@
         <div class="elite-footer__bottom">
             <div class="elite-footer__legal"><a href='/terms'>Terms of service</a><a href='/privacy'>Privacy policy</a><a href='/portal'>Affiliate Portal</a></div>
             <p class="elite-footer__copyright">© 2026 SM LIMOUSINE, Inc.</p>
+=======
+    <script>
+        function scrollToBooking() {
+            const booking = document.getElementById('booking');
+            if (booking) {
+                booking.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+    <section class="fleet section" id="fleet" style="background:#fff; padding:80px 0;">
+        <div class="container">
+            <h2 class="section-title" style="text-align:center; font-family:"Playfair Display", serif; font-size:2.5rem; margin-bottom:50px;">Premium Vehicles for Every Occasion</h2>
+            <div class="fleet-grid-simple" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:30px;">
+                <!-- 1. PREMIUM SEDAN -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Premium Sedan</h3>
+                    <p style="color:#888; font-size:0.9rem;">Elite Cadillac XT6 or similar.</p>
+                </div>
+                <!-- 2. EXECUTIVE SUV -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/0f18ce1c6c9b4d2a7c0791bea279de6b3675d3032e3eb9c095f916123a865f68.png" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Executive SUV</h3>
+                    <p style="color:#888; font-size:0.9rem;">Professional high-capacity Chevrolet Suburban.</p>
+                </div>
+                <!-- 3. PREMIUM SUV -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Premium SUV</h3>
+                    <p style="color:#888; font-size:0.9rem;">Elite GMC Denali for executive travel.</p>
+                </div>
+                <!-- 4. FIRST CLASS -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">2026 Cadillac Escalade</h3>
+                    <p style="color:#888; font-size:0.9rem;">The gold standard in luxury and security.</p>
+                </div>
+                <!-- 5. SPRINTER VAN -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Mercedes Sprinter</h3>
+                    <p style="color:#888; font-size:0.9rem;">Luxury group logistics up to 14 passengers.</p>
+                </div>
+                <!-- 6. MOTOR COACH -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://images.ctfassets.net/youh2ajahg7j/35mg10tqU3HdcQLjD2izW0/b4d2b3658d8ff3d97130177675574a76/buses.webp" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Motor Coach</h3>
+                    <p style="color:#888; font-size:0.9rem;">Premium Charter Bus for large groups.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="areas-serve section--bg" id="destinations">
+        <div class="container">
+            <h2 class="section-title">AREAS WE SERVE</h2>
+            <div class="areas-list-bl">
+                <div class="area-card"><img src="images/areas/dallas.jpg"><h3>Dallas</h3></div>
+                <div class="area-card"><img src="images/areas/fortworth.jpg"><h3>Fort Worth</h3></div>
+                <div class="area-card"><img src="images/areas/arlington.jpg"><h3>Arlington</h3></div>
+                <div class="area-card"><img src="images/areas/plano.jpg"><h3>Plano</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__social-row">
+                <a href="https://www.facebook.com/share/1DBJ281rsN/?mibextid=wwXIfr" target="_blank" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/limousinesm" target="_blank" class="social-btn ig"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@smlimo2026" target="_blank" class="social-btn tt"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="footer__links-row">
+                <a href="/privacy.html">Privacy policy</a>
+                <a href="/terms.html">Terms of service</a>
+            </div>
+            <div class="footer__copyright">© 2026 SM LIMOUSINE. All rights reserved.</div>
+>>>>>>> 91ca00f6e6bc82da0f707bd60b0cc999a00f3a20
         </div>
     </footer>
 
-    <div class="addbon-overlay" id="addon-Overlay" onclick="if(event.target===this)closeAddonModal()">
-        <div class="addon-modal">
-            <div class="addon-sheet-handle"></div>
-            <div class="addon-header"><h3>Passengers &amp; add-ons</h3><button onclick="closeAddonModal()">&#10005;</button></div>
-            <div class="addon-content">
-                <div class="addon-row"><div>Passengers</div><div class="addon-counter"><button onclick="updateCounter('passengers', -1)">-</button><span id="count-passengers">1</span><button onclick="updateCounter('passengers', 1)">+</button></div></div>
-                <div class="addon-row"><div>Luggage</div><div class="addon-counter"><button onclick="updateCounter('luggage', -1)">-</button><span id="count-luggage">1</span><button onclick="updateCounter('luggage', 1)">+</button></div></div>
-                <button class="addon-confirm-btn" onclick="closeAddonModal()">Confirm</button>
-            </div>
-        </div>
-    </div>
-    <div class="vs-overlay" id="vsOverlay">
-        <div class="vs-panel">
-            <div class="vs-header"><h2>Select Vehicle</h2><div id="vs-distance-summary"></div></div>
-            <div class="vs-list" id="vsList"></div>
-            <div class="vs-footer"><button id="vsBackBtn" class="btn--outline">Back</button><button id="vsContinueBtn" class="btn--primary" disabled="">Continue</button></div>
-        </div>
-    </div>
     <div class="payment-overlay" id="paymentOverlay">
-        <div class="payment-modal">
-            <button class="payment-modal__close" id="paymentClose">&#10005;</button>
+        <div class="payment-modal" id="paymentModal">
+            <button class="payment-modal__close" id="paymentClose">&times;</button>
+            <div class="payment-modal__header">
+                <div class="payment-modal__brand"><img src="sm_logo_silver.png" alt="SM" style="height:36px;"></div>
+                <div class="payment-modal__secure">Secure Payment</div>
+            </div>
             <div class="payment-modal__summary">
-                <h3 id="pay-vehicle">Vehicle</h3>
-                <p id="pay-total" class="clear-price">$0.00 USD</p>
+                <div class="payment-modal__line"><span>Vehicle</span><span id="pay-summary-vehicle">—</span></div>
+                <div class="payment-modal__divider"></div>
+                <div class="payment-modal__line payment-modal__line--total"><span>Total</span><span id="pay-summary-total">$0.00</span></div>
             </div>
             <div class="payment-modal__form">
-                <div class="pm-field"><label class="field-label">Full Name</label><input type="text" id="pay-name" class="st-input" placeholder="Name on card"></div>
-                <div class="pm-field"><label class="field-label">Email</label><input type="email" id="pay-email" class="st-input" placeholder="Email for receipt"></div>
-                <div class="pm-field"><label class="field-label">Card number</label><div id="card-number-element" class="st-input"></div></div>
-                <div class="booking-widget__row">
-                    <div class="pm-field"><label class="field-label">Expiry</label><div id="card-expiry-element" class="st-input"></div></div>
-                    <div class="pm-field"><label class="field-label">CVC</label><div id="card-cvc-element" class="st-input"></div></div>
+                <div class="payment-modal__field"><label>Email</label><input type="email" id="pay-card-email"></div>
+                <div class="payment-modal__field"><label>Name on Card</label><input type="text" id="pay-card-name"></div>
+                <div class="payment-modal__field"><label>Card Number</label><div id="card-number" style="padding:12px; background:#f1f3f9; border:1px solid #eee; border-radius:8px;"></div></div>
+                <div class="payment-modal__row" style="display:flex; gap:15px; margin-bottom:15px;">
+                    <div class="payment-modal__field" style="flex:1;"><label>Expiry</label><div id="card-expiry" style="padding:12px; background:#f1f3f9; border:1px solid #eee; border-radius:8px;"></div></div>
+                    <div class="payment-modal__field" style="flex:1;"><label>CVC</label><div id="card-cvc" style="padding:12px; background:#f1f3f9; border:1px solid #eee; border-radius:8px;"></div></div>
                 </div>
-                <button id="payBtn" class="pm-book-btn">Book Now</button>
+                <button class="payment-modal__pay-btn" id="pay-modal-submit-btn">Pay Now</button>
+            </div>
+            <div id="paymentSuccess" style="display:none; text-align:center; padding:40px;">
+                <h2 style="color:#fff;">Confirmed!</h2>
+                <p id="confirmationId" style="color:#D4AF37;"></p>
+                <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px;">Close</button>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="booking_v2.js?v=master_final_2.0"></script>
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('main-nav');
+            nav.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
