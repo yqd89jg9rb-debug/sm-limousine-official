@@ -1,28 +1,18 @@
-functionsDirectory = "/root/workspace/black-car-service/netlify/functions"
-functionsDirectoryOrigin = "default"
-plugins = []
-headers = []
-redirects = []
-
 [build]
-publish = "."
-publishOrigin = "default"
-functions = "netlify/functions"
+  publish = "."
+  functions = "netlify/functions"
 
-[build.environment]
+[[redirects]]
+  from = "/portal"
+  to = "/portal.html"
+  status = 200
 
-[build.processing]
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
 
-[build.processing.css]
-
-[build.processing.html]
-
-[build.processing.images]
-
-[build.processing.js]
-
-[build.services]
-
-[functions]
-
-[functions."*"]
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
