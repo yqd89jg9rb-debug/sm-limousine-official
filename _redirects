@@ -1,3 +1,4 @@
 # Clean URL redirects
-/privacy    /index.html   200
-/terms      /index.html   200
+/privacy    /privacy.html   200
+/terms      /terms.html     200
+/portal     /portal.html    200
