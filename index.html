@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=master_final_2.0">
+    <link rel="stylesheet" href="styles.css?v=master_final_3.0">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
 </head>
@@ -34,7 +34,7 @@
         </div>
     </header>
 
-    <div class="bl-container">
+    <div class="bl-container" id="booking">
         
         <h1 class="hero-title-sm2">Book Your Chauffeur Service</h1>
 
@@ -42,9 +42,9 @@
         <div id="bl-step-1" class="bl-step">
             <div class="bl-search-card">
                 <div class="bl-tabs">
-                    <div class="bl-tab active" data-trip="oneway">One-way</div>
-                    <div class="bl-tab" data-trip="roundtrip">Roundtrip</div>
-                    <div class="bl-tab" data-trip="hourly">Hourly</div>
+                    <div class="bl-tab active trip-tab" data-trip="oneway">One-way</div>
+                    <div class="bl-tab trip-tab" data-trip="roundtrip">Roundtrip</div>
+                    <div class="bl-tab trip-tab" data-trip="hourly">Hourly</div>
                 </div>
 
                 <div class="bl-input-group">
@@ -209,7 +209,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=master_final_2.0"></script>
+    <script src="script.js?v=master_final_3.0"></script>
     <script>
         function toggleMenu() {
             const nav = document.getElementById('main-nav');
