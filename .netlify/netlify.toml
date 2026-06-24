@@ -1,13 +1,12 @@
-functionsDirectory = "/root/workspace/black-car-service/netlify/functions"
+functionsDirectory = "/root/workspace/temp_repo/netlify/functions"
 functionsDirectoryOrigin = "config-v1"
-headersOrigin = "config"
 redirectsOrigin = "config"
 plugins = []
 
 [build]
-publish = "/root/workspace/black-car-service"
+publish = "/root/workspace/temp_repo"
 publishOrigin = "config"
-functions = "/root/workspace/black-car-service/netlify/functions"
+functions = "/root/workspace/temp_repo/netlify/functions"
 
 [build.environment]
 
@@ -76,8 +75,20 @@ for = "/script.js"
 Cache-Control = "public, max-age=0, must-revalidate"
 
 [[redirects]]
+from = "/portal"
+to = "/portal.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
 from = "/privacy"
-to = "/index.html"
+to = "/privacy.html"
 status = 200.0
 force = false
 
@@ -89,7 +100,7 @@ force = false
 
 [[redirects]]
 from = "/terms"
-to = "/index.html"
+to = "/terms.html"
 status = 200.0
 force = false
 
