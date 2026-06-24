@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=master_final_3.0">
+    <link rel="stylesheet" href="styles.css?v=master_final_4.0">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
 </head>
@@ -22,9 +22,9 @@
             </a>
             
             <nav class="header__nav" id="main-nav">
-                <a href="#booking">Book Now</a>
-                <a href="#fleet">Our Fleet</a>
-                <a href="#destinations">Destinations</a>
+                <a href="#booking" onclick="toggleMenu()">Book Now</a>
+                <a href="#fleet" onclick="toggleMenu()">Our Fleet</a>
+                <a href="#destinations" onclick="toggleMenu()">Destinations</a>
                 <a href="tel:+18177234592" class="nav-cta">Call Now</a>
             </nav>
 
@@ -34,7 +34,7 @@
         </div>
     </header>
 
-    <div class="bl-container" id="booking">
+    <div class="bl-container" id="booking" style="padding-top: 100px;">
         
         <h1 class="hero-title-sm2">Book Your Chauffeur Service</h1>
 
@@ -193,6 +193,62 @@
         </div>
     </section>
 
+    <section class="fleet section" id="fleet" style="background:#fff; padding:80px 0;">
+        <div class="container">
+            <h2 class="section-title" style="text-align:center; font-family:'Playfair Display', serif; font-size:2.5rem; margin-bottom:50px;">Our Elite Fleet</h2>
+            <div class="fleet-grid-simple" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:30px;">
+                <!-- 1. PREMIUM SEDAN -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Premium Sedan</h3>
+                    <p style="color:#888; font-size:0.9rem;">Elite Cadillac XT6 or similar.</p>
+                </div>
+                <!-- 2. EXECUTIVE SUV -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/0f18ce1c6c9b4d2a7c0791bea279de6b3675d3032e3eb9c095f916123a865f68.png" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Executive SUV</h3>
+                    <p style="color:#888; font-size:0.9rem;">Professional high-capacity Chevrolet Suburban.</p>
+                </div>
+                <!-- 3. PREMIUM SUV -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2b8c60feeae7034daea35ae7343d608f10d8f13b1116025c20080796380d9ff7.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Premium SUV</h3>
+                    <p style="color:#888; font-size:0.9rem;">Elite GMC Denali for executive travel.</p>
+                </div>
+                <!-- 4. FIRST CLASS -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">2026 Cadillac Escalade</h3>
+                    <p style="color:#888; font-size:0.9rem;">The gold standard in luxury and security.</p>
+                </div>
+                <!-- 5. SPRINTER VAN -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Mercedes Sprinter</h3>
+                    <p style="color:#888; font-size:0.9rem;">Luxury group logistics up to 14 passengers.</p>
+                </div>
+                <!-- 6. MOTOR COACH -->
+                <div class="fleet-item" style="background:#f8f9fc; padding:40px 30px; border-radius:24px; text-align:center;">
+                    <img src="https://images.ctfassets.net/youh2ajahg7j/35mg10tqU3HdcQLjD2izW0/b4d2b3658d8ff3d97130177675574a76/buses.webp" style="width:100%; height:180px; object-fit:contain; margin-bottom:20px;">
+                    <h3 style="font-weight:800;">Motor Coach</h3>
+                    <p style="color:#888; font-size:0.9rem;">Premium Charter Bus for large groups.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="areas-serve section--bg" id="destinations">
+        <div class="container">
+            <h2 class="section-title">AREAS WE SERVE</h2>
+            <div class="areas-list-bl">
+                <div class="area-card"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/9e049100028d48479e0a6d0c75a4686b_IMG_1102.jpeg"><h3>Dallas</h3></div>
+                <div class="area-card"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/331f800faa002f9de2afe1eadaffa930_dallas.jpg"><h3>Fort Worth</h3></div>
+                <div class="area-card"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/775dbd71d7b68f9c162634f3b42b157_arlington.jpg"><h3>Arlington</h3></div>
+                <div class="area-card"><img src="https://customer-assets.emergentagent.com/wingman/f17b6fee-cc29-44c6-94cf-45fa9654051a/attachments/7b3fc3c2c597b9a9dede8cf9b19a83dd_plano.jpg"><h3>Plano</h3></div>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer" style="background:#000; padding:60px 0; color:#fff; text-align:center;">
         <div class="container">
             <div class="footer__social-row" style="margin-bottom:30px;">
@@ -209,11 +265,11 @@
         </div>
     </footer>
 
-    <script src="script.js?v=master_final_3.0"></script>
+    <script src="script.js?v=master_final_4.0"></script>
     <script>
         function toggleMenu() {
             const nav = document.getElementById('main-nav');
-            nav.classList.toggle('active');
+            if (nav) nav.classList.toggle('active');
         }
     </script>
 </body>
