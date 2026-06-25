@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Master Elite Engine (v22.7 - ADD-ON REPAIR)
+   SM LIMOUSINE — Master Elite Engine (v22.8 - PRICING VISIBILITY)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -67,19 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- PRICING ENGINE ---
-    function updateFinalPrice() {
-        const vehicleSelect = document.getElementById('final-vehicle-select');
-        const amountEl = document.getElementById('final-price-amount');
-        // If we are in the modern layout (bl-container)
-        const summaryTotalEl = document.getElementById('summary-total');
-        
-        const vehicleKey = vehicleSelect ? vehicleSelect.value : bookingData.vehicleKey;
-        if (!vehicleKey) {
-            if (amountEl) amountEl.textContent = '—';
-            if (summaryTotalEl) summaryTotalEl.textContent = '$0.00';
-            return;
-        }
-        
+    function calculatePrice(vehicleKey) {
         const v = VEHICLE_RATES[vehicleKey];
         let total = 0;
         if (bookingData.serviceType === 'hourly') {
@@ -90,15 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
             total = v.base + (v.perMile * bookingData.miles);
             if (bookingData.serviceType === 'roundtrip') total *= 2;
         }
-        
-        // Addons
         if (bookingData.addons['meet-greet']) total += 25;
         if (bookingData.addons['child-seat']) total += 15;
+        return total.toFixed(2);
+    }
 
-        bookingData.total = total.toFixed(2);
-        bookingData.vehicleName = v.name;
-        
-        if (amountEl) amountEl.textContent = '$' + bookingData.total;
+    function updateFinalPrice() {
+        const summaryTotalEl = document.getElementById('summary-total');
+        if (!bookingData.vehicleKey) {
+            if (summaryTotalEl) summaryTotalEl.textContent = '$0.00';
+            return;
+        }
+        bookingData.total = calculatePrice(bookingData.vehicleKey);
         if (summaryTotalEl) summaryTotalEl.textContent = '$' + bookingData.total;
     }
 
@@ -126,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         Object.keys(VEHICLE_RATES).forEach(key => {
             const v = VEHICLE_RATES[key];
+            const price = calculatePrice(key);
             const card = document.createElement('div');
             card.className = 'bl-fleet-card';
             card.onclick = () => {
@@ -139,10 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <img src="${v.image}" class="bl-fleet-img">
                 <div class="bl-fleet-info">
-                    <h3>${v.name}</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>${v.name}</h3>
+                        <span class="bl-fleet-price" style="background:none; padding:0; font-size:1.4rem;">$${price}</span>
+                    </div>
                     <p>${v.category} • ${v.passengers} Pax</p>
                 </div>
-                <div class="bl-fleet-price">Select</div>
+                <div class="bl-fleet-price" style="text-align:center; background:#f8f9fc; border-top:1px solid #eee;">Select This Vehicle</div>
             `;
             list.appendChild(card);
         });
