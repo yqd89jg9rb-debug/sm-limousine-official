@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=master_final_14.0">
+    <link rel="stylesheet" href="styles.css?v=master_final_15.0">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjQX0AwWeSZ7FHHwKBGueEwC6VYd9v60&libraries=places" async defer></script>
 </head>
@@ -34,7 +34,7 @@
         </div>
     </header>
 
-    <div class="bl-container" id="booking" style="padding-top: 100px;">
+    <div class="bl-container" id="booking" style="padding-top: 50px;">
         
         <h1 class="hero-title-sm2">Book Your Chauffeur Service</h1>
 
@@ -114,11 +114,11 @@
 
         <!-- STEP 2: VEHICLE SELECTION -->
         <div id="bl-step-2" class="bl-step" style="display:none;">
-            <div id="bl-fleet-list">
+            <div id="bl-fleet-list" style="display: flex; flex-direction: column; gap: 20px; padding: 20px 0;">
                 <!-- Fleet Cards Rendered by JS -->
             </div>
             <div style="height: 100px;"></div>
-            <button class="bl-continue-btn" id="bl-continue-btn" onclick="goToStep(3)">Continue</button>
+            <button class="bl-continue-btn" id="bl-continue-btn" onclick="goToStep(3)" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; width: calc(100% - 40px); max-width: 440px;">Continue</button>
         </div>
 
         <!-- STEP 3: CONTACT & PAYMENT -->
@@ -233,28 +233,28 @@
             <div class="areas-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
                 <!-- DALLAS -->
                 <div class="area-card" style="position:relative; border-radius:16px; overflow:hidden; height: 350px;">
-                    <img src="/images/areas/dallas.jpg" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="images/areas/dallas.jpg" style="width:100%; height:100%; object-fit:cover;">
                     <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:20px; text-align:center;">
                         <h3 style="color:#ffffff !important; font-weight:900 !important; text-transform:uppercase !important; letter-spacing:2px !important; font-size: 1.5rem !important;">Dallas</h3>
                     </div>
                 </div>
                 <!-- FORT WORTH -->
                 <div class="area-card" style="position:relative; border-radius:16px; overflow:hidden; height: 350px;">
-                    <img src="/images/areas/fortworth.jpg" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="images/areas/fortworth.jpg" style="width:100%; height:100%; object-fit:cover;">
                     <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:20px; text-align:center;">
                         <h3 style="color:#ffffff !important; font-weight:900 !important; text-transform:uppercase !important; letter-spacing:2px !important; font-size: 1.5rem !important;">Fort Worth</h3>
                     </div>
                 </div>
                 <!-- ARLINGTON -->
                 <div class="area-card" style="position:relative; border-radius:16px; overflow:hidden; height: 350px;">
-                    <img src="/images/areas/arlington.jpg" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="images/areas/arlington.jpg" style="width:100%; height:100%; object-fit:cover;">
                     <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:20px; text-align:center;">
                         <h3 style="color:#ffffff !important; font-weight:900 !important; text-transform:uppercase !important; letter-spacing:2px !important; font-size: 1.5rem !important;">Arlington</h3>
                     </div>
                 </div>
                 <!-- PLANO -->
                 <div class="area-card" style="position:relative; border-radius:16px; overflow:hidden; height: 350px;">
-                    <img src="/images/areas/plano.jpg" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="images/areas/plano.jpg" style="width:100%; height:100%; object-fit:cover;">
                     <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); padding:20px; text-align:center;">
                         <h3 style="color:#ffffff !important; font-weight:900 !important; text-transform:uppercase !important; letter-spacing:2px !important; font-size: 1.5rem !important;">Plano</h3>
                     </div>
@@ -279,12 +279,58 @@
         </div>
     </footer>
 
-    <script src="script.js?v=master_final_14.0"></script>
+    <script src="script.js?v=master_final_15.0"></script>
     <script>
         function toggleMenu() {
             const nav = document.getElementById('main-nav');
             if (nav) nav.classList.toggle('active');
         }
     </script>
+    <style>
+        /* EXTRA MOBILE POLISH */
+        .bl-fleet-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .bl-fleet-card.selected {
+            border-color: #5d2b45;
+            background: #fdfafb;
+        }
+        .bl-fleet-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #000;
+        }
+        .bl-fleet-info {
+            padding: 20px;
+        }
+        .bl-fleet-info h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #1a1a1a;
+        }
+        .bl-fleet-info p {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .bl-fleet-price {
+            padding: 15px 20px;
+            background: #f8f9fc;
+            text-align: right;
+            font-weight: 800;
+            color: #5d2b45;
+            font-size: 1.1rem;
+        }
+    </style>
 </body>
 </html>
