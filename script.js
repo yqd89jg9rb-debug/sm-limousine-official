@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Master Elite Engine (v22.6 - GLOBAL REPAIR)
+   SM LIMOUSINE — Master Elite Engine (v22.7 - ADD-ON REPAIR)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,7 +19,32 @@ document.addEventListener('DOMContentLoaded', () => {
         pax: 1,
         luggage: 0,
         miles: 15,
-        total: 0
+        total: 0,
+        addons: {
+            'meet-greet': false,
+            'child-seat': false
+        }
+    };
+
+    // --- ADDON HANDLERS ---
+    window.updateStep = (type, val) => {
+        if (type === 'pax') {
+            bookingData.pax = Math.max(1, bookingData.pax + val);
+            const el = document.getElementById('pax-val');
+            if (el) el.innerText = bookingData.pax;
+        } else if (type === 'luggage') {
+            bookingData.luggage = Math.max(0, bookingData.luggage + val);
+            const el = document.getElementById('luggage-val');
+            if (el) el.innerText = bookingData.luggage;
+        }
+    };
+
+    window.toggleAddon = (id) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.toggle('active');
+            bookingData.addons[id] = el.classList.contains('active');
+        }
     };
 
     // --- STRIPE INITIALIZATION ---
@@ -45,11 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateFinalPrice() {
         const vehicleSelect = document.getElementById('final-vehicle-select');
         const amountEl = document.getElementById('final-price-amount');
-        if (!vehicleSelect || !amountEl) return;
-
-        const vehicleKey = vehicleSelect.value;
+        // If we are in the modern layout (bl-container)
+        const summaryTotalEl = document.getElementById('summary-total');
+        
+        const vehicleKey = vehicleSelect ? vehicleSelect.value : bookingData.vehicleKey;
         if (!vehicleKey) {
-            amountEl.textContent = '—';
+            if (amountEl) amountEl.textContent = '—';
+            if (summaryTotalEl) summaryTotalEl.textContent = '$0.00';
             return;
         }
         
@@ -64,9 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bookingData.serviceType === 'roundtrip') total *= 2;
         }
         
+        // Addons
+        if (bookingData.addons['meet-greet']) total += 25;
+        if (bookingData.addons['child-seat']) total += 15;
+
         bookingData.total = total.toFixed(2);
         bookingData.vehicleName = v.name;
-        amountEl.textContent = '$' + bookingData.total;
+        
+        if (amountEl) amountEl.textContent = '$' + bookingData.total;
+        if (summaryTotalEl) summaryTotalEl.textContent = '$' + bookingData.total;
     }
 
     // --- NAVIGATION ---
@@ -75,39 +108,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const p = document.getElementById('pickup-input')?.value;
             const d = document.getElementById('dropoff-input')?.value;
             if (!p || !d) { alert("Please enter Pickup and Dropoff locations."); return; }
+            renderFleet();
         }
-        document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(`step-${n}`);
+        
+        document.querySelectorAll('.bl-step').forEach(s => s.style.display = 'none');
+        const target = document.getElementById(`bl-step-${n}`);
         if (target) {
-            target.classList.add('active');
-            if (n === 3) updateFinalPrice();
+            target.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
-    // --- PICKERS ---
-    function setupPicker(id, key) {
-        const picker = document.getElementById(id);
-        if (!picker) return;
-        picker.querySelectorAll('.picker-opt').forEach(opt => {
-            opt.addEventListener('click', () => {
-                picker.querySelectorAll('.picker-opt').forEach(o => o.classList.remove('active'));
-                opt.classList.add('active');
-                bookingData[key] = parseInt(opt.dataset.val || opt.innerText);
-            });
+    function renderFleet() {
+        const list = document.getElementById('bl-fleet-list');
+        if (!list) return;
+        list.innerHTML = '';
+        
+        Object.keys(VEHICLE_RATES).forEach(key => {
+            const v = VEHICLE_RATES[key];
+            const card = document.createElement('div');
+            card.className = 'bl-fleet-card';
+            card.onclick = () => {
+                document.querySelectorAll('.bl-fleet-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                bookingData.vehicleKey = key;
+                bookingData.vehicleName = v.name;
+                document.getElementById('bl-continue-btn').disabled = false;
+            };
+            
+            card.innerHTML = `
+                <img src="${v.image}" class="bl-fleet-img">
+                <div class="bl-fleet-info">
+                    <h3>${v.name}</h3>
+                    <p>${v.category} • ${v.passengers} Pax</p>
+                </div>
+                <div class="bl-fleet-price">Select</div>
+            `;
+            list.appendChild(card);
         });
     }
-    setupPicker('pax-picker', 'pax');
-    setupPicker('luggage-picker', 'luggage');
 
     // --- EXTERNAL ACTIONS ---
     window.selectVehicle = (key) => {
-        const select = document.getElementById('final-vehicle-select');
-        if (select) {
-            select.value = key;
-            bookingData.vehicleKey = key;
-            bookingData.vehicleName = VEHICLE_RATES[key]?.name || '';
-            window.goToStep(3);
-        }
+        bookingData.vehicleKey = key;
+        bookingData.vehicleName = VEHICLE_RATES[key]?.name || '';
+        window.goToStep(3);
     };
 
     window.updateFinalPrice = updateFinalPrice;
@@ -121,16 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameEl = document.getElementById('pay-name');
         const emailEl = document.getElementById('pay-email');
         const phoneEl = document.getElementById('pay-phone');
-        const consentEl = document.getElementById('sms-consent');
 
         const name = nameEl ? nameEl.value.trim() : '';
         const email = emailEl ? emailEl.value.trim() : '';
         const phone = phoneEl ? phoneEl.value.trim() : '';
-        const consent = consentEl ? consentEl.checked : false;
 
         if (!name || !email || !phone) { alert("Please fill all contact fields."); return; }
-        if (!consent) { alert("Please agree to receive SMS updates."); return; }
 
+        updateFinalPrice();
+        
         document.getElementById('pay-summary-vehicle').textContent = bookingData.vehicleName;
         document.getElementById('pay-summary-total').textContent = '$' + bookingData.total;
         
@@ -153,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (payModalBtn) {
         payModalBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            
             payModalBtn.disabled = true;
             payModalBtn.innerText = "Processing...";
 
@@ -182,11 +225,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     total: bookingData.total,
                     pickup: document.getElementById('pickup-input')?.value || '',
                     dropoff: document.getElementById('dropoff-input')?.value || '',
-                    date: document.getElementById('trip-date')?.value || '',
-                    time: document.getElementById('trip-time')?.value || '',
                     passengers: bookingData.pax,
                     luggage: bookingData.luggage,
-                    notes: document.getElementById('final-notes')?.value || ''
+                    addons: bookingData.addons
                 };
 
                 await fetch('/.netlify/functions/dispatch', {
@@ -194,12 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(payload)
                 });
 
-                const confirmId = 'SM-' + Date.now().toString(36).toUpperCase();
-                document.getElementById('confirmationId').textContent = 'Confirmation: ' + confirmId;
-
                 document.querySelector('.payment-modal__form').style.display = 'none';
                 document.querySelector('.payment-modal__summary').style.display = 'none';
-                document.getElementById('paymentSuccess').style.display = 'flex';
+                document.getElementById('paymentSuccess').style.display = 'block';
                 
             } catch (err) {
                 alert("Payment Error: " + err.message);
@@ -220,38 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.querySelectorAll('.service-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            if (tab.innerText.includes('Charter')) {
-                const charter = document.getElementById('charter-section');
-                if (charter) charter.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
-
-    // --- VIEW / SCROLL ---
-    window.viewAction = (tab) => {
-        if (tab === 'Charter bus') {
-            const charter = document.getElementById('charter-section');
-            if (charter) charter.scrollIntoView({ behavior: 'smooth' });
-            return;
-        }
-        if (tab) {
-            const tabBtn = document.querySelector(`.trip-tab[data-trip="${tab}"]`);
-            if (tabBtn) tabBtn.click();
-        }
-        const booking = document.getElementById('booking');
-        if (booking) booking.scrollIntoView({ behavior: 'smooth' });
-    };
-
     // --- GOOGLE MAPS ---
     function initMaps() {
         if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
             setTimeout(initMaps, 500); return;
         }
-        const inputs = document.querySelectorAll('input[data-field="pickup"], input[data-field="dropoff"]');
+        const inputs = document.querySelectorAll('#pickup-input, #dropoff-input');
         inputs.forEach(input => {
             const autocomplete = new google.maps.places.Autocomplete(input, { componentRestrictions: { country: "us" } });
             autocomplete.addListener('place_changed', () => {
