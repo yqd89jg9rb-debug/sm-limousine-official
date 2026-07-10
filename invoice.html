@@ -37,7 +37,11 @@
         
         .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #444; }
         
-        .route-info { margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid #222; margin-bottom: 30px; display: none; }
+        .route-info { margin: 20px 0; padding: 20px; background: #111; border: 1px solid #333; border-radius: 12px; display: none; text-align: left; }
+        .route-item { margin-bottom: 15px; }
+        .route-item:last-child { margin-bottom: 0; }
+        .route-item label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); letter-spacing: 1px; margin-bottom: 4px; font-weight: 700; }
+        .route-item span { font-size: 0.95rem; color: #fff; line-height: 1.4; display: block; }
         .route-item { margin-bottom: 10px; text-align: left; }
         .route-item label { display: block; font-size: 0.65rem; text-transform: uppercase; color: #666; margin-bottom: 2px; }
         .route-item span { font-size: 0.9rem; color: #eee; }
@@ -63,6 +67,7 @@
             <div class="route-item"><label>Pickup Address</label><span id="disp-pickup"></span></div>
             <div class="route-item"><label>Drop-off Address</label><span id="disp-dropoff"></span></div>
         </div>
+
         <table class="summary-table">
             <thead><tr><th>Description</th><th style="text-align:right;">Amount</th></tr></thead>
             <tbody>
@@ -79,7 +84,7 @@
 
         <div class="footer">
             3500 Oak Lawn Ave, Dallas, TX 75219<br>
-            sam@sm-limo.com | +1 817-723-4592
+            sam@sm-limo.com | +1 817-723-4592<br><span style="opacity:0.3; font-size:0.6rem;">v27.2</span>
         </div>
     </div>
 
