@@ -37,6 +37,10 @@
         
         .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #444; }
         
+        .route-info { margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid #222; margin-bottom: 30px; display: none; }
+        .route-item { margin-bottom: 10px; text-align: left; }
+        .route-item label { display: block; font-size: 0.65rem; text-transform: uppercase; color: #666; margin-bottom: 2px; }
+        .route-item span { font-size: 0.9rem; color: #eee; }
         @media print { .btn-pay { display: none !important; } }
     </style>
 </head>
@@ -54,6 +58,11 @@
             <div class="detail-item" style="text-align:right;"><label>Date</label><span id="disp-date">---</span></div>
         </div>
 
+        <div class="route-info" id="route-info">
+            <div class="route-item"><label>Trip Date(s)</label><span id="disp-trip-date"></span></div>
+            <div class="route-item"><label>Pickup Address</label><span id="disp-pickup"></span></div>
+            <div class="route-item"><label>Drop-off Address</label><span id="disp-dropoff"></span></div>
+        </div>
         <table class="summary-table">
             <thead><tr><th>Description</th><th style="text-align:right;">Amount</th></tr></thead>
             <tbody>
@@ -89,6 +98,17 @@
         document.getElementById('disp-vehicle').innerText = vehicle;
         document.getElementById('disp-inv').innerText = inv;
         document.getElementById('disp-date').innerText = date;
+
+        const tripDate = p.get('d');
+        const pickup = p.get('pu');
+        const dropoff = p.get('do');
+
+        if (tripDate || pickup || dropoff) {
+            document.getElementById('route-info').style.display = 'block';
+            if (tripDate) document.getElementById('disp-trip-date').innerText = tripDate;
+            if (pickup) document.getElementById('disp-pickup').innerText = pickup;
+            if (dropoff) document.getElementById('disp-dropoff').innerText = dropoff;
+        }
 
         if (isPaid) {
             document.getElementById('paid-stamp').style.display = 'block';
