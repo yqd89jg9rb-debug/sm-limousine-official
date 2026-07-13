@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Master Elite Engine (v27.1 - RECOVERY FIX)
+   SM LIMOUSINE — Master Elite Engine (v27.2 - PAYMENT RESTORE)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const VEHICLE_RATES = {
         xt6:        { name: 'Cadillac XT6',          base: 65,  perMile: 4.00, hourly: 72.68, category: 'Premium sedan',    passengers: '2-4',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
-        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, hourly: 95.63, category: 'Premium SUV',      passengers: '4-6',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/2e57c8707998441ada71f30611004c25cdc32bf69297e9741f5ed6747ef63327.png' },
+        suburban:   { name: 'Chevrolet Suburban',    base: 85,  perMile: 5.00, hourly: 95.63, category: 'Premium SUV',      passengers: '4-6',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/cf22b96994e3db52466fe888e68ba76dfa286d2d99e49f86fe153638daf2271c.jpeg' },
         denali:     { name: 'GMC Denali',            base: 95,  perMile: 5.50, hourly: 107.10, category: 'Premium SUV',      passengers: '4-7',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/c535ec35e31ee0dbc9eebf7e8c4ab1f9fb24e6e9c301d8fe7f94f26854d7ec0f.png' },
         escalade:   { name: '2026 Cadillac Escalade',    base: 125, perMile: 6.50, hourly: 141.53, category: 'First class',      passengers: '4-7',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' },
         maybach:    { name: 'Mercedes-Maybach',      base: 150, perMile: 7.50, hourly: 180.00, category: 'Ultra Luxury',     passengers: '2-4',  image: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/df430f8d73d1aad459320327e99032c81b2244772710f1d44626a4985eca047d.png' },
@@ -159,13 +159,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.innerText = "Confirm Details";
                 btn.disabled = false;
             }
-            // Fallback: Show fleet anyway
             if (n === 2) {
                 renderFleet();
                 document.querySelectorAll('.bl-step').forEach(s => s.style.display = 'none');
                 document.getElementById('bl-step-2').style.display = 'block';
             }
         }
+    };
+
+    window.handleFinalReservation = () => {
+        const name = document.getElementById('pay-name').value.trim();
+        const email = document.getElementById('pay-email').value.trim();
+        const phone = document.getElementById('pay-phone').value.trim();
+
+        if (!name || !email || !phone) {
+            alert("Please fill all contact fields.");
+            return;
+        }
+
+        const btn = document.querySelector('#bl-step-3 .bl-confirm-btn');
+        btn.innerText = "Redirecting...";
+        btn.disabled = true;
+
+        // Construct Payment URL
+        const payUrl = `https://sm-limo.com/pay.html?a=${bookingData.total}&n=${encodeURIComponent(name)}&e=${encodeURIComponent(email)}&p=${encodeURIComponent(phone)}&v=${encodeURIComponent(bookingData.vehicleName)}`;
+        
+        // Log Lead to Dispatch Function
+        fetch('/.netlify/functions/dispatch', {
+            method: 'POST',
+            body: JSON.stringify({
+                type: 'BOOKING_LEAD',
+                name, email, phone,
+                vehicle: bookingData.vehicleName,
+                total: bookingData.total,
+                pickup: document.getElementById('pickup-input').value,
+                dropoff: document.getElementById('dropoff-input').value,
+                service: bookingData.serviceType,
+                pax: bookingData.pax,
+                luggage: bookingData.luggage
+            })
+        }).finally(() => {
+            window.location.href = payUrl;
+        });
     };
 
     function initMaps() {
