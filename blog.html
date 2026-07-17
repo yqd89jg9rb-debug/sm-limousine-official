@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Travel Blog | SM LIMOUSINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=master_final_24.0">
+    <style>
+        .blog-container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 20px;
+            min-height: 600px;
+        }
+        .header { height: auto !important; padding: 15px 0; background: #fff; border-bottom: 1px solid #f1f1f1; position: sticky; top: 0; z-index: 1000; }
+        .header__logo img { height: 55px !important; }
+        .header__logo-container { display: flex; flex-direction: column; align-items: flex-start; }
+        .brand-name-text { font-size: 1.1rem !important; letter-spacing: 1px !important; font-weight: 900; color: #000; }
+        .header__phone-link { font-size: 0.85rem; color: #5d2b45; font-weight: 800; text-decoration: none; margin-top: 2px; }
+        
+        .hero-title-sm2 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            color: #1a1a1a; 
+            margin-top: 30px; 
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        /* Ensure Soro blog content blends with our theme */
+        #soro-blog {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body class="bl-body">
+
+    <header class="header">
+        <div class="header__container container">
+            <a href="/" class="header__logo" style="text-decoration: none; display: flex; align-items: center; gap: 15px;">
+                <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM" style="height: 45px;">
+                <div class="header__logo-container">
+                    <span class="brand-name-text">SM LIMOUSINE</span>
+                    <a href="tel:+18773376546" class="header__phone-link">(877) 337-6546</a>
+                </div>
+            </a>
+            
+            <nav class="header__nav" id="main-nav">
+                <a href="/#booking">Book Now</a>
+                <a href="/#fleet">Our Fleet</a>
+                <a href="/blog">Blog</a>
+                <a href="tel:+18773376546" class="nav-cta">Call Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="blog-container">
+        <h1 class="hero-title-sm2">Elite Travel & Lifestyle</h1>
+        <p style="text-align: center; color: #888; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; font-size: 0.75rem; margin-bottom: 40px;">Insights from the World of Premium Chauffeur Service</p>
+        
+        <!-- SORO BLOG WIDGET -->
+        <div id="soro-blog"></div>
+        <script src="https://app.trysoro.com/api/embed/621e411b-9edf-4e5f-ba87-0ba37bc7e0bb" defer></script>
+    </div>
+
+    <footer class="footer" style="background:#000; padding:80px 0 60px; color:#fff; text-align:center; border-top: 1px solid #111;">
+        <div class="container">
+            <div class="footer-info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px;">
+                <div class="footer-info-item">
+                    <h4 style="color: #D4AF37; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;">Direct Contact</h4>
+                    <p><a href="tel:+18773376546" style="color: #ccc; text-decoration: none;">(877) 337-6546</a></p>
+                    <p><a href="mailto:reservation@sm-limo.com" style="color: #ccc; text-decoration: none;">reservation@sm-limo.com</a></p>
+                </div>
+                <div class="footer-info-item">
+                    <h4 style="color: #D4AF37; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;">Corporate Office</h4>
+                    <p style="color: #ccc; line-height: 1.6;">3500 Oak Lawn Avenue<br>Suite# 460<br>Dallas, TX 75219</p>
+                </div>
+                <div class="footer-info-item">
+                    <h4 style="color: #D4AF37; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;">Connect</h4>
+                    <div style="margin-top:10px;">
+                        <a href="https://www.facebook.com/share/1DBJ281rsN/?mibextid=wwXIfr" target="_blank" style="color: #fff; margin:0 10px; font-size:1.2rem;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/limousinesm" target="_blank" style="color: #fff; margin:0 10px; font-size:1.2rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@smlimo2026" target="_blank" style="color: #fff; margin:0 10px; font-size:1.2rem;"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div style="margin: 40px 0 20px;">
+                <a href="/privacy" style="color:#444; margin:0 15px; text-decoration:none; font-size: 0.8rem;">Privacy policy</a>
+                <a href="/terms" style="color:#444; margin:0 15px; text-decoration:none; font-size: 0.8rem;">Terms of service</a>
+                <a href="/blog" style="color:#D4AF37; margin:0 15px; text-decoration:none; font-weight:700; font-size: 0.8rem;">Elite Blog</a>
+                <a href="/portal" style="color:#D4AF37; margin:0 15px; text-decoration:none; font-weight:700; font-size: 0.8rem;">Affiliate Portal</a>
+            </div>
+            <div style="color:#222; font-size:0.75rem; letter-spacing: 1px;">© 2026 SM LIMOUSINE. v27.2 RECOVERY. ALL RIGHTS RESERVED.</div>
+        </div>
+    </footer>
+</body>
+</html>
