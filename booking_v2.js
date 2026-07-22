@@ -1,5 +1,5 @@
 /* ===================================================================
-   SM LIMOUSINE — Elite Booking Engine (v22.8 - GOOGLE MAPS FIX)
+   SM LIMOUSINE — Elite Booking Engine (v28.0 - ELITE RATE UPDATE)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
             key: 'sedan', 
             name: 'Premium sedan', 
-            base: 78, 
-            perMile: 4.80, 
+            base: 95, 
+            perMile: 5.00, 
             hourly: 95, 
             pax: 3, 
             bag: 2, 
@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
             key: 'suburban', 
             name: 'Executive SUV',   
-            base: 102, 
-            perMile: 6.00, 
+            base: 125, 
+            perMile: 6.50, 
             hourly: 125, 
             pax: 6, 
             bag: 5, 
@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
             key: 'denali',   
             name: 'Premium SUV',   
-            base: 114, 
-            perMile: 6.60, 
+            base: 145, 
+            perMile: 7.50, 
             hourly: 140, 
             pax: 6, 
             bag: 5, 
@@ -40,31 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         { 
             key: 'elite', 
-            name: 'First class',   
-            base: 150, 
-            perMile: 7.80, 
+            name: '2026 Cadillac Escalade',   
+            base: 185, 
+            perMile: 9.00, 
             hourly: 185, 
             pax: 6, 
             bag: 6, 
-            sub: '2026 Cadillac Escalade or similar.', 
+            sub: 'The gold standard in luxury and security.', 
             img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/ef53f08dbf9c9347f564d98b5ea4e5abdbdd44079efceb279fa5200e71060721.jpeg' 
         },
         { 
             key: 'van',   
-            name: 'Sprinter van',  
-            base: 270, 
+            name: 'Mercedes Sprinter',  
+            base: 350, 
             perMile: 12.00, 
             hourly: 225, 
             pax: 14, 
             bag: 10, 
-            sub: 'Mercedes Sprinter or similar.', 
+            sub: 'Luxury group logistics up to 14 passengers.', 
             img: 'https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/75f9359e022ebf23e1fba88293ba5cc31754eeaa26015ff992a60a5cf00f516d.jpeg' 
         },
         { 
             key: 'motorcoach', 
             name: 'Motor Coach', 
-            base: 600, 
-            perMile: 30.00, 
+            base: 250, 
+            perMile: 15.00, 
             hourly: 450, 
             pax: 56, 
             bag: 50, 
@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         luggage: 0,
         addons: [],
         miles: 15,
+        milesCalculated: false,
         selectedVehicle: null,
         total: 0
     };
@@ -118,6 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const p = document.getElementById('pickup-input').value;
             const d = document.getElementById('dropoff-input').value;
             if (!p || !d) { alert("Please enter Pickup and Dropoff locations."); return; }
+
+            // Waco minimum-miles guard: if Google Maps hasn't measured the distance
+            // and the dropoff mentions Waco, force at least 100 miles so pricing
+            // reflects the long-distance run rather than the 15-mile local default.
+            if (!bookingData.milesCalculated && /waco/i.test(d)) {
+                bookingData.miles = Math.max(bookingData.miles, 100);
+            }
+
             renderFleet();
         }
         document.querySelectorAll('.bl-step').forEach(s => s.style.display = 'none');
@@ -126,18 +135,36 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function renderFleet() {
+        const isEstimate = !bookingData.milesCalculated;
         const list = document.getElementById('bl-fleet-list');
+
+        // Show/hide the estimate banner above the fleet list
+        let banner = document.getElementById('bl-estimate-banner');
+        if (!banner) {
+            banner = document.createElement('div');
+            banner.id = 'bl-estimate-banner';
+            banner.style.cssText = 'background:#5d2b45;color:#fff;text-align:center;padding:8px 16px;font-size:0.85rem;letter-spacing:0.05em;border-radius:4px;margin-bottom:12px;';
+            list.parentNode.insertBefore(banner, list);
+        }
+        if (isEstimate) {
+            banner.innerHTML = '⚡ <strong>Estimated starting rates</strong> — exact pricing confirmed once your route is calculated.';
+            banner.style.display = 'block';
+        } else {
+            banner.style.display = 'none';
+        }
+
         list.innerHTML = FLEET.map(v => {
             let price = v.base + (v.perMile * bookingData.miles);
             if (bookingData.tripType === 'roundtrip') price *= 2;
             if (bookingData.tripType === 'hourly') price = v.hourly * parseInt(document.getElementById('trip-hours').value || 3);
+            const disclaimer = isEstimate ? 'Estimated starting rate' : 'Price includes taxes & fees';
             return `
                 <div class="bl-vehicle-card" id="v-${v.key}" onclick="selectVehicle('${v.key}', ${price.toFixed(2)})">
                     <div class="bl-v-content">
                         <div class="bl-v-title">${v.name}</div>
                         <div class="bl-v-sub">${v.sub}</div>
                         <div class="bl-v-price">$${price.toFixed(2)} <span style="font-size:0.8rem; color:#888;">USD</span></div>
-                        <div class="bl-v-disclaimer">Price includes taxes & fees</div>
+                        <div class="bl-v-disclaimer">${disclaimer}</div>
                     </div>
                     <img src="${v.img}" class="bl-v-img">
                     <div class="bl-v-icons">
@@ -240,7 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     svc.getDistanceMatrix({ origins: [p], destinations: [d], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.IMPERIAL }, (res, stat) => {
                         if (stat === 'OK' && res.rows[0].elements[0].status === 'OK') {
                             bookingData.miles = res.rows[0].elements[0].distance.value / 1609.34;
-                            console.log('Trip Miles:', bookingData.miles);
+                            bookingData.milesCalculated = true;
+                            console.log('Trip Miles (confirmed):', bookingData.miles);
                         }
                     });
                 }

@@ -1,12 +1,10 @@
-<!-- Build: 2026-06-30-T1305 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketing SMS Sender v27.1 | SM LIMOUSINE</title>
+    <title>Marketing SMS Sender | SM LIMOUSINE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
             background: #f8f9fc; 
@@ -83,7 +81,6 @@
             margin-bottom: 5px;
         }
         .template-btn:hover { background: #d0d7e0; }
-        .template-btn.highlight { background: #D4AF37; color: #000; }
 
         button.send-btn { 
             width: 100%; 
@@ -118,10 +115,10 @@
 <body>
     <div class="sender-card">
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" style="height:50px;">
+            <img src="sm_logo_silver.png" style="height:50px;">
         </div>
         <h1>Marketing SMS Sender</h1>
-        <p class="subtitle">Elite Twilio Marketing Engine (High Reliability)</p>
+        <p class="subtitle">Direct-to-Client Twilio Engine</p>
         
         <div class="field">
             <label>Recipient Phone Number</label>
@@ -132,9 +129,9 @@
             <label>Master Templates (Click to Load):</label>
             <div class="template-btn" onclick="loadTemplate(1)">Elite Fleet</div>
             <div class="template-btn" onclick="loadTemplate(2)">Executive</div>
-            <div class="template-btn highlight" onclick="loadTemplate(5)">Hotel Partner</div>
-            <div class="template-btn highlight" onclick="loadTemplate(4)">Direct Web</div>
-            <div class="template-btn" onclick="loadTemplate(6)" style="background:#000; color:#fff;">Affiliate 2026</div>
+            <div class="template-btn" onclick="loadTemplate(3)" style="background:#D4AF37; color:#000;">Hotel Partner</div>
+            <div class="template-btn" onclick="loadTemplate(5)" style="background:#000; color:#fff;">Affiliate 2026</div>
+            <div class="template-btn" onclick="loadTemplate(4)" style="background:#D4AF37; color:#000;">Direct Web</div>
         </div>
 
         <div class="field">
@@ -148,11 +145,11 @@
 
     <script>
         const templates = {
-            1: "SM LIMOUSINE - Elite 2026 Fleet Update\n\nWe invite you to experience our new 2026 elite fleet, featuring the latest Cadillac Escalades and GMC Denalis. Book your priority reservation at: sm-limo.com",
-            2: "Hello, Sam Boulos here. As a valued past guest of SM LIMOUSINE, we’ve placed you on our priority list for the 2026 summer season. Our expanded fleet and enhanced precision dispatch are now live. Reserve at: sm-limo.com",
+            1: "SM LIMOUSINE - Elite 2026 Fleet Update\n\nWe invite you to experience our new 2026 elite fleet, featuring the latest Cadillac Escalades and GMC Denalis. Book your priority reservation at: sm-limo.com/book.html\n\nSafe travels,\nSam Boulos, Owner",
+            2: "Hello, Sam Boulos here. As a valued past guest of SM LIMOUSINE, we’ve placed you on our priority list for the 2026 summer season. Our expanded fleet and enhanced precision dispatch are now live to ensure your DFW and Love Field transfers are seamless. Reserve at: sm-limo.com",
+            3: "Hi, it’s been a while since your last trip with us. We’ve been busy upgrading SM LIMOUSINE to a world-class standard, including brand new 2026 models and a streamlined booking portal at sm-limo.com/book.html. I’d love to handle your next trip personally. – Sam Boulos",
             4: "SM LIMOUSINE - The 2026 Elite Fleet is now live. View our new Cadillac Escalades and book your next world-class journey at: www.sm-limo.com\n\n– Sam Boulos",
-            5: "Hi [Name], it was a pleasure meeting you at [Hotel Name] today. As promised, here is the direct link to the SM LIMOUSINE Affiliate Portal: sm-limo.com/portal. All bookings through this link are flagged for 'Executive Priority' in our DFW dispatch system. – Sam Boulos, Owner",
-            6: "Greetings from SM LIMOUSINE. As DFW prepares for FIFA 2026, ensure your VIPs have the best ground transport. Our new portal is live: sm-limo.com/portal. Secure your elite fleet today. - Sam Boulos"
+            5: "Greetings from SM LIMOUSINE. As DFW prepares for FIFA 2026, ensure your VIPs have the best ground transport. Our new portal is live: sm-limo.com/portal. Secure your elite fleet today. - Sam Boulos"
         };
 
         function loadTemplate(id) {
@@ -176,7 +173,7 @@
                     method: 'POST',
                     body: JSON.stringify({
                         type: 'MARKETING_SMS',
-                        to: phone, 
+                        to: phone,
                         message: message
                     })
                 });
