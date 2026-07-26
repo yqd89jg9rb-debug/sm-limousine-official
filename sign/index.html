@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<!-- v28.1 - Forced Elite Centering -->
+<!-- v28.2 - ULTIMATE CENTERING FIX -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Greeting Sign | SM LIMOUSINE</title>
-    
-    <!-- Professional App Meta Tags -->
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg">
-
     <style>
         body, html {
             margin: 0; padding: 0;
@@ -19,123 +16,53 @@
             background-color: #000000;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: flex-start;
-            overflow: hidden;
-            touch-action: none; 
-        }
-
-        .logo-container {
-            margin-top: 5dvh;
-            width: 100%;
-            display: flex !important; 
-            justify-content: center !important; /* CENTERED */
+            display: flex !important;
+            flex-direction: column !important;
             align-items: center !important;
-            flex-grow: 0;
-            height: auto;
-            min-height: 250px;
-            z-index: 10;
-            box-sizing: border-box;
+            justify-content: center !important;
+            overflow: hidden;
+            text-align: center !important;
         }
-
+        .logo-container {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 20px !important;
+        }
         .logo-img {
-            display: block !important;
-            margin: 0 auto !important;
-            height: 250px !important; /* MASSIVE */
+            height: 250px !important;
             width: auto !important;
             border-radius: 15px;
-            box-shadow: 0 0 30px rgba(255,255,255,0.15);
+            display: block !important;
+            margin: 0 auto !important;
         }
-
         .name-container {
-            width: 100%;
-            text-align: center;
-            flex-grow: 1;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0 20px;
-            margin-top: -2dvh;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
         }
-
         .client-name {
             font-size: 15vw;
             font-weight: 900;
             text-transform: uppercase;
             border: none; background: transparent;
-            color: #ffffff; text-align: center;
-            width: 100%; outline: none;
-            line-height: 1.0; white-space: normal; 
-            word-wrap: break-word;
-            overflow: visible;
+            color: #ffffff;
+            width: 100%;
+            outline: none;
         }
-
-        .instruction {
-            position: absolute; bottom: 15px;
-            font-size: 10px; color: #333;
-            text-transform: uppercase; letter-spacing: 1px;
-            text-align: center; width: 100%;
-        }
-
-        body.is-typing .logo-container, 
-        body.is-typing .instruction {
-            display: none !important;
-        }
-
-        #keepAwakeVideo {
-            position: absolute; width: 1px; height: 1px;
-            opacity: 0; pointer-events: none;
-        }
-
         @media (orientation: landscape) {
             .logo-img { height: 180px !important; }
-            .client-name { font-size: 18vh; }
-            .logo-container { min-height: 180px; }
         }
     </style>
 </head>
 <body>
-
-    <video id="keepAwakeVideo" loop muted playsinline src="https://static.prod-images.emergentagent.net/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/assets/blank_loop.mp4"></video>
-
-    <div class="logo-container" id="logoWrap">
-        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" 
-             alt="SM LIMOUSINE" class="logo-img">
+    <div class="logo-container">
+        <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" alt="SM" class="logo-img">
     </div>
-
-    <div class="name-container" id="zoomArea">
-        <div class="client-name" id="nameField" contenteditable="true" spellcheck="false">TAP NAME</div>
+    <div class="name-container">
+        <div class="client-name" contenteditable="true">TAP NAME</div>
     </div>
-
-    <div class="instruction">Pinch to resize • 2-line support • Screen locked ON</div>
-
-    <script>
-        const el = document.getElementById('nameField');
-        const body = document.body;
-        const video = document.getElementById('keepAwakeVideo');
-        
-        const startKeepAwake = async () => {
-            try {
-                if ('wakeLock' in navigator) {
-                    await navigator.wakeLock.request('screen');
-                }
-            } catch (err) {}
-            try { video.play(); } catch (err) {}
-        };
-
-        ['click', 'touchstart', 'focus'].forEach(evt => {
-            document.addEventListener(evt, startKeepAwake, { once: false });
-        });
-
-        el.addEventListener('focus', function() {
-            body.classList.add('is-typing');
-            if (this.innerText === 'TAP NAME') this.innerText = '';
-        });
-
-        el.addEventListener('blur', function() {
-            body.classList.remove('is-typing');
-            if (this.innerText.trim() === '') {
-                this.innerText = 'TAP NAME';
-            }
-        });
-    </script>
 </body>
 </html>
