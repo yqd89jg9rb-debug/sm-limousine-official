@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- v28.1 - Forced Elite Centering -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,18 +28,21 @@
         .logo-container {
             margin-top: 5dvh;
             width: 100%;
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            max-height: 40dvh;
+            display: flex !important; 
+            justify-content: center !important; /* CENTERED */
+            align-items: center !important;
+            flex-grow: 0;
+            height: auto;
+            min-height: 250px;
             z-index: 10;
             box-sizing: border-box;
         }
 
         .logo-img {
-            height: 250px;
-            width: auto;
+            display: block !important;
+            margin: 0 auto !important;
+            height: 250px !important; /* MASSIVE */
+            width: auto !important;
             border-radius: 15px;
             box-shadow: 0 0 30px rgba(255,255,255,0.15);
         }
@@ -46,9 +50,10 @@
         .name-container {
             width: 100%;
             text-align: center;
-            flex-grow: 1.5;
-            display: flex; align-items: flex-start; justify-content: center;
+            flex-grow: 1;
+            display: flex; align-items: center; justify-content: center;
             padding: 0 20px;
+            margin-top: -2dvh;
         }
 
         .client-name {
@@ -81,14 +86,15 @@
         }
 
         @media (orientation: landscape) {
-            .logo-img { height: 180px; }
+            .logo-img { height: 180px !important; }
             .client-name { font-size: 18vh; }
+            .logo-container { min-height: 180px; }
         }
     </style>
 </head>
 <body>
 
-    <video id="keepAwakeVideo" loop muted playsinline src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/assets/blank_loop.mp4"></video>
+    <video id="keepAwakeVideo" loop muted playsinline src="https://static.prod-images.emergentagent.net/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/assets/blank_loop.mp4"></video>
 
     <div class="logo-container" id="logoWrap">
         <img src="https://static.prod-images.emergentagent.com/jobs/f17b6fee-cc29-44c6-94cf-45fa9654051a/images/b589ae7bf307bf16f3410b6cb1ee8cb91f6cbf51ef443f48053b33604b76aa30.jpeg" 
@@ -103,17 +109,13 @@
 
     <script>
         const el = document.getElementById('nameField');
-        const zoomArea = document.getElementById('zoomArea');
         const body = document.body;
         const video = document.getElementById('keepAwakeVideo');
         
-        let currentFontSize = 15;
-        let wakeLock = null;
-
         const startKeepAwake = async () => {
             try {
                 if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
+                    await navigator.wakeLock.request('screen');
                 }
             } catch (err) {}
             try { video.play(); } catch (err) {}
