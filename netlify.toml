@@ -1,18 +1,19 @@
 [build]
   publish = "."
-  functions = "netlify/functions"
 
-[[redirects]]
-  from = "/portal"
-  to = "/portal.html"
-  status = 200
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
 
-[[redirects]]
-  from = "/privacy"
-  to = "/privacy.html"
-  status = 200
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-[[redirects]]
-  from = "/terms"
-  to = "/terms.html"
-  status = 200
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
